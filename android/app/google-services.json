@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "123675939246",
+    "firebase_url": "https://zaveri-bazaar-ae390.firebaseio.com",
+    "project_id": "zaveri-bazaar-ae390",
+    "storage_bucket": "zaveri-bazaar-ae390.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123675939246:android:5909d5804d5d947d08b83f",
+        "android_client_info": {
+          "package_name": "in.co.zaveribazaar.retailer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123675939246-no08jjkldcdbt23mi7vg320kugpi9m8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFse_pYMYeHzVF2k6YToJ5leyRxr7CdZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123675939246-no08jjkldcdbt23mi7vg320kugpi9m8j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123675939246-2bd6d282ptir7pi9qjv64pm0cb1p05e2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.coronainfotech.sonaarWholesaler"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123675939246:android:31bdd765f896166008b83f",
+        "android_client_info": {
+          "package_name": "in.co.zaveribazaar.wholesaler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123675939246-no08jjkldcdbt23mi7vg320kugpi9m8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFse_pYMYeHzVF2k6YToJ5leyRxr7CdZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123675939246-no08jjkldcdbt23mi7vg320kugpi9m8j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "123675939246-2bd6d282ptir7pi9qjv64pm0cb1p05e2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.coronainfotech.sonaarWholesaler"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
