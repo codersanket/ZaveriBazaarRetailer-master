@@ -164,44 +164,49 @@ class _MainPageStage extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          // BottomNavigationBarItem(
-          //   icon: ImageIcon(
-          //     AssetImage("images/ic_gold_grey.png"),
-          //   ),
-          //   title: Text('Bullion', style: TextStyle(fontSize: 12.0)),
-          // ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.rss_feed),
-            title: Text('Feed', style: TextStyle(fontSize: 12.0)),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_on),
-            title: Text('Products', style: TextStyle(fontSize: 12.0)),
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/new.png')),
-            title: Text('Arrivals', style: TextStyle(fontSize: 12.0)),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            title: Text('Following', style: TextStyle(fontSize: 12.0)),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Profile', style: TextStyle(fontSize: 12.0)),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.white54,
-        showUnselectedLabels: false,
-        onTap: _onItemTapped,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: _widgetOptions.elementAt(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            // BottomNavigationBarItem(
+            //   icon: ImageIcon(
+            //     AssetImage("images/ic_gold_grey.png"),
+            //   ),
+            //   title: Text('Bullion', style: TextStyle(fontSize: 12.0)),
+            // ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.rss_feed),
+              title: Text('Feed', style: TextStyle(fontSize: 12.0)),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_on),
+              title: Text('Products', style: TextStyle(fontSize: 12.0)),
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/new.png')),
+              title: Text('Arrivals', style: TextStyle(fontSize: 12.0)),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              title: Text('Following', style: TextStyle(fontSize: 12.0)),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text('Profile', style: TextStyle(fontSize: 12.0)),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
+          unselectedItemColor: Colors.white54,
+          showUnselectedLabels: false,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

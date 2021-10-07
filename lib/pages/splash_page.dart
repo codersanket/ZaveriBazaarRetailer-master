@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:sonaar_retailer/main.dart';
 import 'package:sonaar_retailer/models/user.dart';
+import 'package:sonaar_retailer/pages/login_page.dart';
 import 'package:sonaar_retailer/pages/update_page.dart';
 import 'package:sonaar_retailer/pages/wholesaler_view.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
@@ -19,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
+    initAppLinks();
     initUniLinks();
   }
 
@@ -69,9 +72,25 @@ class _SplashPageState extends State<SplashPage> {
 
   StreamSubscription _sub;
 
-  Future<Null> initUniLinks() async {
+  Future<Null> initAppLinks() async {
+    // on change
+    getUriLinksStream().listen(processAppLink);
+  }
+
+  processAppLink(Uri uri) {
+    if (uri == null) return;
+    if (uri.path.isEmpty) return;
+    if (uri.pathSegments.isEmpty) return;
+
+    initUniLinks(pathSegments: uri.pathSegments);
+    return true;
+  }
+
+  Future<Null> initUniLinks({List<String> pathSegments}) async {
     bool launched = false;
     // initial value
+    
+
     try {
       launched = processUri(await getInitialUri(), true);
     } on FormatException {}
@@ -84,8 +103,9 @@ class _SplashPageState extends State<SplashPage> {
           }).catchError((err) {
             print("userLogById Error:" + err.toString());
           });
-          Navigator.of(context).pushReplacementNamed('/login');
-          return;
+          print(pathSegments);
+          Navigator.of(context)
+              .pushNamed('/login', arguments: {"path": pathSegments});
         }
 
         try {
@@ -111,15 +131,24 @@ class _SplashPageState extends State<SplashPage> {
           }).catchError((err) {
             print("userLogById Error:" + err.toString());
           });
-          Navigator.of(context).pushReplacementNamed('/main');
+          if (pathSegments != null && pathSegments.isNotEmpty) {
+            if (pathSegments.contains("wholesaler-firms"))
+              navigatorKey.currentState.push(MaterialPageRoute(
+                  builder: (_) =>
+                      WholesalerViewPage(wholesalerId: pathSegments.last)));
+          } else
+            Navigator.of(context).pushNamed('/main');
+
           // }
         } catch (e) {
           UserLogService.userLogById("000", 'App usage log').then((res) {
             print("userLogById Success");
-          }).catchError((err) {
-            print("userLogById Error:" + err.toString());
-          });
-          Navigator.of(context).pushReplacementNamed('/main');
+          }).catchError(
+            (err) {
+              print("userLogById Error:" + err.toString());
+            },
+          );
+          // Navigator.of(context).pushReplacementNamed('/main');
         }
       });
     }
@@ -128,15 +157,14 @@ class _SplashPageState extends State<SplashPage> {
   bool processUri(Uri uri, bool delayed) {
     if (uri == null) return false;
 
-    if (uri.path.startsWith("/app/wholesaler-firms/") &&
-        uri.pathSegments.length == 3) {
+    if (uri.path.contains("wholesaler-firms")) {
       if (delayed) {
         Future.delayed(Duration(seconds: 2), () {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (_) => WholesalerViewPage(
-                wholesalerId: uri.pathSegments[2],
+                wholesalerId: uri.pathSegments[1],
               ),
             ),
           );

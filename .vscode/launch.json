@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ZaveriBazaarRetailer-master",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "ZaveriBazaarRetailer-master (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "intent",
+            "cwd": "intent",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "intent (profile mode)",
+            "cwd": "intent",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "qrcode_reader",
+            "cwd": "qrcode_reader",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "qrcode_reader (profile mode)",
+            "cwd": "qrcode_reader",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ]
+}

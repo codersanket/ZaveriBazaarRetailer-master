@@ -34,7 +34,7 @@ class _UpdatePageState extends State<UpdatePage> {
               SizedBox(height: 16),
               Text(
                 'New update.',
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               SizedBox(height: 48),
               Text(widget.whatsNew),
