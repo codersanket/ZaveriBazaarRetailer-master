@@ -46,8 +46,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="app"
-                    android:scheme="sonaarretailer" />
+                    android:host="sonaarretailer"
+                    android:scheme="app" />
             </intent-filter>
 
             <!-- App Links -->
@@ -60,7 +60,8 @@
                 <data
                     android:host="sonaar.coronainfotech.in"
                     android:pathPrefix="/r"
-                    android:scheme="https" />
+                
+                    android:scheme="https"/>
             </intent-filter>
 
             <intent-filter>
