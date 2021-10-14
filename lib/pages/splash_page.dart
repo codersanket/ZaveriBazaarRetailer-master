@@ -77,8 +77,8 @@ class _SplashPageState extends State<SplashPage> {
     } on FormatException {}
 
     if (!launched) {
-      Future.delayed(Duration(seconds: 2), () async {
-        if (!await AuthService.isLoggedIn()) {
+      Future.delayed(Duration(seconds: 0), () async {
+        if (!await AuthService.isUserId()) {
           UserLogService.userLogById("000", 'App usage log').then((res) {
             print("userLogById Success");
           }).catchError((err) {

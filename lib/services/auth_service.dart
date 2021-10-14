@@ -29,7 +29,10 @@ class AuthService {
           );
 
       User user = User.fromJson(response.data);
-      AuthService.setUser(user);
+      //AuthService.setUser(user);
+      setUser(user);
+      print('Retailer id' + user.id);
+      setUserId(user.id);
 
       return Future.value(user);
     } catch (e) {
@@ -51,8 +54,9 @@ class AuthService {
             data: FormData.fromMap(data),
           );
 
-      /*User user = User.fromJson(response.data);
-      AuthService.setUser(user);*/
+      User user1 = User.fromJson(response.data);
+      //AuthService.setUser(user);
+      AuthService.setUserId(user1.id);
 
       return Future.value(user);
     } catch (e) {
@@ -97,6 +101,8 @@ class AuthService {
 
       User user = User.fromJson(response.data);
       AuthService.setUser(user);
+      print("User data id " + user.id);
+      setUserId(user.id);
 
       return Future.value(user);
     } catch (e) {
@@ -196,6 +202,12 @@ class AuthService {
     AuthService.user = user;
   }
 
+  /// Set User Id
+  static setUserId(String userid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userid', userid);
+  }
+
   /// Tokens preference get
   static Future<User> getUser() async {
     if (AuthService.user == null) {
@@ -229,11 +241,18 @@ class AuthService {
         prefs.getString('refreshToken') != null;
   }
 
+  /// Check UserId status
+  static Future<bool> isUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userid') != null;
+  }
+
   /// Clear tokens and logout
   static logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('accessToken');
-    await prefs.remove('refreshToken');
+    await prefs.clear();
+    // await prefs.remove('accessToken');
+    // await prefs.remove('refreshToken');
   }
 
   /// User sync contacts
