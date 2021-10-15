@@ -117,9 +117,13 @@ class _ProductViewState extends State<ProductViewPage> {
                                         ),
                                       );
                                     },
-                                    child: Text(
-                                      product.firm.name,
-                                      overflow: TextOverflow.fade,
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        product.firm.name,
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
                                     )),
                                 ratings == null
                                     ? Text(" ")
