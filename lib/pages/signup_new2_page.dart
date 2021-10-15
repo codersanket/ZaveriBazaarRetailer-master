@@ -582,6 +582,7 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
       });
     } catch (ignored) {
       print(ignored.toString());
+      loading = false;
       setState(() {
         isCityVisible = true;
       });

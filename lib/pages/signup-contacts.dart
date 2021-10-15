@@ -78,6 +78,7 @@ class _ContactsPageState extends State<ContactsPage> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
           key: _scaffoldKey,
           body: shouldShowInfo && !isSyncing
               ? buildInfo()
