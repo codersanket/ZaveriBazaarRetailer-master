@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,15 +32,13 @@ const MaterialColor primaryPalette = MaterialColor(0xFF004272, <int, Color>{
   900: Color(0xFF001D42),
 });
 
-const MaterialColor primaryPaletteAccent = MaterialColor(
-  0xFF4484FF,
-  <int, Color>{
-    100: Color(0xFF77A5FF),
-    200: Color(0xFF4484FF),
-    400: Color(0xFF1162FF),
-    700: Color(0xFF0054F6),
-  },
-);
+const MaterialColor primaryPaletteAccent =
+    MaterialColor(0xFF4484FF, <int, Color>{
+  100: Color(0xFF77A5FF),
+  200: Color(0xFF4484FF),
+  400: Color(0xFF1162FF),
+  700: Color(0xFF0054F6),
+});
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -66,31 +63,11 @@ void main() async {
         ),
       ),
       home: SplashPage(),
-      onGenerateRoute: (RouteSettings routeSettings) {
-        switch (routeSettings.name) {
-          case '/main':
-            return MaterialPageRoute(builder: (_) => MainPage());
-            break;
-          case '/login':
-            final map = routeSettings.arguments as Map;
-            return MaterialPageRoute(
-              builder: (_) => LoginPage(
-                pathSegments: map==null?null:map["path"],
-              ),
-            );
-            break;
-          default:
-            return MaterialPageRoute(
-                builder: (_) => Scaffold(
-                      body: Center(child: Text("Error")),
-                    ));
-        }
-      },
       //home: ContactsPage(),
-      // routes: {
-      //   '/main': (context) => MainPage(),
-      //   // '/login': (context) => LoginPage(pathSegments: ,),
-      // },
+      routes: {
+        '/main': (context) => MainPage(),
+        '/login': (context) => LoginPage(),
+      },
     ),
   );
 
@@ -120,6 +97,25 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   // deeplink config
+  initUniLinks();
+}
+
+Future<Null> initUniLinks() async {
+  // on change
+  getUriLinksStream().listen(processUri);
+}
+
+void processUri(Uri uri) {
+  if (uri == null) return;
+
+  if (uri.path.startsWith("/app/wholesaler-firms/") &&
+      uri.pathSegments.length == 3) {
+    navigatorKey.currentState.push(
+      MaterialPageRoute(
+        builder: (_) => WholesalerViewPage(wholesalerId: uri.pathSegments[2]),
+      ),
+    );
+  }
 }
 
 initFCM(SharedPreferences prefs, Future<Database> database) async {
