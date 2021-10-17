@@ -89,7 +89,6 @@ class _SplashPageState extends State<SplashPage> {
   Future<Null> initUniLinks({List<String> pathSegments}) async {
     bool launched = false;
     // initial value
-    
 
     try {
       launched = processUri(await getInitialUri(), true);
@@ -155,6 +154,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   bool processUri(Uri uri, bool delayed) {
+    log("process uri");
     if (uri == null) return false;
 
     if (uri.path.contains("wholesaler-firms")) {
@@ -164,7 +164,7 @@ class _SplashPageState extends State<SplashPage> {
             context,
             MaterialPageRoute(
               builder: (_) => WholesalerViewPage(
-                wholesalerId: uri.pathSegments[1],
+                wholesalerId: uri.pathSegments.last,
               ),
             ),
           );
@@ -174,7 +174,7 @@ class _SplashPageState extends State<SplashPage> {
           context,
           MaterialPageRoute(
             builder: (_) => WholesalerViewPage(
-              wholesalerId: uri.pathSegments[2],
+              wholesalerId: uri.pathSegments.last,
             ),
           ),
         );

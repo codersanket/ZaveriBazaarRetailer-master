@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
@@ -83,7 +85,7 @@ class _WholesalerViewState extends State<WholesalerViewPage> {
 
   void fetchWholesaler() {
     setState(() => isLoading = true);
-
+    log(widget.wholesalerId);
     WholesalerFirmService.getById(widget.wholesalerId).then((res) {
       setState(() {
         firm = res;
