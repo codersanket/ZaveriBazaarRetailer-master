@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
+import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/models/wholesaler_rating.dart';
 import 'package:sonaar_retailer/pages/cached_image.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
@@ -20,27 +21,26 @@ class ProductViewPage extends StatefulWidget {
   final List<Product> products;
   final int index;
   //List<WholesalerRating> ratings = [];
-  final List<Map<String, dynamic>> ratings;
+  //final List<Map<String, dynamic>> ratings;
   final Function(Product product) onChange;
 
-  ProductViewPage(
-      {Key key,
-      @required this.products,
-      @required this.index,
-      this.onChange,
-      this.ratings})
-      : super(key: key);
+  ProductViewPage({
+    Key key,
+    @required this.products,
+    @required this.index,
+    this.onChange,
+  }) : super(key: key);
 
   @override
-  _ProductViewState createState() => _ProductViewState(products, ratings);
+  _ProductViewState createState() => _ProductViewState(products);
 }
 
 class _ProductViewState extends State<ProductViewPage> {
   final List<Product> products;
   //final List<WholesalerRating> ratings;
-  final List<Map<String, dynamic>> ratings;
+  //final List<Map<String, dynamic>> ratings;
 
-  _ProductViewState(this.products, this.ratings);
+  _ProductViewState(this.products);
 
   PageController pageController;
   User authUser;
@@ -60,6 +60,7 @@ class _ProductViewState extends State<ProductViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Color(0xff004272),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Product details')),
       body: PageView(
@@ -81,6 +82,7 @@ class _ProductViewState extends State<ProductViewPage> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
                               child: CachedImage(
@@ -103,87 +105,147 @@ class _ProductViewState extends State<ProductViewPage> {
                                     }
                                   : null,
                             ),
-                            SizedBox(width: 5),
-                            Column(
-                              children: [
-                                GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (_) => WholesalerViewPage(
-                                            wholesalerId:
-                                                product.wholesalerFirmId,
+                            //SizedBox(width: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 2),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => WholesalerViewPage(
+                                              wholesalerId:
+                                                  product.wholesalerFirmId,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          product.firm.name,
+                                          overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Color(0xff004272),
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      );
-                                    },
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        product.firm.name,
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                    )),
-                                ratings == null
-                                    ? Text(" ")
-                                    : RatingBarIndicator(
-                                        itemCount: 5,
-                                        rating: double.tryParse(
-                                            findRatings(ratings, product)),
-                                        itemSize: 12,
-                                        unratedColor: Colors.grey[700],
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return Icon(Icons.star,
-                                              color: Colors.yellow.shade600);
-                                        },
-                                      ),
-                              ],
+                                      )),
+                                  // ratings == null
+                                  //     ? Text(" ")
+                                  //     :
+                                  //     RatingBarIndicator(
+                                  //         itemCount: 5,
+                                  //         rating: double.tryParse(
+                                  //             findRatings(ratings, product)),
+                                  //         itemSize: 12,
+                                  //         unratedColor: Colors.grey[700],
+                                  //         itemBuilder: (BuildContext context,
+                                  //             int index) {
+                                  //           return Icon(Icons.star,
+                                  //               color: Colors.yellow.shade600);
+                                  //         },
+                                  //       ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                        ElevatedButton.icon(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              )),
-                              foregroundColor:
-                                  MaterialStateProperty.all(Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.green),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                UserLogService.userLogById(
+                                        products[pageController.page.toInt()]
+                                            .wholesalerFirmId,
+                                        "Product details message")
+                                    .then((res) {
+                                  print("userLogById Success");
+                                }).catchError((err) {
+                                  print("userLogById Error:" + err.toString());
+                                });
+                                // do whatsapp share process
+                                whatsappWholesaler(
+                                    products[pageController.page.toInt()]
+                                        .firm
+                                        .mobile,
+                                    products[pageController.page.toInt()]
+                                        .shareLink);
+                              },
+                              icon: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Image.asset('images/whatsapp.png',
+                                    color: Colors.green),
+                              ),
                             ),
-                            onPressed: () {
-                              UserLogService.userLogById(
-                                      products[pageController.page.toInt()]
-                                          .wholesalerFirmId,
-                                      "Product details")
-                                  .then((res) {
-                                print("userLogById Success");
-                              }).catchError((err) {
-                                print("userLogById Error:" + err.toString());
-                              });
-                              // do whatsapp share process
-                              whatsappWholesaler(
-                                  products[pageController.page.toInt()]
-                                      .firm
-                                      .mobile,
-                                  products[pageController.page.toInt()]
-                                      .shareLink);
-                            },
-                            icon: Image.asset('images/whatsapp.png',
-                                width: 20, color: Colors.white),
-                            label: Text(
-                              'MESSAGE',
-                              style: TextStyle(fontSize: 12),
-                            )),
+                            IconButton(
+                              onPressed: () {
+                                UserLogService.userLogById(
+                                        products[pageController.page.toInt()]
+                                            .wholesalerFirmId,
+                                        "Product details call")
+                                    .then((res) {
+                                  print("userLogById Success");
+                                }).catchError((err) {
+                                  print("userLogById Error:" + err.toString());
+                                });
+                                // call firm
+                                launch(
+                                    "tel://${products[pageController.page.toInt()].firm.mobile}");
+                              },
+                              icon: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Icon(
+                                    Icons.phone,
+                                    color: Colors.blueAccent,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        // ElevatedButton.icon(
+                        //     style: ButtonStyle(
+                        //       shape: MaterialStateProperty.all<
+                        //               RoundedRectangleBorder>(
+                        //           RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(18.0),
+                        //       )),
+                        //       foregroundColor:
+                        //           MaterialStateProperty.all(Colors.white),
+                        //       backgroundColor:
+                        //           MaterialStateProperty.all(Colors.green),
+                        //     ),
+                        //     onPressed: () {
+                        //       UserLogService.userLogById(
+                        //               products[pageController.page.toInt()]
+                        //                   .wholesalerFirmId,
+                        //               "Product details")
+                        //           .then((res) {
+                        //         print("userLogById Success");
+                        //       }).catchError((err) {
+                        //         print("userLogById Error:" + err.toString());
+                        //       });
+                        //       // do whatsapp share process
+                        //       whatsappWholesaler(
+                        //           products[pageController.page.toInt()]
+                        //               .firm
+                        //               .mobile,
+                        //           products[pageController.page.toInt()]
+                        //               .shareLink);
+                        //     },
+                        //     icon: Image.asset('images/whatsapp.png',
+                        //         width: 20, color: Colors.white),
+                        //     label: Text(
+                        //       'MESSAGE',
+                        //       style: TextStyle(fontSize: 12),
+                        //     )),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                //SizedBox(height: 5),
                 Card(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -192,7 +254,7 @@ class _ProductViewState extends State<ProductViewPage> {
                       GestureDetector(
                         child: Container(
                           width: double.infinity,
-                          height: 250,
+                          height: 300,
                           color: Colors.white,
                           child: Hero(
                             tag: heroTag,
@@ -469,13 +531,13 @@ class _ProductViewState extends State<ProductViewPage> {
     });
   }
 
-  String findRatings(List<Map<String, dynamic>> ratings, Product product) {
-    var temp;
-    temp = ratings.indexWhere(
-      (element) => product.firm.name.contains(element["name"]),
-    );
-    return temp != -1 ? temp.toString() : "0";
-  }
+  // String findRatings(List<Map<String, dynamic>> ratings, Product product) {
+  //   var temp;
+  //   temp = ratings.indexWhere(
+  //     (element) => product.firm.name.contains(element["name"]),
+  //   );
+  //   return temp != -1 ? temp.toString() : "0";
+  // }
 
   // void fetchWholesaler(var id) {
   //   setState(() => isLoading = true);
@@ -494,9 +556,6 @@ class _ProductViewState extends State<ProductViewPage> {
   //   });
   // }
 }
-
-
-
 
 // RatingBarIndicator(
 //                                         itemCount: 5,

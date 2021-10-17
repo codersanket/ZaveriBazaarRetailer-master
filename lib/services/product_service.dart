@@ -49,8 +49,7 @@ class ProductService {
 
   static Future<dynamic> getNewProducts() async {
     try {
-      var response = await DioProvider().dio().get("m/add_new_arrivals");
-
+      var response = await DioProvider().dio().get("/m/add_new_arrivals");
       return Future.value(response.data);
     } catch (e) {
       return Future.error(_handleError(e));

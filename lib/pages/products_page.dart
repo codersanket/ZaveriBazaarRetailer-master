@@ -614,17 +614,9 @@ class _ProductsPageState extends State<ProductsPage> {
 
     ProductService.getAll(params).then((res) {
       List<Product> products = Product.listFromJson(res['data']);
-      List<Map<String, dynamic>> ratings;
+
       totalPage = res['last_page'];
       if (rowCount == 0) rowCount = res['total'];
-
-      for (var item in products) {
-        WholesalerRatingService.getWholesalerById(item.wholesalerFirmId)
-            .then((res2) {
-          ratings.add(res2);
-        });
-      }
-      //print(ratings);
 
       if (mounted)
         setState(() {
@@ -745,7 +737,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   //   ),
                   // ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
+                    padding: const EdgeInsets.only(right: 8.0, left: 4.0),
                     child: TextFormField(
                       style: TextStyle(fontSize: 12),
                       controller: weightFromController,
@@ -754,7 +746,8 @@ class _ProductsPageState extends State<ProductsPage> {
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
-                        labelText: 'Weight From',
+                        labelText: 'Min',
+                        //'Weight From',
                         isDense: true,
                         fillColor: Colors.white,
                         filled: true,
@@ -771,42 +764,16 @@ class _ProductsPageState extends State<ProductsPage> {
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
-                        labelText: 'Weight To',
+                        labelText: 'Max',
+                        //'Weight To',
                         isDense: true,
                         fillColor: Colors.white,
                         filled: true,
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     left: 8.0,
-                  //   ),
-                  //   child: ElevatedButton(
-                  //     style: ButtonStyle(
-                  //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  //           RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(10.0),
-                  //       )),
-                  //       //foregroundColor: MaterialStateProperty.all(Colors.white),
-                  //       backgroundColor:
-                  //           MaterialStateProperty.all(Colors.grey.shade300),
-                  //     ),
-                  //     child: Text(
-                  //       'Apply',
-                  //       style:
-                  //           TextStyle(color: Colors.grey.shade700, fontSize: 12),
-                  //     ),
-                  //     onPressed: () {
-                  //       setState(() {
-                  //         params['page'] = 1;
-                  //         fetchProducts();
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, right: 4.0),
                     child: TextButton(
                       style: ButtonStyle(
                         shape:
@@ -820,6 +787,14 @@ class _ProductsPageState extends State<ProductsPage> {
                       ),
                       onPressed: () {
                         setState(() {
+                          final from =
+                              double.tryParse(weightFromController.text);
+                          final to = double.tryParse(weightToController.text);
+                          filter.weightRangeLower =
+                              from ?? filter.weightRange.lower;
+
+                          filter.weightRangeUpper =
+                              to ?? filter.weightRange.upper;
                           params['page'] = 1;
                           fetchProducts();
                         });

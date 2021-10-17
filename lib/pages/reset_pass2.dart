@@ -3,6 +3,9 @@ import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:charcode/charcode.dart';
+
+const int $asterisk = 0x2A;
 
 class ResetPasswordPage extends StatefulWidget {
   @override
@@ -39,6 +42,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 height: 250,
               ),
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 8),
 
@@ -55,13 +60,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   SizedBox(height: 8),
 
                   //
-                  Text(
-                    'Please fill the details and click the button',
-                    style: TextStyle(color: Colors.white70),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Text(
+                      //'Please fill the details and click the button',
+                      'Our Reset Password functionality is currently under development.\nZaveri Bazaar Team will reset your password manually',
+                      style: TextStyle(color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  Text(
-                    'Our team will connect with you and reset the password',
-                    style: TextStyle(color: Colors.white70),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Text(
+                      'Please Enter your registered mobile number and username our team will connect back with you shortly.\nSorry for the inconvenience caused.',
+                      //'Our team will connect with you and reset the password',
+                      style: TextStyle(color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
 
                   SizedBox(height: 32),
@@ -212,7 +229,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     setState(() => loading = true);
     final url = "https://api.whatsapp.com/send?phone=919321463461&text=" +
-        "ZaveriBazaar user : \n\n${usernameController.text} \n\n ${phController.text} \n\n wants to reset ////the passsword";
+        "ZAVERI BAZAAR BUYER APP USER ${usernameController.text} WANTS TO RESET HIS PASSWORD.\n\nTHE REGISTERED MOBILE NUMBER IS ${phController.text}";
 
     // Uri.encodeFull(shareLink);
     final encodeURL = Uri.encodeFull(url);

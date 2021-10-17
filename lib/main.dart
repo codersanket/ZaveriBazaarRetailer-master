@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+//import 'dart:js';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,7 @@ void main() async {
       routes: {
         '/main': (context) => MainPage(),
         '/login': (context) => LoginPage(),
+        //'/wholesalerView': (context) => WholesalerViewPage(),
       },
     ),
   );

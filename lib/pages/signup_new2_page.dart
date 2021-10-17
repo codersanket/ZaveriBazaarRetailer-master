@@ -486,7 +486,7 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
         color: Colors.grey.shade300,
         child: image == null
             ? Center(child: Text('Pick visiting card image'))
-            : Image(image: FileImage(image), fit: BoxFit.cover),
+            : Image(image: FileImage(image), fit: BoxFit.contain),
       ),
       onTap: pickImage,
     );
@@ -508,7 +508,12 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
           onSelected: (bool selected) {
             setState(() {
               if (selected) {
-                _filters.add(company);
+                if (_filters.length >= 1) {
+                  ToastService.error(
+                      _scaffoldKey, 'Please select only one dealer type');
+                } else {
+                  _filters.add(company);
+                }
               } else {
                 _filters.removeWhere((String name) {
                   return name == company;
@@ -603,11 +608,12 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
     if (_filters.isEmpty) {
       ToastService.error(_scaffoldKey, 'Please select dealer type');
       return;
-    } else if (_filters.length > 2) {
-      ToastService.error(
-          _scaffoldKey, 'Please select upto 3 dealer types only');
-      return;
     }
+    // else if (_filters.length > 2) {
+    //   ToastService.error(
+    //       _scaffoldKey, 'Please select upto 3 dealer types only');
+    //   return;
+    // }
 
     final Map<String, dynamic> data = {
       'name': nameController.text,
@@ -637,14 +643,6 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
         print("verifyOTP Error:" + err.toString());
       });
 
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (_) => LoginPage(
-      //       afterSignup: true,
-      //     ),
-      //   ),
-      // );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

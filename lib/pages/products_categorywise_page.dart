@@ -26,7 +26,8 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
   Map<String, dynamic> params = {'query': null};
 
   List<dynamic> _categories = [];
-  Map<String, dynamic> _newProducts;
+  List<Map<String, dynamic>> _newProducts;
+  bool isEmpty = false;
   var isLoading = true, _error;
 
   // filters
@@ -84,7 +85,17 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                 child: _error != null
                     ? Center(child: Text(_error.toString()))
                     : widget.whatsNew
-                        ? buildCarouselView()
+                        ? isEmpty || isLoading
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'No new Products have been uploaded today, pls check again later',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              )
+                            : buildCarouselView()
                         : buildGridView(),
               ),
             ],
@@ -225,6 +236,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
         if (mounted)
           setState(() {
             _newProducts = res["request"];
+            _newProducts.isEmpty ? isEmpty = true : isEmpty = false;
             _error = null;
             isLoading = false;
           });

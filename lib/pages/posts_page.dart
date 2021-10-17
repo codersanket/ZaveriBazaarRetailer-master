@@ -269,8 +269,8 @@ class _PostsPageState extends State<PostsPage> {
                   InkWell(
                     onTap: () {
                       post.firm.followId == null
-                          ? follow(firm: post.firm)
-                          : unfollow(firm: post.firm);
+                          ? follow(firm: post.firm, index: index)
+                          : unfollow(firm: post.firm, index: index);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -336,14 +336,15 @@ class _PostsPageState extends State<PostsPage> {
     );
   }
 
-  void follow({WholesalerFirm firm}) {
+  void follow({WholesalerFirm firm, int index}) {
     setState(() => isLoading = true);
-    FollowService.create(firmId: firm.id).then((res) {
+    FollowService.create(firmId: firm.id, mobile: firm.mobile).then((res) {
       ToastService.success(
         _scaffoldKey,
         'You are now following ${firm.name}!',
       );
-      setState(() => firm.followId = res.id);
+      //setState(() => firm.followId = res.id);
+      setState(() => _posts[index].firm.followId = res.id);
     }).catchError((err) {
       ToastService.error(_scaffoldKey, err.toString());
     }).whenComplete(() {
@@ -351,14 +352,15 @@ class _PostsPageState extends State<PostsPage> {
     });
   }
 
-  void unfollow({WholesalerFirm firm}) {
+  void unfollow({WholesalerFirm firm, int index}) {
     setState(() => isLoading = true);
     FollowService.delete(firm.followId).then((res) {
       ToastService.success(
         _scaffoldKey,
         'You are no longer following ${firm.name}!',
       );
-      setState(() => firm.followId = null);
+      //setState(() => firm.followId = null);
+      setState(() => _posts[index].firm.followId = null);
     }).catchError((err) {
       ToastService.error(_scaffoldKey, err.toString());
     }).whenComplete(() {
@@ -383,7 +385,7 @@ class _PostsPageState extends State<PostsPage> {
       if (mounted)
         setState(() {
           _posts.addAll(posts);
-          print(_posts[0]);
+          //print(_posts[0]);
           _error = null;
           isLoading = false;
         });
