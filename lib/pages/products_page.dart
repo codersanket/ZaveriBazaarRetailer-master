@@ -595,6 +595,7 @@ class _ProductsPageState extends State<ProductsPage> {
   searchProducts(String keyword) {
     params['query'] = keyword;
     params['page'] = 1;
+    print('Search KeyWord:-$keyword');
     fetchProducts();
   }
 
@@ -796,6 +797,8 @@ class _ProductsPageState extends State<ProductsPage> {
                           filter.weightRangeUpper =
                               to ?? filter.weightRange.upper;
                           params['page'] = 1;
+                          print('Min value:-'+weightFromController.text.toString());
+                          print('Max value:-'+weightToController.text.toString());
                           fetchProducts();
                         });
                       },
