@@ -14,6 +14,7 @@ import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 //import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:sonaar_retailer/services/userlog_service.dart';
+import 'package:sonaar_retailer/services/wholesaler_rating_service.dart';
 //import 'package:sonaar_retailer/services/wholesaler_rating_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,9 +45,8 @@ class _ProductViewState extends State<ProductViewPage> {
 
   PageController pageController;
   User authUser;
+  dynamic rating;
   //bool isLoading = false;
-  //Map<String, dynamic> wholesaler;
-  //var error;
 
   @override
   void initState() {
@@ -54,7 +54,16 @@ class _ProductViewState extends State<ProductViewPage> {
 
     authUser = AuthService.user;
     pageController = PageController(initialPage: widget.index);
-    //fetchWholesaler(products[widget.index].firm.id);
+  }
+
+  void getRating(String id) async {
+    WholesalerRatingService.getRatingbyWholesalerId(id).then((value) {
+      setState(() {
+        rating = value;
+      });
+    }).catchError((err) {
+      //ToastService.error(scaffoldKey, err.toString());
+    });
   }
 
   @override
@@ -64,19 +73,25 @@ class _ProductViewState extends State<ProductViewPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Product details')),
       body: PageView(
-        // onPageChanged: (index) {
-        //   fetchWholesaler(products[index].firm.id);
-        // },
+        onPageChanged: (index) {
+          setState(() {
+            getRating(products[index].wholesalerFirmId);
+          });
+
+          //getRating(products[index].wholesalerFirmId);
+        },
         controller: pageController,
         children: products.map((product) {
           final heroTag = 'product - ${product.id}';
+          //getRating(product.wholesalerFirmId);
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -110,6 +125,7 @@ class _ProductViewState extends State<ProductViewPage> {
                               padding:
                                   const EdgeInsets.only(left: 10, right: 2),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   GestureDetector(
                                       onTap: () {
@@ -134,21 +150,20 @@ class _ProductViewState extends State<ProductViewPage> {
                                           ),
                                         ),
                                       )),
-                                  // ratings == null
-                                  //     ? Text(" ")
-                                  //     :
-                                  //     RatingBarIndicator(
-                                  //         itemCount: 5,
-                                  //         rating: double.tryParse(
-                                  //             findRatings(ratings, product)),
-                                  //         itemSize: 12,
-                                  //         unratedColor: Colors.grey[700],
-                                  //         itemBuilder: (BuildContext context,
-                                  //             int index) {
-                                  //           return Icon(Icons.star,
-                                  //               color: Colors.yellow.shade600);
-                                  //         },
-                                  //       ),
+                                  rating == null
+                                      ? Text(" ")
+                                      : RatingBarIndicator(
+                                          itemCount: 5,
+                                          rating: double.parse(
+                                              rating[0]["average"]),
+                                          itemSize: 14,
+                                          unratedColor: Colors.grey[700],
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Icon(Icons.star,
+                                                color: Colors.yellow.shade600);
+                                          },
+                                        ),
                                 ],
                               ),
                             ),
@@ -531,45 +546,4 @@ class _ProductViewState extends State<ProductViewPage> {
     });
   }
 
-  // String findRatings(List<Map<String, dynamic>> ratings, Product product) {
-  //   var temp;
-  //   temp = ratings.indexWhere(
-  //     (element) => product.firm.name.contains(element["name"]),
-  //   );
-  //   return temp != -1 ? temp.toString() : "0";
-  // }
-
-  // void fetchWholesaler(var id) {
-  //   setState(() => isLoading = true);
-
-  //   WholesalerRatingService.getWholesalerById(id).then((res) {
-  //     setState(() {
-  //       wholesaler = res;
-  //       print("////////////////////////////");
-  //       print(wholesaler);
-  //       error = null;
-  //     });
-  //   }).catchError((err) {
-  //     setState(() => error = err);
-  //   }).whenComplete(() {
-  //     setState(() => isLoading = false);
-  //   });
-  // }
-}
-
-// RatingBarIndicator(
-//                                         itemCount: 5,
-//                                         rating: double.tryParse(ratings
-//                                             .firstWhere(
-//                                                 (element) => product.firm.name
-//                                                     .contains(element["name"]),
-//                                                 orElse: () => null)
-//                                             .toString() == null ? : ['rating']['average'],),
-//                                         itemSize: 12,
-//                                         unratedColor: Colors.grey[350],
-//                                         itemBuilder:
-//                                             (BuildContext context, int index) {
-//                                           return Icon(Icons.star,
-//                                               color: Colors.yellow.shade600);
-//                                         },
-//                                       ),
+  
