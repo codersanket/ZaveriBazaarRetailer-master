@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sonaar_retailer/pages/products_page.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
 import 'package:sonaar_retailer/pages/widgets/product_filters.dart' as PF;
-import 'package:sonaar_retailer/services/Exception.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/user_tracking.dart';
 
@@ -28,7 +27,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
   Map<String, dynamic> params = {'query': null};
 
   List<dynamic> _categories = [];
-  List<Map<String, dynamic>> _newProducts;
+  List<dynamic> _newProducts;
   bool isEmpty = false;
   var isLoading = true, _error;
 
@@ -90,10 +89,11 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                         ? isEmpty || isLoading
                             ? Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Text(
-                                    'No new Products have been uploaded today, pls check again later',
+                                    'No new products have been uploaded today.\nPlease check again later',
                                     style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               )
@@ -160,10 +160,13 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       child: GridTile(
         child: GestureDetector(
           onTap: () {
+<<<<<<< HEAD
             print('Main Category id:-' +
                 category['id'].toString() +
                 '\nCategory Name:-' +
                 category['name'].toString());
+=======
+>>>>>>> b545fe0f6d8a60dd4858b4a69bddef1273c1c6df
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -242,14 +245,18 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
         if (mounted)
           setState(() {
             _newProducts = res["request"];
-            _newProducts.isEmpty ? isEmpty = true : isEmpty = false;
+            if (_newProducts != null) {
+              _newProducts.isEmpty ? isEmpty = true : isEmpty = false;
+            }
             _error = null;
             isLoading = false;
           });
       }).catchError((err) {
         if (mounted)
           setState(() {
-            _newProducts.clear();
+            if (_newProducts != null) {
+              _newProducts.clear();
+            }
             _error = err;
             isLoading = false;
           });

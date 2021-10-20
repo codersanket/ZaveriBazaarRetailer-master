@@ -19,6 +19,22 @@ class WholesalerRatingService {
       return Future.error(_handleError(e));
     }
   }
+  
+  
+  static Future getRatingbyWholesalerId(String id) async {
+    try {
+      var params = {'wholesaler_firms_id': id};
+      var response = await DioProvider()
+          .dio()
+          .get('/wholesaler-ratings/wholesaler_rate/', queryParameters: params);
+      //print(response.data[0]);
+      //print(response.data);
+      //var res = response.data;
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
 
   /// Get rating by id
   static Future<WholesalerRating> getById(String id) async {
