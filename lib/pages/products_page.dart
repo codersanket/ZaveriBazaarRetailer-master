@@ -55,6 +55,7 @@ class _ProductsPageState extends State<ProductsPage> {
   bool vWeightClearButton = false;
 
   final weightFormKey = GlobalKey<FormState>();
+  final searchController=TextEditingController();
   final weightFromController = TextEditingController();
   final weightToController = TextEditingController();
 
@@ -66,6 +67,7 @@ class _ProductsPageState extends State<ProductsPage> {
     super.initState();
 
     searchFocusNode = new FocusNode();
+    searchController.text=filter.searchkey.toString();
     weightFromController.text = filter.weightRangeLower.toString();
     weightToController.text = filter.weightRangeUpper.toString();
 
@@ -115,6 +117,7 @@ class _ProductsPageState extends State<ProductsPage> {
               child: AutoCompleteTextField(
                 key: searchKey,
                 focusNode: searchFocusNode,
+                controller: searchController,
                 suggestions: tags,
                 clearOnSubmit: false,
                 itemBuilder: (BuildContext context, String suggestion) {

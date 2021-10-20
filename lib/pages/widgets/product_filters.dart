@@ -25,6 +25,7 @@ class ProductFiltersState extends State<ProductFilters> {
   int expandedItem = -1;
 
   final weightFormKey = GlobalKey<FormState>();
+  final searchController=TextEditingController();
   final weightFromController = TextEditingController();
   final weightToController = TextEditingController();
 
@@ -59,10 +60,14 @@ class ProductFiltersState extends State<ProductFilters> {
 
                     final to = double.tryParse(weightToController.text);
                     filter.weightRangeUpper = to ?? filter.weightRange.upper;
-                    Tracking.getFilterData('not', '00', '00').then((res) {
-                      print(filter.subcategories1.toString() +
-                         'Min Weight:-'+ weightFromController.text+'Max weight:-'+weightToController.text );
-                    });
+                    Tracking.getFilterData(
+                        filter.subcategories1.toString(),
+                        filter.categoryId,
+                        weightFromController.text,
+                        weightToController.text,
+                        searchController.text,
+                        filter.cities1.toString(),
+                        filter.types1.toString());
                     Navigator.pop(context, 'filter');
                   },
                 ),
@@ -85,7 +90,6 @@ class ProductFiltersState extends State<ProductFilters> {
                           groupValue: filter.categoryId,
                           onChanged: (val) {
                             setState(() => filter.categoryId = val);
-                            print('Category:-$val');
                             onCategoryChange(val);
                           },
                         );
@@ -290,7 +294,6 @@ class ProductFiltersState extends State<ProductFilters> {
   onCategoryChange(String categoryId) async {
     try {
       filter.subcategories = await ProductService.getSubcategories(categoryId);
-      print('Category:-' + filter.subcategories.toString());
     } catch (ignored) {}
 
     setState(() {});
@@ -326,4 +329,5 @@ class Filter {
   WeightRange weightRange = WeightRange(lower: 0, upper: 0);
   // double weightRangeValue = 0;
   double weightRangeLower = 0, weightRangeUpper = 0;
+  String searchkey='none';
 }

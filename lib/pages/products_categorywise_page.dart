@@ -160,13 +160,10 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-<<<<<<< HEAD
             print('Main Category id:-' +
                 category['id'].toString() +
                 '\nCategory Name:-' +
                 category['name'].toString());
-=======
->>>>>>> b545fe0f6d8a60dd4858b4a69bddef1273c1c6df
             Navigator.push(
               context,
               MaterialPageRoute(

@@ -16,6 +16,6 @@ public class MainActivity extends FlutterActivity {
         GeneratedPluginRegistrant.registerWith(this);
 
         // for disabling screenshot throughout the app
-        getWindow().addFlags(LayoutParams.FLAG_SECURE);
+       // getWindow().addFlags(LayoutParams.FLAG_SECURE);
     }
 }

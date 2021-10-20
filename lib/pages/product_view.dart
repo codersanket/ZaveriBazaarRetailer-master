@@ -38,6 +38,7 @@ class ProductViewPage extends StatefulWidget {
 
 class _ProductViewState extends State<ProductViewPage> {
   final List<Product> products;
+
   //final List<WholesalerRating> ratings;
   //final List<Map<String, dynamic>> ratings;
 
@@ -46,6 +47,7 @@ class _ProductViewState extends State<ProductViewPage> {
   PageController pageController;
   User authUser;
   dynamic rating;
+
   //bool isLoading = false;
 
   @override
@@ -108,22 +110,23 @@ class _ProductViewState extends State<ProductViewPage> {
                               ),
                               onTap: product.firm.imageUrl != null
                                   ? () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => ImageView(
-                                            imageUrl: product.firm.imageUrl,
-                                            heroTag: 'Wholesaler_firm',
-                                          ),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        ImageView(
+                                          imageUrl: product.firm.imageUrl,
+                                          heroTag: 'Wholesaler_firm',
                                         ),
-                                      );
-                                    }
+                                  ),
+                                );
+                              }
                                   : null,
                             ),
                             //SizedBox(width: 10),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 10, right: 2),
+                              const EdgeInsets.only(left: 10, right: 2),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -131,10 +134,11 @@ class _ProductViewState extends State<ProductViewPage> {
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (_) => WholesalerViewPage(
-                                              wholesalerId:
+                                            builder: (_) =>
+                                                WholesalerViewPage(
+                                                  wholesalerId:
                                                   product.wholesalerFirmId,
-                                            ),
+                                                ),
                                           ),
                                         );
                                       },
@@ -153,17 +157,17 @@ class _ProductViewState extends State<ProductViewPage> {
                                   rating == null
                                       ? Text(" ")
                                       : RatingBarIndicator(
-                                          itemCount: 5,
-                                          rating: double.parse(
-                                              rating[0]["average"]),
-                                          itemSize: 14,
-                                          unratedColor: Colors.grey[700],
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Icon(Icons.star,
-                                                color: Colors.yellow.shade600);
-                                          },
-                                        ),
+                                    itemCount: 5,
+                                    rating: double.parse(
+                                        rating[0]["average"]),
+                                    itemSize: 14,
+                                    unratedColor: Colors.grey[700],
+                                    itemBuilder: (BuildContext context,
+                                        int index) {
+                                      return Icon(Icons.star,
+                                          color: Colors.yellow.shade600);
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -174,9 +178,9 @@ class _ProductViewState extends State<ProductViewPage> {
                             IconButton(
                               onPressed: () {
                                 UserLogService.userLogById(
-                                        products[pageController.page.toInt()]
-                                            .wholesalerFirmId,
-                                        "Product details message")
+                                    products[pageController.page.toInt()]
+                                        .wholesalerFirmId,
+                                    "Product details message")
                                     .then((res) {
                                   print("userLogById Success");
                                 }).catchError((err) {
@@ -199,9 +203,9 @@ class _ProductViewState extends State<ProductViewPage> {
                             IconButton(
                               onPressed: () {
                                 UserLogService.userLogById(
-                                        products[pageController.page.toInt()]
-                                            .wholesalerFirmId,
-                                        "Product details call")
+                                    products[pageController.page.toInt()]
+                                        .wholesalerFirmId,
+                                    "Product details call")
                                     .then((res) {
                                   print("userLogById Success");
                                 }).catchError((err) {
@@ -209,7 +213,8 @@ class _ProductViewState extends State<ProductViewPage> {
                                 });
                                 // call firm
                                 launch(
-                                    "tel://${products[pageController.page.toInt()].firm.mobile}");
+                                    "tel://${products[pageController.page
+                                        .toInt()].firm.mobile}");
                               },
                               icon: Padding(
                                   padding: const EdgeInsets.all(2.0),
@@ -276,11 +281,12 @@ class _ProductViewState extends State<ProductViewPage> {
                             child: CachedNetworkImage(
                               imageUrl: product.thumbUrl,
                               fit: BoxFit.contain,
-                              errorWidget: (c, u, e) => Image.asset(
-                                "images/ic_launcher.png",
-                                fit: BoxFit.contain,
-                                alignment: Alignment.topCenter,
-                              ),
+                              errorWidget: (c, u, e) =>
+                                  Image.asset(
+                                    "images/ic_launcher.png",
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.topCenter,
+                                  ),
                               //   Icon(Icons.warning, color: Colors.white),
                               // placeholder: (c, u) => Center(
                               //     child: CircularProgressIndicator(
@@ -292,7 +298,8 @@ class _ProductViewState extends State<ProductViewPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => ImageView(
+                                builder: (_) =>
+                                    ImageView(
                                       imageUrl: product.imageUrl,
                                       heroTag: heroTag,
                                     )),
@@ -322,10 +329,10 @@ class _ProductViewState extends State<ProductViewPage> {
                                   padding: const EdgeInsets.all(5.0),
                                   child: Text(
                                       product.createdAt
-                                              .substring(0, 10)
-                                              .split('-')
-                                              .reversed
-                                              .join('-') ??
+                                          .substring(0, 10)
+                                          .split('-')
+                                          .reversed
+                                          .join('-') ??
                                           "-",
                                       style: TextStyle(fontSize: 12)),
                                 )
@@ -420,35 +427,35 @@ class _ProductViewState extends State<ProductViewPage> {
     List tagList = value.split(",");
     return value.isEmpty
         ? Expanded(
-            child: SizedBox(
-            width: double.infinity,
-          ))
+        child: SizedBox(
+          width: double.infinity,
+        ))
         : Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(label,
-                      style: TextStyle(fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: tagList.length != 1
-                        ? Wrap(
-                            spacing: 2.0,
-                            alignment: WrapAlignment.spaceBetween,
-                            children: List.generate(tagList.length, (index) {
-                              return ChoiceChip(
-                                  label: Text(tagList[index]), selected: false);
-                            }),
-                          )
-                        : ChoiceChip(label: Text(value), selected: false)),
-              ],
-            ),
-          );
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(label,
+                style: TextStyle(fontWeight: FontWeight.w500)),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: tagList.length != 1
+                  ? Wrap(
+                spacing: 2.0,
+                alignment: WrapAlignment.spaceBetween,
+                children: List.generate(tagList.length, (index) {
+                  return ChoiceChip(
+                      label: Text(tagList[index]), selected: false);
+                }),
+              )
+                  : ChoiceChip(label: Text(value), selected: false)),
+        ],
+      ),
+    );
   }
 
   Widget buildTableRowGrid(String label1, String value1, label2, value2) {
@@ -464,52 +471,52 @@ class _ProductViewState extends State<ProductViewPage> {
         Expanded(
           child: value1 == "-"
               ? SizedBox(
-                  width: double.infinity,
-                )
+            width: double.infinity,
+          )
               : Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(label1,
-                            style: TextStyle(fontWeight: FontWeight.w500)),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            value1,
-                          )),
-                    ],
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(label1,
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                 ),
+                Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      value1,
+                    )),
+              ],
+            ),
+          ),
         ),
         Expanded(
           child: value2 == "-"
               ? SizedBox(
-                  width: double.infinity,
-                )
+            width: double.infinity,
+          )
               : Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(label2,
-                            style: TextStyle(fontWeight: FontWeight.w500)),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            value2,
-                          )),
-                    ],
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(label2,
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                 ),
+                Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      value2,
+                    )),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -546,4 +553,4 @@ class _ProductViewState extends State<ProductViewPage> {
     });
   }
 
-  
+}
