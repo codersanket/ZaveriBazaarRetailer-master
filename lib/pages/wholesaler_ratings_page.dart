@@ -155,17 +155,20 @@ class _WholesalerRatingsPageState extends State<WholesalerRatingsPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        leading: Hero(
-          tag: 'rating${rating.id}',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Image(
-              width: 40,
-              height: 40,
-              fit: BoxFit.cover,
-              image: rating.thumbUrl != null
-                  ? CachedNetworkImageProvider(rating.thumbUrl)
-                  : AssetImage('images/placeholder.png'),
+        leading: SizedBox(
+          width: 40,
+          child: Hero(
+            tag: 'rating${rating.id}',
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image(
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+                image: rating.thumbUrl != null
+                    ? CachedNetworkImageProvider(rating.thumbUrl)
+                    : AssetImage('images/placeholder.png'),
+              ),
             ),
           ),
         ),
