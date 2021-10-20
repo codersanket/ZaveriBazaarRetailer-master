@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sonaar_retailer/models/category.dart';
 import 'package:sonaar_retailer/models/city.dart';
@@ -6,6 +8,7 @@ import 'package:sonaar_retailer/models/subcategory.dart';
 import 'package:sonaar_retailer/models/weight_range.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart' as RS;
+import 'package:sonaar_retailer/services/user_tracking.dart';
 
 class ProductFilters extends StatefulWidget {
   final Filter filter;
@@ -56,7 +59,10 @@ class ProductFiltersState extends State<ProductFilters> {
 
                     final to = double.tryParse(weightToController.text);
                     filter.weightRangeUpper = to ?? filter.weightRange.upper;
-
+                    Tracking.getFilterData('not', '00', '00').then((res) {
+                      print(filter.subcategories1.toString() +
+                         'Min Weight:-'+ weightFromController.text+'Max weight:-'+weightToController.text );
+                    });
                     Navigator.pop(context, 'filter');
                   },
                 ),
@@ -79,6 +85,7 @@ class ProductFiltersState extends State<ProductFilters> {
                           groupValue: filter.categoryId,
                           onChanged: (val) {
                             setState(() => filter.categoryId = val);
+                            print('Category:-$val');
                             onCategoryChange(val);
                           },
                         );
@@ -98,7 +105,23 @@ class ProductFiltersState extends State<ProductFilters> {
                           value: s.checked,
                           title: Text(s.name),
                           onChanged: (bool checked) {
-                            setState(() => s.checked = checked);
+                            //  setState(() => s.checked = checked);
+                            setState(() {
+                              s.checked = checked;
+                              if (checked == true) {
+                                // print("Name-"+s.name);
+                                filter.subcategories1.add(s.name);
+
+                                print("SubCategories Name-" +
+                                    jsonEncode(filter.subcategories1));
+                              } else if (checked == false) {
+                                //print("Name-"+s.name);
+                                filter.subcategories1.remove(s.name);
+
+                                print("SubCategories Name-" +
+                                    jsonEncode(filter.subcategories1));
+                              }
+                            });
                           },
                         );
                       }).toList(),
@@ -117,7 +140,19 @@ class ProductFiltersState extends State<ProductFilters> {
                           value: c.checked,
                           title: Text(c.name),
                           onChanged: (bool checked) {
-                            setState(() => c.checked = checked);
+                            //  setState(() => c.checked = checked);
+                            setState(() {
+                              c.checked = checked;
+                              if (checked == true) {
+                                filter.cities1.add(c.name);
+                                print("Cities Name-" +
+                                    jsonEncode(filter.cities1));
+                              } else if (checked == false) {
+                                filter.cities1.remove(c.name);
+                                print("Cities Name-" +
+                                    jsonEncode(filter.cities1));
+                              }
+                            });
                           },
                         );
                       }).toList(),
@@ -135,7 +170,19 @@ class ProductFiltersState extends State<ProductFilters> {
                           value: t.checked,
                           title: Text(t.name),
                           onChanged: (bool checked) {
-                            setState(() => t.checked = checked);
+                            // setState(() => t.checked = checked);
+                            setState(() {
+                              t.checked = checked;
+                              if (checked == true) {
+                                filter.types1.add(t.name);
+                                print("Product type Name-" +
+                                    jsonEncode(filter.types1));
+                              } else if (checked == false) {
+                                filter.types1.remove(t.name);
+                                print("Product type Name-" +
+                                    jsonEncode(filter.types1));
+                              }
+                            });
                           },
                         );
                       }).toList(),
@@ -243,6 +290,7 @@ class ProductFiltersState extends State<ProductFilters> {
   onCategoryChange(String categoryId) async {
     try {
       filter.subcategories = await ProductService.getSubcategories(categoryId);
+      print('Category:-' + filter.subcategories.toString());
     } catch (ignored) {}
 
     setState(() {});
@@ -255,15 +303,26 @@ class ProductFiltersState extends State<ProductFilters> {
     });
     return count;
   }
+
+  getItems(var list) {
+    list.forEach((item) {
+      if (item.checked) {
+        print('item' + item.toString());
+      }
+    });
+  }
 }
 
 class Filter {
   // List<Melting> meltings = [];
   List<ProductType> types = [];
+  List<String> types1 = [];
   List<Category> categories = [];
   String categoryId;
   List<Subcategory> subcategories = [];
+  List<String> subcategories1 = [];
   List<City> cities = [];
+  List<String> cities1 = [];
   WeightRange weightRange = WeightRange(lower: 0, upper: 0);
   // double weightRangeValue = 0;
   double weightRangeLower = 0, weightRangeUpper = 0;

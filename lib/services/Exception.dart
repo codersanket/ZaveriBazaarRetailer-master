@@ -5,16 +5,18 @@ import 'auth_service.dart';
 
 class UserException1 {
   /// user Exception
-  static Future<void> userException(String vendorId, String type) async {
+  static Future<void> userException(String errorType, String errorMsg) async {
     try {
       AuthService.getUser().then((res) async {
         var response = await DioProvider().dio().post(
-          '/users/exception',
+          '/m/error_log',
+          //'/users/exception',
           data: {
+            'number': res.mobile,
+            'name':res.name,
+            'error_type': errorType,
             'user_id': res.id,
-            'mobile_no': res.mobile,
-            'other': vendorId,
-            'type': type,
+            'error_message': errorMsg,
           },
         );
 
@@ -31,25 +33,4 @@ class UserException1 {
     return ErrorHandler.handleError(e);
   }
 
-  ///filter data
-  static Future<void> getFilterData() async {
-    try {
-      AuthService.getUser().then((res) async {
-        var response = await DioProvider().dio().post(
-          '/users/exception',
-          data: {
-            'user_id': res.id,
-            'name': res.name,
-            'mobile_no': res.mobile,
-          },
-        );
-
-        return Future.value();
-      }).catchError((err) {
-        print(err);
-      });
-    } catch (e) {
-      return Future.error(_handleError(e));
-    }
-  }
 }

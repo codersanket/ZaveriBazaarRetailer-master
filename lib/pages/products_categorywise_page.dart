@@ -5,6 +5,7 @@ import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
 import 'package:sonaar_retailer/pages/widgets/product_filters.dart' as PF;
 import 'package:sonaar_retailer/services/Exception.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
+import 'package:sonaar_retailer/services/user_tracking.dart';
 
 class ProductsCategorywisePage extends StatefulWidget {
   final onlyBookmarked;
@@ -159,8 +160,10 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-            print('Main Category id:-' + category['id'].toString());
-            UserException1.getFilterData();
+            print('Main Category id:-' +
+                category['id'].toString() +
+                '\nCategory Name:-' +
+                category['name'].toString());
             Navigator.push(
               context,
               MaterialPageRoute(
