@@ -9,8 +9,11 @@ import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
+import 'package:sonaar_retailer/services/user_tracking.dart';
 import 'package:sonaar_retailer/services/wholesaler_rating_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+
 
 class ProductsPage extends StatefulWidget {
   final WholesalerFirm firm;
@@ -55,7 +58,7 @@ class _ProductsPageState extends State<ProductsPage> {
   bool vWeightClearButton = false;
 
   final weightFormKey = GlobalKey<FormState>();
-  final searchController=TextEditingController();
+  final searchController = TextEditingController();
   final weightFromController = TextEditingController();
   final weightToController = TextEditingController();
 
@@ -67,7 +70,6 @@ class _ProductsPageState extends State<ProductsPage> {
     super.initState();
 
     searchFocusNode = new FocusNode();
-    searchController.text=filter.searchkey.toString();
     weightFromController.text = filter.weightRangeLower.toString();
     weightToController.text = filter.weightRangeUpper.toString();
 
@@ -97,7 +99,11 @@ class _ProductsPageState extends State<ProductsPage> {
               if (searchVisible && params['query'] != null) {
                 searchProducts(null);
               }
-              setState(() => searchVisible = !searchVisible);
+              //setState(() => searchVisible = !searchVisible);
+              setState(() {
+                searchVisible = !searchVisible;
+                filter.searchkey=searchController.text.toString();
+              });
             },
           ),
           // IconButton(
@@ -800,8 +806,10 @@ class _ProductsPageState extends State<ProductsPage> {
                           filter.weightRangeUpper =
                               to ?? filter.weightRange.upper;
                           params['page'] = 1;
-                          print('Min value:-'+weightFromController.text.toString());
-                          print('Max value:-'+weightToController.text.toString());
+                          print('Min value:-' +
+                              weightFromController.text.toString());
+                          print('Max value:-' +
+                              weightToController.text.toString());
                           fetchProducts();
                         });
                       },

@@ -25,7 +25,6 @@ class ProductFiltersState extends State<ProductFilters> {
   int expandedItem = -1;
 
   final weightFormKey = GlobalKey<FormState>();
-  final searchController=TextEditingController();
   final weightFromController = TextEditingController();
   final weightToController = TextEditingController();
 
@@ -34,7 +33,6 @@ class ProductFiltersState extends State<ProductFilters> {
   @override
   void initState() {
     super.initState();
-
     weightFromController.text = filter.weightRangeLower.toString();
     weightToController.text = filter.weightRangeUpper.toString();
   }
@@ -64,13 +62,13 @@ class ProductFiltersState extends State<ProductFilters> {
                         filter.subcategories1.toString(),
                         filter.categoryId,
                         weightFromController.text,
-                        weightToController.text,
-                        searchController.text,
+                        weightToController.text,filter.searchkey,
                         filter.cities1.toString(),
                         filter.types1.toString());
                     Navigator.pop(context, 'filter');
                   },
-                ),
+
+                )
               ),
             ),
             Expanded(
@@ -329,5 +327,5 @@ class Filter {
   WeightRange weightRange = WeightRange(lower: 0, upper: 0);
   // double weightRangeValue = 0;
   double weightRangeLower = 0, weightRangeUpper = 0;
-  String searchkey='none';
+  String searchkey='Search something';
 }
