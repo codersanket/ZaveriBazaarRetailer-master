@@ -2,6 +2,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/pages/widgets/product_filters.dart' as PF;
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
@@ -9,11 +10,8 @@ import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
-import 'package:sonaar_retailer/services/user_tracking.dart';
-import 'package:sonaar_retailer/services/wholesaler_rating_service.dart';
+
 import 'package:url_launcher/url_launcher.dart';
-
-
 
 class ProductsPage extends StatefulWidget {
   final WholesalerFirm firm;
@@ -45,7 +43,6 @@ class _ProductsPageState extends State<ProductsPage> {
   List<Product> _products = [];
 
   List<Product> temp = [];
-
   // filters
   PF.Filter filter = PF.Filter();
 
@@ -64,11 +61,12 @@ class _ProductsPageState extends State<ProductsPage> {
 
   //for carousel
   int _currentIndex = 0;
+  User authUser;
 
   @override
   void initState() {
     super.initState();
-
+    authUser = AuthService.user;
     searchFocusNode = new FocusNode();
     weightFromController.text = filter.weightRangeLower.toString();
     weightToController.text = filter.weightRangeUpper.toString();
@@ -102,7 +100,7 @@ class _ProductsPageState extends State<ProductsPage> {
               //setState(() => searchVisible = !searchVisible);
               setState(() {
                 searchVisible = !searchVisible;
-                filter.searchkey=searchController.text.toString();
+                filter.searchkey = searchController.text.toString();
               });
             },
           ),
@@ -118,7 +116,7 @@ class _ProductsPageState extends State<ProductsPage> {
           Visibility(
             visible: searchVisible,
             child: Card(
-              margin: EdgeInsets.all(8.0),
+              margin: EdgeInsets.only(left: 8, right: 8, top: 8),
               elevation: 2,
               child: AutoCompleteTextField(
                 key: searchKey,
@@ -219,7 +217,7 @@ class _ProductsPageState extends State<ProductsPage> {
               ],
             ),
             subtitle: Padding(
-              padding: EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: 0.0),
               child: _buildWeightForm(),
             ),
           ),
@@ -579,7 +577,11 @@ class _ProductsPageState extends State<ProductsPage> {
 
   void whatsappSupport() {
     final mobile = AuthService.user.preference.productWhatsapp;
-    launch("https://api.whatsapp.com/send?phone=91$mobile");
+    final firmName = authUser.retailerFirmName;
+    final city = authUser.city;
+    launch("https://api.whatsapp.com/send?phone=919321463461&text=" +
+        "Hi I am a Zaveri bazaar buyer app user my name is $firmName from $city"
+            " I am searching for some product can you please help me.");
   }
 
   void clearWeightFilter() {

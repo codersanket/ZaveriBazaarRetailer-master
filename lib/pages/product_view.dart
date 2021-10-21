@@ -406,7 +406,8 @@ class _ProductViewState extends State<ProductViewPage> {
 
     try {
       final url = "https://api.whatsapp.com/send?phone=91$mobile&text=" +
-          "ZaveriBazaar B2B platform\n\n$firmName from $city has an enquiry regarding your product. Click on the below link to view the product details\n\n$shareLink";
+          "ZaveriBazaar B2B platform\n\n$firmName from $city has an enquiry regarding your product."
+              " Click on the below link to view the product details\n\n$shareLink";
       // Uri.encodeFull(shareLink);
       final encodeURL = Uri.encodeFull(url);
 

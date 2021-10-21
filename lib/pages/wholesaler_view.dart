@@ -1,17 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/posts_page.dart';
 import 'package:sonaar_retailer/pages/products_page.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/follow_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:sonaar_retailer/services/userlog_service.dart';
 import 'package:sonaar_retailer/services/wholesaler_firm_service.dart';
 import 'cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+User authUser;
 class WholesalerViewPage extends StatefulWidget {
   final String wholesalerId;
   final Function(WholesalerFirm wholesaler) onChange;
@@ -29,11 +31,10 @@ class _WholesalerViewState extends State<WholesalerViewPage> {
   WholesalerFirm firm;
   bool isLoading = false;
   var error;
-
   @override
   void initState() {
     super.initState();
-
+    authUser = AuthService.user;
     fetchWholesaler();
   }
 
@@ -495,7 +496,12 @@ class Profile extends StatelessWidget {
       print("userLogById Error:" + err.toString());
     });
 
-    launch("https://api.whatsapp.com/send?phone=91${firm.mobile}");
+    //launch("https://api.whatsapp.com/send?phone=91${firm.mobile}");
+    final firmName = authUser.retailerFirmName;
+    final city = authUser.city;
+    launch("https://api.whatsapp.com/send?phone=91${firm.mobile}&text=" +
+        "Hi my firm name is\n\n $firmName from $city I got your number from Zaveri bazaar app. "
+            "I am interested in your product range and would like to know more details.");
   }
 
   call() {
