@@ -1,12 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sonaar_retailer/models/bullion_city.dart';
 import 'package:sonaar_retailer/models/bullion_vendor.dart';
 import 'package:sonaar_retailer/models/get_live_price.dart';
+import 'package:sonaar_retailer/models/product.dart';
+import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/bullion_service.dart';
+import 'package:sonaar_retailer/services/product_service.dart';
+import 'package:sonaar_retailer/services/toast_service.dart';
 
 import 'bullion_price_controller.dart';
 import 'bullion_price_helper.dart';
@@ -20,7 +26,7 @@ class BullionCityPage extends StatefulWidget {
 
 class _BullionCityPageState extends State<BullionCityPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var isLoading = true, _error;
+  var isLoading = true, _error,_prodError,_postError;
   List<BullionCity> _cityList = [];
   BullionService bullionService;
 
@@ -36,6 +42,13 @@ class _BullionCityPageState extends State<BullionCityPage> {
   BullionPriceController _bullionPriceController =
       Get.put(BullionPriceController());
 
+  //for carousel
+  int _currentProductIndex = 0;
+  int _currentPostIndex = 0;
+  User authUser;
+  List<Product> productList = [];
+  List<Product> postList = [];
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +61,8 @@ class _BullionCityPageState extends State<BullionCityPage> {
     }).catchError((err) {
       print(err);
     });
+
+    fetchTopProducts();
   }
 
   @override
@@ -493,10 +508,262 @@ class _BullionCityPageState extends State<BullionCityPage> {
               },
             ),
           ),
+        
+          // top products label &
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+            child: Text(
+              'Top Products',
+              style:
+                  TextStyle(fontSize: 16, color: Theme.of(context).accentColor),
+            ),
+          ),
+
+          // top products carousel
+          Visibility(
+            visible: productList.isNotEmpty && _prodError==null,
+            child: Card(
+              color :Colors.grey.shade200,
+              margin: EdgeInsets.all(10),
+              child: _buildProductCarousel(),)),
         ],
       ),
     );
   }
+
+//Product Carousel
+Widget _buildProductCarousel() {
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: true,
+            height: 400,
+            // enlargeCenterPage: true,
+            //scrollDirection: Axis.vertical,
+            onPageChanged: (index, reason) {
+              setState(
+                () {
+                  _currentProductIndex = index;
+                },
+              );
+            },
+          ),
+          items: productList
+              .map((item) => Card(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (_) => ProductViewPage(
+                        //         products: _products,
+                        //         index: index,
+                        //         onChange: (product) {
+                        //           setState(() => _products[index] = product);
+                        //         },
+                        //       ),
+                        //     ));
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: CachedNetworkImage(
+                                  imageUrl: item.imageUrl,
+                                  fit: BoxFit.contain,
+                                  alignment: Alignment.topCenter,
+                                  errorWidget: (c, u, e) => Image.asset(
+                                    "images/ic_launcher.png",
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.topCenter,
+                                  ),
+                                  //Icon(Icons.warning),
+                                  //placeholder: (c, u) => Center(
+                                  //    child: CircularProgressIndicator(strokeWidth: 2.0)),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Container(
+                              //color: Colors.black.withOpacity(0.6),
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  // Divider(
+                                  //   color: Colors.black38,
+                                  // ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "by ",
+                                        style: TextStyle(fontSize: 12),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          item.firm.name.isNotEmpty
+                                              ? "${item.firm.name}"
+                                              : "-",
+                                          //style: TextStyle(color: Colors.white),
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          softWrap: false,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black38,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        // "${_products[index].melting}".isNotEmpty
+                                        //     ? "Melting : ${_products[index].melting}"
+                                        //     : "-",
+                                        "Melting : " +
+                                            (item.melting == null
+                                                ? " - "
+                                                : "${item.melting}"),
+                                        style: TextStyle(fontSize: 11),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                      Text(
+                                        // "${_products[index].weightRange}".isNotEmpty
+                                        //     ? "Weight : " +
+                                        //             "${_products[index].weightRange}" ??
+                                        //         "-"
+                                        //     : "-",
+                                        "Weight : " +
+                                            (item.weightRange == null
+                                                ? " - "
+                                                : "${item.weightRange}"),
+                                        style: TextStyle(fontSize: 11),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black38,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        child: Icon(
+                                          item.bookmarked
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                          color: Colors.yellowAccent.shade400,
+                                        ),
+                                        onTap: () => bookmarkProduct(item),
+                                      ),
+                                      Text(
+                                        item.createdAt.isNotEmpty
+                                            ? "${item.createdAt.substring(0, 10)}"
+                                                .split('-')
+                                                .reversed
+                                                .join('-')
+                                            : "-",
+                                        style: TextStyle(fontSize: 10),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: productList.map((urlOfItem) {
+            int index = productList.indexOf(urlOfItem);
+            return Container(
+              width: 5.0,
+              height: 5.0,
+              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _currentProductIndex == index
+                    ? Color.fromRGBO(0, 0, 0, 0.8)
+                    : Color.fromRGBO(0, 0, 0, 0.3),
+              ),
+            );
+          }).toList(),
+        )
+      ],
+    );
+  }
+
+  void bookmarkProduct(Product product) {
+    setState(() {
+      product.bookmarked = !product.bookmarked;
+    });
+
+    ProductService.toggleBookmark(product.id, !product.bookmarked)
+        .then((value) {})
+        .catchError((err) {
+      ToastService.error(_scaffoldKey, err.toString());
+      setState(() {
+        product.bookmarked = !product.bookmarked;
+      });
+    });
+  }
+
+  fetchTopProducts(){
+    
+    setState(() {
+      isLoading = true;
+      ProductService.getTopProducts().then((res) {
+        List<Product> products = Product.listFromJson(res);
+        if (mounted)
+          setState(() {
+            products.shuffle();
+            productList.addAll(products);
+            _prodError = null;
+            isLoading = false;
+          });
+      }).catchError((err) {
+        if (mounted)
+          setState(() {
+            _prodError = err;
+            isLoading = false;
+          });
+      });
+    });
+    // .whenComplete(() {
+    //   if (params['page'] >= totalPage) {
+    //     vWhatsappButton = true;
+    //   }
+    // });
+  }
+
+
 
   GetLivePrice getLivePriceModel() {
     return GetLivePrice(
@@ -574,4 +841,10 @@ class _BullionCityPageState extends State<BullionCityPage> {
         });
     });
   }
+
+
+
+
+
+
 }

@@ -219,6 +219,18 @@ class ProductService {
     }
   }
 
+
+  //Top 10 products
+  static Future<dynamic> getTopProducts() async {
+    try {
+      var response = await DioProvider().dio().get('/products/product_topten');
+
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
   static _handleError(e) {
     return ErrorHandler.handleError(e);
   }

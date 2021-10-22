@@ -31,7 +31,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.7),
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
         ),
         body: SingleChildScrollView(

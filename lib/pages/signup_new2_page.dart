@@ -62,7 +62,7 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
           child: Stack(
             children: <Widget>[
               Container(
-                color: Theme.of(context).primaryColor.withOpacity(0.7),
+                color: Theme.of(context).primaryColor,
                 height: 250,
               ),
               Column(
@@ -90,7 +90,7 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
                   ),
 
                   Text(
-                    'retailers',
+                    'Buyer App',
                     style: TextStyle(
                       fontFamily: 'serif',
                       color: Colors.white70,
@@ -509,8 +509,10 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
             setState(() {
               if (selected) {
                 if (_filters.length >= 1) {
-                  ToastService.error(
-                      _scaffoldKey, 'Please select only one dealer type');
+                  // ToastService.error(
+                  //     _scaffoldKey, 'Please select only one dealer type');
+                  _filters.clear();
+                  _filters.add(company);
                 } else {
                   _filters.add(company);
                 }

@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: <Widget>[
               Container(
-                color: Theme.of(context).primaryColor.withOpacity(0.7),
+                color: Theme.of(context).primaryColor,
                 height: 250,
               ),
               Column(
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   Text(
-                    'retailers',
+                    'Buyer App',
                     style: TextStyle(
                       fontFamily: 'serif',
                       color: Colors.white70,
