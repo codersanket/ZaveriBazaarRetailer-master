@@ -76,9 +76,9 @@ class _ProductViewState extends State<ProductViewPage> {
       appBar: AppBar(title: Text('Product details')),
       body: PageView(
         onPageChanged: (index) {
-          setState(() {
-            getRating(products[index].wholesalerFirmId);
-          });
+          // setState(() {
+          //   getRating(products[index].wholesalerFirmId);
+          // });
 
           //getRating(products[index].wholesalerFirmId);
         },
@@ -148,26 +148,26 @@ class _ProductViewState extends State<ProductViewPage> {
                                           product.firm.name,
                                           overflow: TextOverflow.fade,
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             color: Color(0xff004272),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       )),
-                                  rating == null
-                                      ? Text(" ")
-                                      : RatingBarIndicator(
-                                    itemCount: 5,
-                                    rating: double.parse(
-                                        rating[0]["average"]),
-                                    itemSize: 14,
-                                    unratedColor: Colors.grey[700],
-                                    itemBuilder: (BuildContext context,
-                                        int index) {
-                                      return Icon(Icons.star,
-                                          color: Colors.yellow.shade600);
-                                    },
-                                  ),
+                                  // rating == null
+                                  //     ? Text(" ")
+                                  //     : RatingBarIndicator(
+                                  //   itemCount: 5,
+                                  //   rating: double.parse(
+                                  //       rating[0]["average"]),
+                                  //   itemSize: 14,
+                                  //   unratedColor: Colors.grey[700],
+                                  //   itemBuilder: (BuildContext context,
+                                  //       int index) {
+                                  //     return Icon(Icons.star,
+                                  //         color: Colors.yellow.shade600);
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             ),
@@ -176,6 +176,7 @@ class _ProductViewState extends State<ProductViewPage> {
                         Row(
                           children: [
                             IconButton(
+                              iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
                                     products[pageController.page.toInt()]
@@ -194,13 +195,11 @@ class _ProductViewState extends State<ProductViewPage> {
                                     products[pageController.page.toInt()]
                                         .shareLink);
                               },
-                              icon: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Image.asset('images/whatsapp.png',
-                                    color: Colors.green),
-                              ),
+                              icon: Image.asset('images/whatsapp.png',
+                                  color: Colors.green,height: 20,width: 20,),
                             ),
                             IconButton(
+                              iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
                                     products[pageController.page.toInt()]
@@ -216,12 +215,10 @@ class _ProductViewState extends State<ProductViewPage> {
                                     "tel://${products[pageController.page
                                         .toInt()].firm.mobile}");
                               },
-                              icon: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: Colors.blueAccent,
-                                  )),
+                              icon: Icon(
+                                Icons.phone,
+                                color: Colors.blueAccent,
+                              ),
                             ),
                           ],
                         ),

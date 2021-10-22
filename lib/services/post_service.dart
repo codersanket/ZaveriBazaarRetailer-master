@@ -61,6 +61,17 @@ class PostService {
     }
   }
 
+  //Top 10 products
+  static Future<dynamic> getTopPosts() async {
+    try {
+      var response = await DioProvider().dio().get('/posts/topten');
+
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
   static _handleError(e) {
     return ErrorHandler.handleError(e);
   }
