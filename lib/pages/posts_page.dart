@@ -6,11 +6,13 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sonaar_retailer/models/post.dart';
+import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/products_page.dart';
 import 'package:sonaar_retailer/pages/wholesaler_view.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/follow_service.dart';
 import 'package:sonaar_retailer/services/post_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
@@ -36,10 +38,11 @@ class _PostsPageState extends State<PostsPage> {
   var isLoading = true, _error, totalPage = 0, rowCount = 0;
   List<Post> _posts = [];
 
+  User authUser;
   @override
   void initState() {
     super.initState();
-
+    authUser = AuthService.user;
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -242,7 +245,7 @@ class _PostsPageState extends State<PostsPage> {
                         print("userLogById Error:" + err.toString());
                       });
                       // do whatsapp share process
-                      whatsappWholesaler(post.firm.mobile);
+                      whatsappWholesaler(post.firm.mobile,post.createdAt,post.imageUrl);
                     },
                   ),
                   //COLLECTION
@@ -368,8 +371,21 @@ class _PostsPageState extends State<PostsPage> {
     });
   }
 
-  void whatsappWholesaler(String mobile) {
-    launch("https://api.whatsapp.com/send?phone=91$mobile");
+  void whatsappWholesaler(String mobile,String createdAt,String imageUrl) {
+    final firmName = authUser.retailerFirmName;
+    final city = authUser.city;
+    try {
+      final url = "https://api.whatsapp.com/send?phone=91$mobile&text=" +
+          "$firmName\nfrom $city\n is interested in one of your products posted on $createdAt. "
+              "To view image of the product please save this number and click on the below link\n $imageUrl";
+      final encodeURL = Uri.encodeFull(url);
+
+      print("final url to open:" + url);
+      print("final url to open: encode url " + encodeURL);
+      launch(encodeURL);
+    }catch(error){
+      print("Launch Error:" + error.toString());
+    }
   }
 
   _fetchPosts() {
