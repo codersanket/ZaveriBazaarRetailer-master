@@ -377,7 +377,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                             BullionVendorDetailPage(model, getLivePriceModel()),
                       ),
                     ).then((value) {
-                      debugPrint(value);
+                      //debugPrint(value);
                       _reloadPage();
                     });
                   },

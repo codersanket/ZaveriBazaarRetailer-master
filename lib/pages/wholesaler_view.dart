@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
@@ -13,6 +15,7 @@ import 'package:sonaar_retailer/services/userlog_service.dart';
 import 'package:sonaar_retailer/services/wholesaler_firm_service.dart';
 import 'cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 User authUser;
 class WholesalerViewPage extends StatefulWidget {
   final String wholesalerId;
@@ -339,6 +342,11 @@ class Profile extends StatelessWidget {
     if (firm.emailAddresses.length > 0) {
       widgets.addAll(firm.emailAddresses.map(
         (e) => ListTile(
+          //onTap: sendMail,
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: e));
+            sendMail(e);
+          },
           leading: Icon(Icons.mail),
           title: Text(e),
           subtitle: Text('Email address'),
@@ -403,51 +411,65 @@ class Profile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Website
-          ListTile(
-            leading: Icon(Icons.language),
-            title: firm.links != null
-                ? Text(firm.links['website'] ?? 'NA')
-                : Text('NA'),
-            subtitle: Text('Website'),
-            trailing: Icon(Icons.chevron_right),
-            onTap: firm.links != null && firm.links['website'] != null
-                ? () => openLink(firm.links['website'])
-                : null,
-          ),
+          Visibility(
+            visible: firm.links != null  && firm.links['website'] != null,
+            child: ListTile(
+              leading: Icon(Icons.language),
+              title: firm.links != null
+                  ? Text(firm.links['website'] ?? 'NA')
+                  : Text('NA'),
+              subtitle: Text('Website'),
+              trailing: Icon(Icons.chevron_right),
+              onTap: firm.links != null && firm.links['website'] != null
+                  ? () => openLink(firm.links['website'])
+                  : null,
+            ),
+          ) ,
 
-          Divider(height: 1, thickness: 1, color: Colors.grey.shade300),
+          Visibility(
+            visible: firm.links != null  && firm.links['website'] != null,
+            child: Divider(height: 1, thickness: 1, color: Colors.grey.shade300)),
 
           // Facebook
-          ListTile(
-            leading: Icon(Icons.language),
-            title: firm.links != null
-                ? Text(firm.links['facebook'] ?? 'NA')
-                : Text('NA'),
-            subtitle: Text('Facebook'),
-            trailing: Icon(Icons.chevron_right),
-            onTap: firm.links != null && firm.links['facebook'] != null
-                ? () => openLink(firm.links['facebook'])
-                : null,
+          Visibility(
+            visible: firm.links != null  && firm.links['facebook'] != null,
+            child: ListTile(
+              leading: Icon(Icons.language),
+              title: firm.links != null
+                  ? Text(firm.links['facebook'] ?? 'NA')
+                  : Text('NA'),
+              subtitle: Text('Facebook'),
+              trailing: Icon(Icons.chevron_right),
+              onTap: firm.links != null && firm.links['facebook'] != null
+                  ? () => openLink(firm.links['facebook'])
+                  : null,
+            ),
           ),
-          Divider(height: 1, thickness: 1, color: Colors.grey.shade300),
+          Visibility(
+            visible: firm.links != null  && firm.links['facebook'] != null,
+            child: Divider(height: 1, thickness: 1, color: Colors.grey.shade300)),
 
           // Instagram
-          ListTile(
-            leading: Icon(Icons.language),
-            title: firm.links != null
-                ? Text(firm.links['instagram'] ?? 'NA')
-                : Text('NA'),
-            subtitle: Text('Instagram'),
-            trailing: Icon(Icons.chevron_right),
-            onTap: firm.links != null && firm.links['instagram'] != null
-                ? () => openLink(firm.links['instagram'])
-                : null,
+          Visibility(
+            visible: firm.links != null  && firm.links['instagram'] != null,
+            child: ListTile(
+              leading: Icon(Icons.language),
+              title: firm.links != null
+                  ? Text(firm.links['instagram'] ?? 'NA')
+                  : Text('NA'),
+              subtitle: Text('Instagram'),
+              trailing: Icon(Icons.chevron_right),
+              onTap: firm.links != null && firm.links['instagram'] != null
+                  ? () => openLink(firm.links['instagram'])
+                  : null,
+            ),
           ),
         ],
       ),
     );
   }
 
+ 
   openLink(String url) {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'http://' + url;
@@ -462,6 +484,7 @@ class Profile extends StatelessWidget {
       ),
     );
   }
+
 
   viewPosts(BuildContext context) {
     Navigator.of(context).push(
@@ -502,6 +525,12 @@ class Profile extends StatelessWidget {
     launch("https://api.whatsapp.com/send?phone=91${firm.mobile}&text=" +
         "Hi my firm name is\n\n $firmName from $city I got your number from Zaveri bazaar app. "
             "I am interested in your product range and would like to know more details.");
+  }
+
+  sendMail(String email){
+    final firmName = authUser.retailerFirmName;
+    final city = authUser.city;
+    launch("mailto:$email?subject=Zaveri Bazaar Buyer App User Query&body=Hi my firm name is\n\n $firmName from $city I got your number from Zaveri bazaar app. \n\nI am interested in your product range and would like to know more details.");
   }
 
   call() {

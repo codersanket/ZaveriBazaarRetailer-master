@@ -145,7 +145,7 @@ class _MainPageStage extends State<MainPage> {
     super.initState();
 
     _widgetOptions = <Widget>[
-      //BullionCityPage(),
+      BullionCityPage(),
       PostsPage(onTabChange: _onItemTapped),
       Visibility(
         visible: true,
@@ -169,12 +169,12 @@ class _MainPageStage extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
-          // BottomNavigationBarItem(
-          //   icon: ImageIcon(
-          //     AssetImage("images/ic_gold_grey.png"),
-          //   ),
-          //   title: Text('Bullion', style: TextStyle(fontSize: 12.0)),
-          // ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(
+              AssetImage("images/ic_gold_grey.png"),
+            ),
+            title: Text('Bullion', style: TextStyle(fontSize: 12.0)),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.rss_feed),
             title: Text('Feed', style: TextStyle(fontSize: 12.0)),

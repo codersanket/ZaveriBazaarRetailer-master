@@ -43,7 +43,7 @@ class BullionPriceController extends GetxController {
     socket.on(socketUrl, (data) {
       List<BullionPriceModel> _priceList =
           BullionPriceModel.listFromString(data["updatedata"]);
-      print("api_data: " + data.toString());
+      //print("api_data: " + data.toString());
 
       BullionPriceModel goldTemp =
           _priceList.singleWhere((element) => element.gold1Symbol == "GOLD-C");
