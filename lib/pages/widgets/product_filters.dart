@@ -79,7 +79,8 @@ class ProductFiltersState extends State<ProductFilters> {
                     visible: filter.categories.length > 0,
                     child: ExpansionTile(
                       title: Text(
-                        'Categories - ${getCount(filter.categories)} selected',
+                       // 'Categories - ${getCount(filter.categories)} selected',
+                        'Categories - $count selected',
                       ),
                       children: filter.categories.map((s) {
                         return RadioListTile(
@@ -87,7 +88,17 @@ class ProductFiltersState extends State<ProductFilters> {
                           value: s.id,
                           groupValue: filter.categoryId,
                           onChanged: (val) {
-                            setState(() => filter.categoryId = val);
+                            setState(() {
+                              filter.categoryId = val;
+                              if(val!=null){
+                                count=1;
+                                print('Count Checked $count');
+                              }else {
+                                count = 0;
+                                print('Count unchecked $count');
+                              }
+                            });
+                           // setState(() => filter.categoryId = val);
                             onCategoryChange(val);
                           },
                         );
@@ -300,10 +311,13 @@ class ProductFiltersState extends State<ProductFilters> {
   getCount(var list) {
     int count = 0;
     list.forEach((item) {
-      if (item.checked) count++;
+      if (item.checked) {
+        count++;
+      }
     });
     return count;
   }
+  int count=0;
 
   getItems(var list) {
     list.forEach((item) {
