@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sonaar_retailer/models/user.dart';
+import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/notifications_page.dart';
 import 'package:sonaar_retailer/pages/products_categorywise_page.dart';
 import 'package:sonaar_retailer/pages/wholesaler_ratings_page.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
+import 'package:sonaar_retailer/services/userlog_service.dart';
+import 'package:sonaar_retailer/services/wholesaler_firm_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   final scaffoldKey;
-
   const DrawerWidget({Key key, @required this.scaffoldKey}) : super(key: key);
 
+  @override
+  _DrawerWidgetState createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  User authUser;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authUser = AuthService.user;
+  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -101,7 +116,18 @@ class DrawerWidget extends StatelessWidget {
 
   doInquiry() {
     final mobile = AuthService.user.preference.productWhatsapp;
-    launch("https://api.whatsapp.com/send?phone=91$mobile");
+    UserLogService.userLogById(authUser.id.toString(), 'zaveri inquiry')
+        .then((res) {
+      print("userLogById Success");
+    }).catchError((err) {
+      print("userLogById Error:" + err.toString());
+    });
+
+    final firmName = authUser.retailerFirmName;
+    final city = authUser.city;
+    launch("https://api.whatsapp.com/send?phone=919321463461&text=" +
+        "Hi I am a Zaveri bazaar buyer app user my name is\n $firmName from $city\n "
+            "I am searching for some product/dealer can you help me with it. ");
   }
 
   showToast(BuildContext context, String title) {

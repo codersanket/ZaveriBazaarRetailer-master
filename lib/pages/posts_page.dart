@@ -377,7 +377,7 @@ class _PostsPageState extends State<PostsPage> {
     try {
       final url = "https://api.whatsapp.com/send?phone=91$mobile&text=" +
           "$firmName\nfrom $city\n is interested in one of your products posted on $createdAt. "
-              "To view image of the product please save this number and click on the below link\n $image_share}";
+              "To view image of the product please save this number and click on the below link\n $image_share";
       final encodeURL = Uri.encodeFull(url);
 
       print("final url to open:" + url);
