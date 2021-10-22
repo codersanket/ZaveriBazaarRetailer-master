@@ -10,6 +10,7 @@ class Post {
   String imageUrl;
   String thumbUrl;
   String videoUrl;
+  String image_share;
   WholesalerFirm firm;
 
   Post({
@@ -20,6 +21,7 @@ class Post {
     this.imageUrl,
     this.thumbUrl,
     this.videoUrl,
+    this.image_share,
     this.firm,
   });
 
@@ -32,6 +34,7 @@ class Post {
       imageUrl: parsedJson['image_url']?.toString(),
       thumbUrl: parsedJson['thumb_url']?.toString(),
       videoUrl: parsedJson['video_url']?.toString(),
+      image_share:parsedJson['image_share']?.toString(),
       firm: parsedJson['firm'] == null
           ? null
           : WholesalerFirm.fromJson(parsedJson['firm']),
@@ -57,5 +60,6 @@ class Post {
         'image_url': imageUrl,
         'thumb_url': thumbUrl,
         'video_url': videoUrl,
+       'image_share':image_share,
       };
 }

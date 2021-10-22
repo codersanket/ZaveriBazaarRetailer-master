@@ -245,7 +245,7 @@ class _PostsPageState extends State<PostsPage> {
                         print("userLogById Error:" + err.toString());
                       });
                       // do whatsapp share process
-                      whatsappWholesaler(post.firm.mobile,post.createdAt,post.imageUrl);
+                      whatsappWholesaler(post.firm.mobile,post.createdAt,post.image_share);
                     },
                   ),
                   //COLLECTION
@@ -371,13 +371,13 @@ class _PostsPageState extends State<PostsPage> {
     });
   }
 
-  void whatsappWholesaler(String mobile,String createdAt,String imageUrl) {
+  void whatsappWholesaler(String mobile,String createdAt,String image_share) {
     final firmName = authUser.retailerFirmName;
     final city = authUser.city;
     try {
       final url = "https://api.whatsapp.com/send?phone=91$mobile&text=" +
           "$firmName\nfrom $city\n is interested in one of your products posted on $createdAt. "
-              "To view image of the product please save this number and click on the below link\n $imageUrl";
+              "To view image of the product please save this number and click on the below link\n $image_share}";
       final encodeURL = Uri.encodeFull(url);
 
       print("final url to open:" + url);
