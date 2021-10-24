@@ -251,6 +251,7 @@ class _ProductViewState extends State<ProductViewPage> {
                     children: [
                       GestureDetector(
                         child: Container(
+                          //decoration:BoxDecoration(),
                           width: double.infinity,
                           height: 300,
                           color: Colors.white,
