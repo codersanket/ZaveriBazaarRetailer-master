@@ -341,7 +341,7 @@ class _SignupNew2PageState extends State<SignupNew2Page> {
                                 validator: (v) {
                                   if (v.isEmpty)
                                     return 'Please enter confirm pin';
-                                  else if (v.length <= 4)
+                                  else if (v.length < 4)
                                     return 'Must be atleast 4 characters long';
                                   else
                                     return null;
