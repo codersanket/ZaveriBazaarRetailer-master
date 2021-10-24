@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/pages/bullion/bullion_city_page.dart';
 import 'package:sonaar_retailer/pages/follows/follows_page.dart';
 import 'package:sonaar_retailer/pages/posts_page.dart';
@@ -14,6 +15,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageStage extends State<MainPage> {
   int _selectedIndex = 0;
+  bool isExtended = false;
 
   static List<Widget> _widgetOptions = [];
 
@@ -143,7 +145,7 @@ class _MainPageStage extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
+    isExtended = true;
     _widgetOptions = <Widget>[
       BullionCityPage(),
       PostsPage(onTabChange: _onItemTapped),
@@ -203,6 +205,90 @@ class _MainPageStage extends State<MainPage> {
         showUnselectedLabels: false,
         onTap: _onItemTapped,
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Color(0xff004272),
+          //foregroundColor: Colors.white54,
+          foregroundColor: Colors.grey.shade300,
+          elevation: 0,
+          onPressed: () {},
+          label: AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            transitionBuilder: (Widget child, Animation<double> animation) =>
+                FadeTransition(
+              opacity: animation,
+              child: SizeTransition(
+                child: child,
+                sizeFactor: animation,
+                axis: Axis.horizontal,
+              ),
+            ),
+            child: isExtended
+                ? GestureDetector(
+                    child: Icon(
+                      Icons.contact_support_sharp,
+                      size: 30,
+                      //color: Colors.white54,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        isExtended = !isExtended;
+                      });
+                    },
+                  )
+                : Row(
+                    children: [
+                      GestureDetector(
+                        onTap: whatsappWholesaler,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: Image.asset('images/whatsapp.png',
+                                  width: 15, color: Colors.green),
+                            ),
+                            Text("Customer Care",style: TextStyle(color: Colors.grey.shade300),),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isExtended = !isExtended;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white54,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
+  }
+
+
+  void whatsappWholesaler() {
+    User user = AuthService.user;
+    try {
+      final url = "https://api.whatsapp.com/send?phone=919321463461&text=" +
+          "ZaveriBazaar B2B platform\n\n${user.name} as ${user.retailerFirmName} from ${user.city} has a query regarding the app.";
+      final encodeURL = Uri.encodeFull(url);
+
+      print("final url to open:" + url);
+      print("final url to open: encode url " + encodeURL);
+      launch(encodeURL);
+
+      // launch("whatsapp://send?phone=91$mobile&text=" +
+      //     "ZaveriBazaar B2B platform\n\n$firmName from $city has an enquiry regarding your product. Click on the below link to view the product details\n\n" +
+      //     Uri.encodeFull(shareLink));
+
+    } catch (error) {
+      print("Launch Error:" + error.toString());
+    }
   }
 }

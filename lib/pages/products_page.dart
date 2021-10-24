@@ -10,6 +10,7 @@ import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
+import 'package:sonaar_retailer/services/userlog_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -582,6 +583,14 @@ class _ProductsPageState extends State<ProductsPage> {
     launch("https://api.whatsapp.com/send?phone=919321463461&text=" +
         "Hi I am a Zaveri bazaar buyer app user my name is $firmName from $city"
             " I am searching for some product can you please help me.");
+    UserLogService.userLogById(
+                                  '000',
+                                    "Products page can't find item whatsapp button")
+                                    .then((res) {
+                                  print("userLogById Success");
+                                }).catchError((err) {
+                                  print("userLogById Error:" + err.toString());
+                                });
   }
 
   void clearWeightFilter() {
