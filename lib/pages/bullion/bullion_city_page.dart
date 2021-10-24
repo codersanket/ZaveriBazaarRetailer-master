@@ -526,35 +526,47 @@ class _BullionCityPageState extends State<BullionCityPage> {
           ),
         
           // top products label 
-          Visibility(
-            visible: productList.isNotEmpty && _prodError==null,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-              child: Text(
-                'Top Products',
-                style:
-                    TextStyle(fontSize: 16, color: Theme.of(context).accentColor),
-              ),
-            ),
-          ),
+          // Visibility(
+          //   visible: productList.isNotEmpty && _prodError==null,
+          //   child: Padding(
+          //     padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+          //     child: Text(
+          //       'Top Products',
+          //       style:
+          //           TextStyle(fontSize: 16, color: Theme.of(context).accentColor),
+          //     ),
+          //   ),
+          // ),
 
           // top products carousel
           Visibility(
             visible: productList.isNotEmpty && _prodError==null,
-            child: Card(
-              color :Colors.grey.shade200,
-              margin: EdgeInsets.all(10),
-              child: _buildProductCarousel(),)),
+            child: Container(
+              height :350,
+              color :Color(0xff004272),
+              //margin: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                    child: Text('Top Products',
+                      style:TextStyle(fontSize: 18, color: Colors.grey.shade200),
+                     ),
+                    ),
+                  _buildProductCarousel(),
+                ],
+              ),)),
 
            // top post label 
           Visibility(
             visible: postList.isNotEmpty && _postError==null,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
               child: Text(
                 'Top Posts',
                 style:
-                    TextStyle(fontSize: 16, color: Theme.of(context).accentColor),
+                    TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
               ),
             ),
           ),
@@ -574,12 +586,15 @@ class _BullionCityPageState extends State<BullionCityPage> {
 //Product Carousel
 Widget _buildProductCarousel() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CarouselSlider(
           options: CarouselOptions(
             autoPlay: true,
-            height: 400,
-            // enlargeCenterPage: true,
+            viewportFraction: 0.6,
+            height: 250,
+            //aspectRatio: 3,
+            enlargeCenterPage: true,
             //scrollDirection: Axis.vertical,
             onPageChanged: (index, reason) {
               setState(
@@ -606,24 +621,29 @@ Widget _buildProductCarousel() {
                             ));
                       },
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Container(
-                              color: Colors.white,
-                              child: Center(
-                                child: CachedNetworkImage(
-                                  imageUrl: item.imageUrl,
-                                  fit: BoxFit.contain,
-                                  alignment: Alignment.topCenter,
-                                  errorWidget: (c, u, e) => Image.asset(
-                                    "images/ic_launcher.png",
-                                    fit: BoxFit.contain,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top : 8.0),
+                              child: Container(
+                                //height: 150,
+                                //width: 150,
+                                color: Colors.white,
+                                child: Center(
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.imageUrl,
+                                    fit: BoxFit.cover,
                                     alignment: Alignment.topCenter,
+                                    errorWidget: (c, u, e) => Image.asset(
+                                      "images/ic_launcher.png",
+                                      fit: BoxFit.contain,
+                                      alignment: Alignment.topCenter,
+                                    ),
+                                    //Icon(Icons.warning),
+                                    //placeholder: (c, u) => Center(
+                                    //    child: CircularProgressIndicator(strokeWidth: 2.0)),
                                   ),
-                                  //Icon(Icons.warning),
-                                  //placeholder: (c, u) => Center(
-                                  //    child: CircularProgressIndicator(strokeWidth: 2.0)),
                                 ),
                               ),
                             ),
@@ -634,105 +654,31 @@ Widget _buildProductCarousel() {
                             child: Container(
                               //color: Colors.black.withOpacity(0.6),
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  // Divider(
-                                  //   color: Colors.black38,
-                                  // ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          "by ",
-                                          style: TextStyle(fontSize: 12),
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            item.firm.name.isNotEmpty
-                                                ? "${item.firm.name}"
-                                                : "-",
-                                            style: TextStyle(color: Color(0xff004272),fontWeight: FontWeight.bold),
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            softWrap: false,
-                                          ),
-                                        ),
-                                      ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "by ",
+                                      style: TextStyle(fontSize: 10),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
                                     ),
-                                  ),
-                                  // Divider(
-                                  //   color: Colors.black38,
-                                  // ),
-                                  // Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceBetween,
-                                  //   children: <Widget>[
-                                  //     Text(
-                                  //       // "${_products[index].melting}".isNotEmpty
-                                  //       //     ? "Melting : ${_products[index].melting}"
-                                  //       //     : "-",
-                                  //       "Melting : " +
-                                  //           (item.melting == null
-                                  //               ? " - "
-                                  //               : "${item.melting}"),
-                                  //       style: TextStyle(fontSize: 11),
-                                  //       overflow: TextOverflow.fade,
-                                  //       maxLines: 1,
-                                  //       softWrap: false,
-                                  //     ),
-                                  //     Text(
-                                  //       // "${_products[index].weightRange}".isNotEmpty
-                                  //       //     ? "Weight : " +
-                                  //       //             "${_products[index].weightRange}" ??
-                                  //       //         "-"
-                                  //       //     : "-",
-                                  //       "Weight : " +
-                                  //           (item.weightRange == null
-                                  //               ? " - "
-                                  //               : "${item.weightRange}"),
-                                  //       style: TextStyle(fontSize: 11),
-                                  //       overflow: TextOverflow.fade,
-                                  //       maxLines: 1,
-                                  //       softWrap: false,
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // Divider(
-                                  //   color: Colors.black38,
-                                  // ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      GestureDetector(
-                                        child: Icon(
-                                          item.bookmarked
-                                              ? Icons.star
-                                              : Icons.star_border,
-                                          color: Colors.yellowAccent.shade400,
-                                        ),
-                                        onTap: () => bookmarkProduct(item),
-                                      ),
-                                      Text(
-                                        item.createdAt.isNotEmpty
-                                            ? "${item.createdAt.substring(0, 10)}"
-                                                .split('-')
-                                                .reversed
-                                                .join('-')
+                                    Expanded(
+                                      child: Text(
+                                        item.firm.name.isNotEmpty
+                                            ? "${item.firm.name}"
                                             : "-",
-                                        style: TextStyle(fontSize: 10),
+                                        style: TextStyle(color: Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 12),
                                         overflow: TextOverflow.fade,
                                         maxLines: 1,
                                         softWrap: false,
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -811,8 +757,9 @@ Widget _buildPostCarousel() {
         CarouselSlider(
           options: CarouselOptions(
             autoPlay: true,
-            height: 400,
-            // enlargeCenterPage: true,
+            height: 250,
+            viewportFraction: 0.6,
+            enlargeCenterPage: true,
             //scrollDirection: Axis.vertical,
             onPageChanged: (index, reason) {
               setState(
@@ -842,152 +789,84 @@ Widget _buildPostCarousel() {
             //     ));
           },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              ListTile(
-                leading: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  child: post.firm.thumbUrl == null
-                      ? Image.asset('images/placeholder.png')
-                      : CachedNetworkImage(
-                          imageUrl: post.firm.thumbUrl,
-                          fit: BoxFit.contain,
-                        ),
-                ),
-                title: Text(post.firm.name ?? ''),
-                subtitle: Text(post.createdAt),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => WholesalerViewPage(
-                        wholesalerId: post.wholesalerFirmId,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 16.0, left: 16.0, right: 16.0),
-                child: Text(post.text),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 180.0),
-                child: post.thumbUrl == null
-                    ? null
-                    : GestureDetector(
-                        onTap: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ImageView(
-                                imageUrl: post.imageUrl,
-                                heroTag: heroTag,
+              //  Padding(
+              //    padding: const EdgeInsets.all(8.0),
+              //    child: GestureDetector(
+              //      child: Container(
+              //         width: 40.0,
+              //         height: 40.0,
+              //         child: post.firm.thumbUrl == null
+              //             ? Image.asset('images/placeholder.png')
+              //             : CachedNetworkImage(
+              //                 imageUrl: post.firm.thumbUrl,
+              //                 fit: BoxFit.contain,
+              //               ),
+              //       ),
+              //       onTap: () {
+              //       Navigator.of(context).push(
+              //         MaterialPageRoute(
+              //           builder: (_) => WholesalerViewPage(
+              //             wholesalerId: post.wholesalerFirmId,
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //    ),
+              //  ),
+              
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    //width : 150,
+                    child: post.thumbUrl == null
+                        ? null
+                        : GestureDetector(
+                            onTap: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => ImageView(
+                                    imageUrl: post.imageUrl,
+                                    heroTag: heroTag,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: CachedNetworkImage(
+                              imageUrl: post.thumbUrl,
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,
+                              errorWidget: (c, u, e) => Image.asset(
+                                "images/ic_launcher.png",
+                                fit: BoxFit.contain,
+                                alignment: Alignment.topCenter,
                               ),
+                              // Icon(Icons.warning),
+                              // placeholder: (c, u) => Center(
+                              //     child:
+                              //         CircularProgressIndicator(strokeWidth: 2.0)),
                             ),
-                          );
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: post.thumbUrl,
-                          fit: BoxFit.contain,
-                          alignment: Alignment.center,
-                          errorWidget: (c, u, e) => Image.asset(
-                            "images/ic_launcher.png",
-                            fit: BoxFit.contain,
-                            alignment: Alignment.topCenter,
                           ),
-                          // Icon(Icons.warning),
-                          // placeholder: (c, u) => Center(
-                          //     child:
-                          //         CircularProgressIndicator(strokeWidth: 2.0)),
-                        ),
-                      ),
+                  ),
+                ),
               ),
-              //SizedBox(height: 8),
-              Divider(),
-              // actions
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-                  //   child: FlatButton.icon(
-                  //     label: Text('SHARE'),
-                  //     icon: Icon(Icons.share),
-                  //     textColor: Colors.blue.shade700,
-                  //     padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  //     onPressed: () => sharePost(post),
-                  //   ),
-                  // ),
-                  //MESSAGE
-                  FlatButton.icon(
-                    label: Text('Message'),
-                    icon: Image.asset(
-                      'images/whatsapp.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                    textColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    onPressed: () {
-                      UserLogService.userLogById(post.wholesalerFirmId, "Feed top 10")
-                          .then((res) {
-                        print("userLogById Success");
-                      }).catchError((err) {
-                        print("userLogById Error:" + err.toString());
-                      });
-                      // do whatsapp share process
-                      whatsappWholesaler(post.firm.mobile,post.createdAt,post.image_share);
-                    },
-                  ),
-                  //COLLECTION
-                  InkWell(
-                    onTap: () {
-                      viewCollection(
-                          context: context, firmId: post.wholesalerFirmId);
-                      // print(
-                      //     "///////////////////////////////////////// FIRMMMMMMMM");
-                      // print(post.firm.followId);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.grid_on, color: Colors.indigo),
-                          SizedBox(width: 4),
-                          Text('Collection'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  //FOLLOW
-                  InkWell(
-                    onTap: () {
-                      post.firm.followId == null
-                          ? follow(firm: post.firm, index: _currentPostIndex)
-                          : unfollow(firm: post.firm, index: _currentPostIndex);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            post.firm.followId == null
-                                ? Icons.person_add
-                                : Icons.person,
-                            color: Colors.teal,
-                          ),
-                          SizedBox(width: 4),
-                          Text(post.firm.followId == null
-                              ? 'Follow'
-                              : 'Unfollow'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal : 4.0),
+                child: Text(post.firm.name ?? '' ,
+                  style: TextStyle(
+                    color: Color(0xff004272),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
               ),
+
               SizedBox(height: 8),
             ],
           ),

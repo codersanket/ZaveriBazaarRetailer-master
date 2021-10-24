@@ -5,6 +5,7 @@ import 'package:sonaar_retailer/models/get_live_price.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/bullion_service.dart';
 import 'package:sonaar_retailer/services/date.service.dart';
+import 'package:sonaar_retailer/services/userlog_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'bullion_price_helper.dart';
@@ -472,6 +473,13 @@ class _BullionVendorDetailState extends State<BullionVendorDetailPage> {
 
   call() {
     launch("tel://${widget.bullionVendor.mobile}");
+    UserLogService.userLogById(
+      widget.bullionVendor.id,"Bullion Vendor details call")
+                                    .then((res) {
+                                  print("userLogById Success");
+                                }).catchError((err) {
+                                  print("userLogById Error:" + err.toString());
+                                });
   }
 
   openLink(String url) {
