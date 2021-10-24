@@ -92,91 +92,72 @@ class _ProductViewState extends State<ProductViewPage> {
               children: <Widget>[
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 10.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              child: CachedImage(
-                                imageUrl: product.firm.thumbUrl,
-                                width: 30,
-                                height: 30,
-                                placeholderIcon: Icons.person,
-                              ),
-                              onTap: product.firm.imageUrl != null
-                                  ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        ImageView(
-                                          imageUrl: product.firm.imageUrl,
-                                          heroTag: 'Wholesaler_firm',
-                                        ),
-                                  ),
-                                );
-                              }
-                                  : null,
-                            ),
-                            //SizedBox(width: 10),
-                            Padding(
-                              padding:
-                              const EdgeInsets.only(left: 10, right: 2),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                WholesalerViewPage(
-                                                  wholesalerId:
-                                                  product.wholesalerFirmId,
-                                                ),
+                        Expanded(
+                          child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                child: CachedImage(
+                                  imageUrl: product.firm.thumbUrl,
+                                  width: 30,
+                                  height: 30,
+                                  placeholderIcon: Icons.person,
+                                ),
+                                onTap: product.firm.imageUrl != null
+                                    ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ImageView(
+                                            imageUrl: product.firm.imageUrl,
+                                            heroTag: 'Wholesaler_firm',
                                           ),
-                                        );
-                                      },
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: Text(
-                                          product.firm.name,
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Color(0xff004272),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      )),
-                                  // rating == null
-                                  //     ? Text(" ")
-                                  //     : RatingBarIndicator(
-                                  //   itemCount: 5,
-                                  //   rating: double.parse(
-                                  //       rating[0]["average"]),
-                                  //   itemSize: 14,
-                                  //   unratedColor: Colors.grey[700],
-                                  //   itemBuilder: (BuildContext context,
-                                  //       int index) {
-                                  //     return Icon(Icons.star,
-                                  //         color: Colors.yellow.shade600);
-                                  //   },
-                                  // ),
-                                ],
+                                    ),
+                                  );
+                                }
+                                    : null,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              WholesalerViewPage(
+                                                wholesalerId:
+                                                product.wholesalerFirmId,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: Expanded(
+                                      child: Text(
+                                        product.firm.name,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ),
                         ),
                         Row(
                           children: [
                             IconButton(
-                              iconSize: 20,
+                              //iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
                                     products[pageController.page.toInt()]
@@ -196,10 +177,10 @@ class _ProductViewState extends State<ProductViewPage> {
                                         .shareLink);
                               },
                               icon: Image.asset('images/whatsapp.png',
-                                  color: Colors.green,height: 20,width: 20,),
+                                  color: Colors.green),
                             ),
                             IconButton(
-                              iconSize: 20,
+                              //iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
                                     products[pageController.page.toInt()]
