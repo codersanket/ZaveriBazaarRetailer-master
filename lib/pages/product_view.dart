@@ -123,33 +123,32 @@ class _ProductViewState extends State<ProductViewPage> {
                                 }
                                     : null,
                               ),
-                              SizedBox(width: 10),
+                              //SizedBox(width: 10),
                               Expanded(
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (_) =>
-                                              WholesalerViewPage(
-                                                wholesalerId:
-                                                product.wholesalerFirmId,
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    child: Expanded(
-                                      child: Text(
-                                        product.firm.name,
-                                        maxLines: 1,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.blueAccent,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            WholesalerViewPage(
+                                              wholesalerId:
+                                              product.wholesalerFirmId,
+                                            ),
                                       ),
-                                    )),
+                                    );
+                                  },
+                                  child: Text(
+                                    product.firm.name,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    overflow: TextOverflow.fade,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),

@@ -538,7 +538,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
           //   ),
           // ),
 
-          // top products carousel
+          //top products carousel
           Visibility(
             visible: productList.isNotEmpty && _prodError==null,
             child: Container(
@@ -558,20 +558,20 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 ],
               ),)),
 
-           // top post label 
-          Visibility(
-            visible: postList.isNotEmpty && _postError==null,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
-              child: Text(
-                'Top Posts',
-                style:
-                    TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
-              ),
-            ),
-          ),
+          //  // top post label 
+          // Visibility(
+          //   visible: postList.isNotEmpty && _postError==null,
+          //   child: Padding(
+          //     padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
+          //     child: Text(
+          //       'Top Posts',
+          //       style:
+          //           TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
+          //     ),
+          //   ),
+          // ),
 
-          // top products carousel
+          // // top posts carousel
           Visibility(
             visible: postList.isNotEmpty && _postError==null,
             child: Card(
@@ -727,7 +727,7 @@ Widget _buildProductCarousel() {
   fetchTopProducts(){
     
     setState(() {
-      isLoading = true;
+      //isLoading = true;
       ProductService.getTopProducts().then((res) {
         List<Product> products = Product.listFromJson(res);
         if (mounted)
@@ -741,7 +741,7 @@ Widget _buildProductCarousel() {
         if (mounted)
           setState(() {
             _prodError = err;
-            isLoading = false;
+            //isLoading = false;
           });
       });
     });
@@ -899,7 +899,7 @@ Widget _buildPostCarousel() {
 fetchTopPosts(){
     
     setState(() {
-      isLoading = true;
+      //isLoading = true;
       PostService.getTopPosts().then((res) {
         List<Post> posts = Post.listFromJson(res);
         if (mounted)
@@ -913,96 +913,12 @@ fetchTopPosts(){
         if (mounted)
           setState(() {
             _postError = err;
-            isLoading = false;
+            //isLoading = false;
           });
       });
     });
   }
 
-void sharePost(Post post) async {
-    final text = (post.text ?? '') +
-        "\n\nShared from Zaveri Bazaar app, Download now from https://zaveribazaar.co.in";
-
-    if (post.imageUrl != null) {
-      var request = await HttpClient().getUrl(Uri.parse(post.imageUrl));
-      var response = await request.close();
-      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-
-      await Share.file(
-        'Share post',
-        'post.jpg',
-        bytes,
-        'image/jpg',
-        text: text,
-      );
-    } else {
-      Share.text('Share post', text, 'text/plain');
-    }
-  }
-
-  viewCollection({BuildContext context, String firmId}) {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (_) => ProductsPage(firm: firm),
-    //   ),
-    // );
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => WholesalerViewPage(
-          wholesalerId: firmId,
-        ),
-      ),
-    );
-  }
-
-  void follow({WholesalerFirm firm, int index}) {
-    setState(() => isLoading = true);
-    FollowService.create(firmId: firm.id, mobile: firm.mobile).then((res) {
-      ToastService.success(
-        _scaffoldKey,
-        'You are now following ${firm.name}!',
-      );
-      //setState(() => firm.followId = res.id);
-      setState(() => postList[index].firm.followId = res.id);
-    }).catchError((err) {
-      ToastService.error(_scaffoldKey, err.toString());
-    }).whenComplete(() {
-      setState(() => isLoading = false);
-    });
-  }
-
-  void unfollow({WholesalerFirm firm, int index}) {
-    setState(() => isLoading = true);
-    FollowService.delete(firm.followId).then((res) {
-      ToastService.success(
-        _scaffoldKey,
-        'You are no longer following ${firm.name}!',
-      );
-      //setState(() => firm.followId = null);
-      setState(() => postList[index].firm.followId = null);
-    }).catchError((err) {
-      ToastService.error(_scaffoldKey, err.toString());
-    }).whenComplete(() {
-      setState(() => isLoading = false);
-    });
-  }
-
-  void whatsappWholesaler(String mobile,String createdAt,String image_share) {
-    final firmName = authUser.retailerFirmName;
-    final city = authUser.city;
-    try {
-      final url = "https://api.whatsapp.com/send?phone=91$mobile&text=" +
-          "$firmName\nfrom $city\n is interested in one of your products posted on $createdAt. "
-              "To view image of the product please save this number and click on the below link\n $image_share";
-      final encodeURL = Uri.encodeFull(url);
-
-      print("final url to open:" + url);
-      print("final url to open: encode url " + encodeURL);
-      launch(encodeURL);
-    }catch(error){
-      print("Launch Error:" + error.toString());
-    }
-  }
 
 
 //bullion
