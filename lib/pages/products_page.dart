@@ -584,13 +584,12 @@ class _ProductsPageState extends State<ProductsPage> {
         "Hi I am a Zaveri bazaar buyer app user my name is $firmName from $city"
             " I am searching for some product can you please help me.");
     UserLogService.userLogById(
-                                  '000',
-                                    "Products page can't find item whatsapp button")
-                                    .then((res) {
-                                  print("userLogById Success");
-                                }).catchError((err) {
-                                  print("userLogById Error:" + err.toString());
-                                });
+            '000', "Products page can't find item whatsapp button")
+        .then((res) {
+      print("userLogById Success");
+    }).catchError((err) {
+      print("userLogById Error:" + err.toString());
+    });
   }
 
   void clearWeightFilter() {
@@ -647,16 +646,18 @@ class _ProductsPageState extends State<ProductsPage> {
           //
           //FOR TESTING THE CAROUSEL
           //
-          temp = products.sublist(1, 5);
+        //temp = products.sublist(1, 5);
           _products.addAll(products);
 
           _error = null;
           isLoading = false;
+          print("load $isLoading");
         });
     }).catchError((err) {
       if (mounted)
         setState(() {
           _error = err;
+          print("error give:-$_error");
           isLoading = false;
         });
     }).whenComplete(() {
