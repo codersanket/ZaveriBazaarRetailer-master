@@ -110,32 +110,45 @@ class _ProductViewState extends State<ProductViewPage> {
                                 ),
                                 onTap: product.firm.imageUrl != null
                                     ? () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          ImageView(
-                                            imageUrl: product.firm.imageUrl,
-                                            heroTag: 'Wholesaler_firm',
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => ImageView(
+                                              imageUrl: product.firm.imageUrl,
+                                              heroTag: 'Wholesaler_firm',
+                                            ),
                                           ),
-                                    ),
-                                  );
-                                }
+                                        );
+                                      }
                                     : null,
                               ),
                               //SizedBox(width: 10),
                               Expanded(
                                 child: InkWell(
-                                  onTap: (){
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            WholesalerViewPage(
-                                              wholesalerId:
-                                              product.wholesalerFirmId,
-                                            ),
-                                      ),
-                                    );
+                                  onTap: () {
+                                    AuthService.getUser().then((res) {
+                                      if (res.approved == 1) {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (_) => WholesalerViewPage(
+                                            wholesalerId:
+                                                product.wholesalerFirmId,
+                                          ),
+                                        ));
+                                      } else {
+                                        showInfoDialog(context, 'Info',
+                                            'Your account is not approved, please contact us on below number\n\n7208226814');
+                                      }
+                                    });
+                                    // Navigator.of(context).push(
+                                    //   MaterialPageRoute(
+                                    //     builder: (_) =>
+                                    //         WholesalerViewPage(
+                                    //           wholesalerId:
+                                    //           product.wholesalerFirmId,
+                                    //         ),
+                                    //   ),
+                                    //);
                                   },
                                   child: Text(
                                     product.firm.name,
@@ -159,9 +172,9 @@ class _ProductViewState extends State<ProductViewPage> {
                               //iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
-                                    products[pageController.page.toInt()]
-                                        .wholesalerFirmId,
-                                    "Product details message")
+                                        products[pageController.page.toInt()]
+                                            .wholesalerFirmId,
+                                        "Product details message")
                                     .then((res) {
                                   print("userLogById Success");
                                 }).catchError((err) {
@@ -182,9 +195,9 @@ class _ProductViewState extends State<ProductViewPage> {
                               //iconSize: 20,
                               onPressed: () {
                                 UserLogService.userLogById(
-                                    products[pageController.page.toInt()]
-                                        .wholesalerFirmId,
-                                    "Product details call")
+                                        products[pageController.page.toInt()]
+                                            .wholesalerFirmId,
+                                        "Product details call")
                                     .then((res) {
                                   print("userLogById Success");
                                 }).catchError((err) {
@@ -192,8 +205,7 @@ class _ProductViewState extends State<ProductViewPage> {
                                 });
                                 // call firm
                                 launch(
-                                    "tel://${products[pageController.page
-                                        .toInt()].firm.mobile}");
+                                    "tel://${products[pageController.page.toInt()].firm.mobile}");
                               },
                               icon: Icon(
                                 Icons.phone,
@@ -259,12 +271,11 @@ class _ProductViewState extends State<ProductViewPage> {
                             child: CachedNetworkImage(
                               imageUrl: product.thumbUrl,
                               fit: BoxFit.contain,
-                              errorWidget: (c, u, e) =>
-                                  Image.asset(
-                                    "images/ic_launcher.png",
-                                    fit: BoxFit.contain,
-                                    alignment: Alignment.topCenter,
-                                  ),
+                              errorWidget: (c, u, e) => Image.asset(
+                                "images/ic_launcher.png",
+                                fit: BoxFit.contain,
+                                alignment: Alignment.topCenter,
+                              ),
                               //   Icon(Icons.warning, color: Colors.white),
                               // placeholder: (c, u) => Center(
                               //     child: CircularProgressIndicator(
@@ -276,8 +287,7 @@ class _ProductViewState extends State<ProductViewPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) =>
-                                    ImageView(
+                                builder: (_) => ImageView(
                                       imageUrl: product.imageUrl,
                                       heroTag: heroTag,
                                     )),
@@ -307,10 +317,10 @@ class _ProductViewState extends State<ProductViewPage> {
                                   padding: const EdgeInsets.all(5.0),
                                   child: Text(
                                       product.createdAt
-                                          .substring(0, 10)
-                                          .split('-')
-                                          .reversed
-                                          .join('-') ??
+                                              .substring(0, 10)
+                                              .split('-')
+                                              .reversed
+                                              .join('-') ??
                                           "-",
                                       style: TextStyle(fontSize: 12)),
                                 )
@@ -406,35 +416,35 @@ class _ProductViewState extends State<ProductViewPage> {
     List tagList = value.split(",");
     return value.isEmpty
         ? Expanded(
-        child: SizedBox(
-          width: double.infinity,
-        ))
+            child: SizedBox(
+            width: double.infinity,
+          ))
         : Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(label,
-                style: TextStyle(fontWeight: FontWeight.w500)),
-          ),
-          Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: tagList.length != 1
-                  ? Wrap(
-                spacing: 2.0,
-                alignment: WrapAlignment.spaceBetween,
-                children: List.generate(tagList.length, (index) {
-                  return ChoiceChip(
-                      label: Text(tagList[index]), selected: false);
-                }),
-              )
-                  : ChoiceChip(label: Text(value), selected: false)),
-        ],
-      ),
-    );
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(label,
+                      style: TextStyle(fontWeight: FontWeight.w500)),
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: tagList.length != 1
+                        ? Wrap(
+                            spacing: 2.0,
+                            alignment: WrapAlignment.spaceBetween,
+                            children: List.generate(tagList.length, (index) {
+                              return ChoiceChip(
+                                  label: Text(tagList[index]), selected: false);
+                            }),
+                          )
+                        : ChoiceChip(label: Text(value), selected: false)),
+              ],
+            ),
+          );
   }
 
   Widget buildTableRowGrid(String label1, String value1, label2, value2) {
@@ -450,52 +460,52 @@ class _ProductViewState extends State<ProductViewPage> {
         Expanded(
           child: value1 == "-"
               ? SizedBox(
-            width: double.infinity,
-          )
+                  width: double.infinity,
+                )
               : Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(label1,
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(label1,
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            value1,
+                          )),
+                    ],
+                  ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      value1,
-                    )),
-              ],
-            ),
-          ),
         ),
         Expanded(
           child: value2 == "-"
               ? SizedBox(
-            width: double.infinity,
-          )
+                  width: double.infinity,
+                )
               : Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(label2,
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(label2,
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            value2,
+                          )),
+                    ],
+                  ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      value2,
-                    )),
-              ],
-            ),
-          ),
         ),
       ],
     );
@@ -532,4 +542,62 @@ class _ProductViewState extends State<ProductViewPage> {
     });
   }
 
+  Future<String> showInfoDialog(
+      BuildContext context, String titleText, String contentText) {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(titleText),
+                  CloseButton(
+                      color: Colors.black87,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ]),
+            content: SingleChildScrollView(child: Text(contentText)),
+            actions: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child:
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    ButtonTheme(
+                        minWidth: 25.0,
+                        height: 40.0,
+                        child: FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          child: Text('Call'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            call();
+                          },
+                        )),
+                    SizedBox(width: 8.0),
+                    ButtonTheme(
+                        minWidth: 25.0,
+                        height: 40.0,
+                        child: FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          child: Text('Message'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            whatsappRetailer();
+                          },
+                        )),
+                    SizedBox(width: 8.0),
+                  ]))
+            ]);
+      },
+    );
+  }
+  call() {
+    launch("tel://917208226814");
+  }
+
+  void whatsappRetailer() {
+    launch("https://api.whatsapp.com/send?phone=917208226814");
+  }
 }
