@@ -550,7 +550,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                    child: Text('Top Products',
+                    child: Text('New Arrivals',
                       style:TextStyle(fontSize: 18, color: Colors.grey.shade200),
                      ),
                     ),
@@ -559,17 +559,17 @@ class _BullionCityPageState extends State<BullionCityPage> {
               ),)),
 
           //  // top post label 
-          // Visibility(
-          //   visible: postList.isNotEmpty && _postError==null,
-          //   child: Padding(
-          //     padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
-          //     child: Text(
-          //       'Top Posts',
-          //       style:
-          //           TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
-          //     ),
-          //   ),
-          // ),
+          Visibility(
+            visible: postList.isNotEmpty && _postError==null,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
+              child: Text(
+                'Top Posts',
+                style:
+                    TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
+              ),
+            ),
+          ),
 
           // // top posts carousel
           Visibility(

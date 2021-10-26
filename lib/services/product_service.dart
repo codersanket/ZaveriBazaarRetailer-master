@@ -47,15 +47,6 @@ class ProductService {
     }
   }
 
-  static Future<dynamic> getNewProducts() async {
-    try {
-      var response = await DioProvider().dio().get("/m/add_new_arrivals");
-      return Future.value(response.data);
-    } catch (e) {
-      return Future.error(_handleError(e));
-    }
-  }
-
   static Future<Product> getById(String id) async {
     try {
       var response = await DioProvider().dio().get('/products/$id');
@@ -225,6 +216,16 @@ class ProductService {
     try {
       var response = await DioProvider().dio().get('/products/product_topten');
 
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
+  //new arrivals
+  static Future<dynamic> getNewProducts() async {
+    try {
+      var response = await DioProvider().dio().get("/m/add_new_arrivals");
       return Future.value(response.data);
     } catch (e) {
       return Future.error(_handleError(e));

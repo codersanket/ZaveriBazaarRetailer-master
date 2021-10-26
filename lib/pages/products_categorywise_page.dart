@@ -1,5 +1,10 @@
+//import 'dart:html';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:sonaar_retailer/models/product.dart';
+import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/pages/products_page.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
 import 'package:sonaar_retailer/pages/widgets/product_filters.dart' as PF;
@@ -28,6 +33,8 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
 
   List<dynamic> _categories = [];
   List<dynamic> _newProducts;
+  int _currentProductIndex = 0;
+
   bool isEmpty = false;
   var isLoading = true, _error;
 
@@ -226,7 +233,116 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
   }
 
   Widget _buildCarouselItem(BuildContext context, int index) {
-    return Card();
+    //final productList = _newProducts[index]["Product"];
+    List<Product> productList = Product.listFromJson(_newProducts[index]["Product"]);
+    final firmName = _newProducts[index]["name"];
+    return Card(
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(4), child: Text(firmName)),
+        //   CarouselSlider(
+        //   options: CarouselOptions(
+        //     autoPlay: true,
+        //     viewportFraction: 0.6,
+        //     height: 250,
+        //     //aspectRatio: 3,
+        //     //enlargeCenterPage: true,
+        //     //scrollDirection: Axis.vertical,
+        //     onPageChanged: (index, reason) {
+        //       setState(
+        //         () {
+        //           _currentProductIndex = index;
+        //         },
+        //       );
+        //     },
+        //   ),
+        //   items: productList
+        //       .map((item) => Card(
+        //             child: GestureDetector(
+        //               onTap: () {
+        //                 Navigator.push(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                       builder: (_) => ProductViewPage(
+        //                         products: productList,
+        //                         index: _currentProductIndex,
+        //                         onChange: (product) {
+        //                           setState(() => productList[_currentProductIndex] = product);
+        //                         },
+        //                       ),
+        //                     ));
+        //               },
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.start,
+        //                 children: [
+        //                   Expanded(
+        //                     child: Padding(
+        //                       padding: const EdgeInsets.only(top : 8.0),
+        //                       child: Container(
+        //                         //height: 150,
+        //                         //width: 150,
+        //                         color: Colors.white,
+        //                         child: Center(
+        //                           child: CachedNetworkImage(
+        //                             imageUrl: item.imageUrl,
+        //                             fit: BoxFit.cover,
+        //                             alignment: Alignment.topCenter,
+        //                             errorWidget: (c, u, e) => Image.asset(
+        //                               "images/ic_launcher.png",
+        //                               fit: BoxFit.contain,
+        //                               alignment: Alignment.topCenter,
+        //                             ),
+        //                             //Icon(Icons.warning),
+        //                             placeholder: (c, u) => Center(
+        //                                 child: CircularProgressIndicator(strokeWidth: 2.0)),
+        //                           ),
+        //                         ),
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   Padding(
+        //                     padding:
+        //                         const EdgeInsets.symmetric(horizontal: 4.0),
+        //                     child: Container(
+        //                       //color: Colors.black.withOpacity(0.6),
+        //                       padding: EdgeInsets.all(8.0),
+        //                       child: Padding(
+        //                         padding: const EdgeInsets.all(8.0),
+        //                         child: Row(
+        //                           mainAxisAlignment: MainAxisAlignment.start,
+        //                           children: <Widget>[
+        //                             Text(
+        //                               "by ",
+        //                               style: TextStyle(fontSize: 10),
+        //                               overflow: TextOverflow.fade,
+        //                               maxLines: 1,
+        //                               softWrap: false,
+        //                             ),
+        //                             Expanded(
+        //                               child: Text(
+        //                                 item.firm.name.isNotEmpty
+        //                                     ? "${item.firm.name}"
+        //                                     : "-",
+        //                                 style: TextStyle(color: Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 12),
+        //                                 overflow: TextOverflow.fade,
+        //                                 maxLines: 1,
+        //                                 softWrap: false,
+        //                               ),
+        //                             ),
+        //                           ],
+        //                         ),
+        //                       ),
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //           ))
+        //       .toList(),
+        // ),
+        ],
+      ),
+    );
   }
 
   fetchProducts() {
@@ -242,6 +358,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
         if (mounted)
           setState(() {
             _newProducts = res["request"];
+            //List<Product> _newProducts = Product.listFromJson(res["request"]);
             if (_newProducts != null) {
               _newProducts.isEmpty ? isEmpty = true : isEmpty = false;
             }
