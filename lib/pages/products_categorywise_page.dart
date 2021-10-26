@@ -242,7 +242,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
     return Container(
       color: Color(0xff004272),
       child: Column(
-        //mainAxisAlignment: MainAxisAlignment.start,
+        //mainAxisAlignment: MainAxisAlignment.,
         children: [
           Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: Colors.grey.shade200,fontWeight: FontWeight.bold,))),
           CarouselSlider(
@@ -263,7 +263,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
           ),
           items: productList
               .map((item) => Card(
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () {
                         Navigator.push(
                             context,
@@ -278,19 +278,19 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                             ));
                       },
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(top : 8.0),
                               child: Container(
-                                //height: 150,
+                                //height: 400,
                                 //width: 150,
                                 color: Colors.white,
                                 child: Center(
                                   child: CachedNetworkImage(
                                     imageUrl: item.imageUrl,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                     alignment: Alignment.topCenter,
                                     errorWidget: (c, u, e) => Image.asset(
                                       "images/ic_launcher.png",
@@ -313,16 +313,14 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                               padding: EdgeInsets.all(8.0),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
-                                  child: Text(
-                                    item.categoryId.isNotEmpty
-                                        ? "${item.categoryName}"
-                                        : "-",
-                                    style: TextStyle(fontSize: 12),
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                    softWrap: false,
-                                  ),
+                                child: Text(
+                                  item.categoryId.isNotEmpty
+                                      ? "${item.categoryName}"
+                                      : "-",
+                                  style: TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
                                 ),
                               ),
                             ),
