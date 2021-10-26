@@ -152,8 +152,8 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 2,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
+        //crossAxisSpacing: 2,
+        //mainAxisSpacing: 2,
       ),
       itemBuilder: buildGridItem,
     );
