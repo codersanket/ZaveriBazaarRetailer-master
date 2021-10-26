@@ -678,7 +678,10 @@ class _ProductsPageState extends State<ProductsPage> {
 
     params['whats_new'] = widget.whatsNew ? '1' : null;
 
-    params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
+      if(widget.onlyBookmarked){
+        params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
+      }
+   // params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
 
     params['subcategory_id'] =
         filter.subcategories.where((c) => c.checked).map((c) => c.id).join(",");
