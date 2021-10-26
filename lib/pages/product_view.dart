@@ -214,42 +214,7 @@ class _ProductViewState extends State<ProductViewPage> {
                             ),
                           ],
                         ),
-                        // ElevatedButton.icon(
-                        //     style: ButtonStyle(
-                        //       shape: MaterialStateProperty.all<
-                        //               RoundedRectangleBorder>(
-                        //           RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(18.0),
-                        //       )),
-                        //       foregroundColor:
-                        //           MaterialStateProperty.all(Colors.white),
-                        //       backgroundColor:
-                        //           MaterialStateProperty.all(Colors.green),
-                        //     ),
-                        //     onPressed: () {
-                        //       UserLogService.userLogById(
-                        //               products[pageController.page.toInt()]
-                        //                   .wholesalerFirmId,
-                        //               "Product details")
-                        //           .then((res) {
-                        //         print("userLogById Success");
-                        //       }).catchError((err) {
-                        //         print("userLogById Error:" + err.toString());
-                        //       });
-                        //       // do whatsapp share process
-                        //       whatsappWholesaler(
-                        //           products[pageController.page.toInt()]
-                        //               .firm
-                        //               .mobile,
-                        //           products[pageController.page.toInt()]
-                        //               .shareLink);
-                        //     },
-                        //     icon: Image.asset('images/whatsapp.png',
-                        //         width: 20, color: Colors.white),
-                        //     label: Text(
-                        //       'MESSAGE',
-                        //       style: TextStyle(fontSize: 12),
-                        //     )),
+                        
                       ],
                     ),
                   ),
@@ -261,27 +226,37 @@ class _ProductViewState extends State<ProductViewPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        child: Container(
-                          //decoration:BoxDecoration(),
-                          width: double.infinity,
-                          height: 300,
-                          color: Colors.white,
-                          child: Hero(
-                            tag: heroTag,
-                            child: CachedNetworkImage(
-                              imageUrl: product.thumbUrl,
-                              fit: BoxFit.contain,
-                              errorWidget: (c, u, e) => Image.asset(
-                                "images/ic_launcher.png",
-                                fit: BoxFit.contain,
-                                alignment: Alignment.topCenter,
+                        child: Stack(
+                          children: [
+                            Container(
+                              //decoration:BoxDecoration(),
+                              width: double.infinity,
+                              height: 300,
+                              color: Colors.white,
+                              child: Hero(
+                                tag: heroTag,
+                                child: CachedNetworkImage(
+                                  imageUrl: product.thumbUrl,
+                                  fit: BoxFit.contain,
+                                  errorWidget: (c, u, e) => Image.asset(
+                                    "images/ic_launcher.png",
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.topCenter,
+                                  ),
+                                  //   Icon(Icons.warning, color: Colors.white),
+                                  // placeholder: (c, u) => Center(
+                                  //     child: CircularProgressIndicator(
+                                  //         strokeWidth: 2.0)),
+                                ),
                               ),
-                              //   Icon(Icons.warning, color: Colors.white),
-                              // placeholder: (c, u) => Center(
-                              //     child: CircularProgressIndicator(
-                              //         strokeWidth: 2.0)),
                             ),
-                          ),
+                            Positioned(child: Row(
+                              children: [
+                                Icon(Icons.error_outline_outlined, color:Colors.grey.shade300),
+                                Text("Click image to view in fullscreen", style:TextStyle(color: Colors.grey.shade300)),
+                              ],
+                            ),bottom:0,left: 5,),
+                          ],
                         ),
                         onTap: () {
                           Navigator.push(

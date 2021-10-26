@@ -58,7 +58,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
           style: TextStyle(fontFamily: 'serif'),
         ),
       ),
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: widget.whatsNew ?Color(0xff004272) :Colors.grey.shade200,
       drawer: !widget.onlyBookmarked
           ? DrawerWidget(scaffoldKey: _scaffoldKey)
           : null,
@@ -221,10 +221,10 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       controller: _scrollController,
       itemCount: _newProducts.length,
       separatorBuilder: (ctx, i) => Divider(
-        height: 5,
-        thickness: 2,
+        height: 8,
+        //thickness: 2,
         //color: Colors.blueGrey.shade100,
-        color: Colors.grey.shade200,
+        color: Color(0xff004272),
       ),
       itemBuilder: (context, index) {
         return _buildCarouselItem(context, index);
@@ -235,111 +235,104 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
   Widget _buildCarouselItem(BuildContext context, int index) {
     //final productList = _newProducts[index]["Product"];
     List<Product> productList = Product.listFromJson(_newProducts[index]["Product"]);
+    if (productList.length>10) {
+      productList = productList.sublist(0,10);
+    }
     final firmName = _newProducts[index]["name"];
-    return Card(
+    return Container(
+      color: Color(0xff004272),
       child: Column(
+        //mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(padding: EdgeInsets.all(4), child: Text(firmName)),
-        //   CarouselSlider(
-        //   options: CarouselOptions(
-        //     autoPlay: true,
-        //     viewportFraction: 0.6,
-        //     height: 250,
-        //     //aspectRatio: 3,
-        //     //enlargeCenterPage: true,
-        //     //scrollDirection: Axis.vertical,
-        //     onPageChanged: (index, reason) {
-        //       setState(
-        //         () {
-        //           _currentProductIndex = index;
-        //         },
-        //       );
-        //     },
-        //   ),
-        //   items: productList
-        //       .map((item) => Card(
-        //             child: GestureDetector(
-        //               onTap: () {
-        //                 Navigator.push(
-        //                     context,
-        //                     MaterialPageRoute(
-        //                       builder: (_) => ProductViewPage(
-        //                         products: productList,
-        //                         index: _currentProductIndex,
-        //                         onChange: (product) {
-        //                           setState(() => productList[_currentProductIndex] = product);
-        //                         },
-        //                       ),
-        //                     ));
-        //               },
-        //               child: Column(
-        //                 mainAxisAlignment: MainAxisAlignment.start,
-        //                 children: [
-        //                   Expanded(
-        //                     child: Padding(
-        //                       padding: const EdgeInsets.only(top : 8.0),
-        //                       child: Container(
-        //                         //height: 150,
-        //                         //width: 150,
-        //                         color: Colors.white,
-        //                         child: Center(
-        //                           child: CachedNetworkImage(
-        //                             imageUrl: item.imageUrl,
-        //                             fit: BoxFit.cover,
-        //                             alignment: Alignment.topCenter,
-        //                             errorWidget: (c, u, e) => Image.asset(
-        //                               "images/ic_launcher.png",
-        //                               fit: BoxFit.contain,
-        //                               alignment: Alignment.topCenter,
-        //                             ),
-        //                             //Icon(Icons.warning),
-        //                             placeholder: (c, u) => Center(
-        //                                 child: CircularProgressIndicator(strokeWidth: 2.0)),
-        //                           ),
-        //                         ),
-        //                       ),
-        //                     ),
-        //                   ),
-        //                   Padding(
-        //                     padding:
-        //                         const EdgeInsets.symmetric(horizontal: 4.0),
-        //                     child: Container(
-        //                       //color: Colors.black.withOpacity(0.6),
-        //                       padding: EdgeInsets.all(8.0),
-        //                       child: Padding(
-        //                         padding: const EdgeInsets.all(8.0),
-        //                         child: Row(
-        //                           mainAxisAlignment: MainAxisAlignment.start,
-        //                           children: <Widget>[
-        //                             Text(
-        //                               "by ",
-        //                               style: TextStyle(fontSize: 10),
-        //                               overflow: TextOverflow.fade,
-        //                               maxLines: 1,
-        //                               softWrap: false,
-        //                             ),
-        //                             Expanded(
-        //                               child: Text(
-        //                                 item.firm.name.isNotEmpty
-        //                                     ? "${item.firm.name}"
-        //                                     : "-",
-        //                                 style: TextStyle(color: Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 12),
-        //                                 overflow: TextOverflow.fade,
-        //                                 maxLines: 1,
-        //                                 softWrap: false,
-        //                               ),
-        //                             ),
-        //                           ],
-        //                         ),
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //           ))
-        //       .toList(),
-        // ),
+          Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: Colors.grey.shade200,fontWeight: FontWeight.bold,))),
+          CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: true,
+            viewportFraction: 0.6,
+            height: 250,
+            //aspectRatio: 3,
+            //enlargeCenterPage: true,
+            //scrollDirection: Axis.vertical,
+            onPageChanged: (index, reason) {
+              setState(
+                () {
+                  _currentProductIndex = index;
+                },
+              );
+            },
+          ),
+          items: productList
+              .map((item) => Card(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProductViewPage(
+                                products: productList,
+                                index: _currentProductIndex,
+                                onChange: (product) {
+                                  setState(() => productList[_currentProductIndex] = product);
+                                },
+                              ),
+                            ));
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top : 8.0),
+                              child: Container(
+                                //height: 150,
+                                //width: 150,
+                                color: Colors.white,
+                                child: Center(
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.imageUrl,
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
+                                    errorWidget: (c, u, e) => Image.asset(
+                                      "images/ic_launcher.png",
+                                      fit: BoxFit.contain,
+                                      alignment: Alignment.topCenter,
+                                    ),
+                                    //Icon(Icons.warning),
+                                    placeholder: (c, u) => Center(
+                                        child: CircularProgressIndicator(strokeWidth: 2.0)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Container(
+                              //color: Colors.black.withOpacity(0.6),
+                              padding: EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Expanded(
+                                  child: Text(
+                                    item.categoryId.isNotEmpty
+                                        ? "${item.categoryName}"
+                                        : "-",
+                                    style: TextStyle(fontSize: 12),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
         ],
       ),
     );
