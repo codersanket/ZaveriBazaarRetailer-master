@@ -2,6 +2,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/pages/widgets/product_filters.dart' as PF;
 import 'package:sonaar_retailer/models/product.dart';
@@ -617,7 +618,6 @@ class _ProductsPageState extends State<ProductsPage> {
     print('Search KeyWord:-$keyword');
     fetchProducts();
   }
-
   fetchProducts() {
     setState(() {
       isLoading = true;
@@ -629,7 +629,6 @@ class _ProductsPageState extends State<ProductsPage> {
       vWhatsappButton = false;
       vWeightClearButton = false;
     });
-
     updateParams();
 
     ProductService.getAll(params).then((res) {
@@ -768,6 +767,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightFromController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
@@ -786,6 +786,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightToController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
