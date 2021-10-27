@@ -641,6 +641,9 @@ class _ProductsPageState extends State<ProductsPage> {
         setState(() {
           if (params['page'] == 1) _products.clear();
 
+          if(widget.firm==null){
+            products.shuffle();
+          }
           //products.shuffle();
           //
           //FOR TESTING THE CAROUSEL
