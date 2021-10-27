@@ -16,6 +16,7 @@ import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
+import 'package:sonaar_retailer/pages/post_view.dart';
 import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/pages/wholesaler_view.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
@@ -40,7 +41,7 @@ class BullionCityPage extends StatefulWidget {
 
 class _BullionCityPageState extends State<BullionCityPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var isLoading = true, _error,_prodError,_postError;
+  var isLoading = true, _error, _prodError, _postError;
   List<BullionCity> _cityList = [];
   BullionService bullionService;
 
@@ -85,7 +86,9 @@ class _BullionCityPageState extends State<BullionCityPage> {
     return Obx(() {
       return SafeArea(
         child: Scaffold(
-          appBar:AppBar(title :Text('Zaveri Bazaar', style: TextStyle(fontFamily: 'serif')),),
+          appBar: AppBar(
+            title: Text('Zaveri Bazaar', style: TextStyle(fontFamily: 'serif')),
+          ),
           key: _scaffoldKey,
           drawer: DrawerWidget(scaffoldKey: _scaffoldKey),
           body: _error != null
@@ -205,12 +208,13 @@ class _BullionCityPageState extends State<BullionCityPage> {
                           ),
                         ),
                         Text(
-                            BullionPriceHelper.getLivePrice(
-                                _bullionPriceController.goldPrice.value,
-                                _selectedCity != null ? _selectedCity.gold : 0),
-                            style: TextStyle(
+                          BullionPriceHelper.getLivePrice(
+                              _bullionPriceController.goldPrice.value,
+                              _selectedCity != null ? _selectedCity.gold : 0),
+                          style: TextStyle(
                               fontSize: 20.0,
-                                color: _bullionPriceController.selectedColourGold),
+                              color:
+                                  _bullionPriceController.selectedColourGold),
                         ),
                       ],
                     ),
@@ -244,9 +248,9 @@ class _BullionCityPageState extends State<BullionCityPage> {
                                     ? _selectedCity.silver
                                     : 0),
                             style: TextStyle(
-                              fontSize: 20.0,
-                                color: _bullionPriceController.selectedColourSilver
-                            )),
+                                fontSize: 20.0,
+                                color: _bullionPriceController
+                                    .selectedColourSilver)),
                       ],
                     ),
                   ),
@@ -495,7 +499,8 @@ class _BullionCityPageState extends State<BullionCityPage> {
                                 : '-',
                             style: TextStyle(
                                 fontSize: 18.0,
-                                color: _bullionPriceController.selectedColourGold),
+                                color:
+                                    _bullionPriceController.selectedColourGold),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -511,9 +516,9 @@ class _BullionCityPageState extends State<BullionCityPage> {
                                     model.silver_price_margin)
                                 : '-',
                             style: TextStyle(
-                              fontSize: 18.0,
-                              color: _bullionPriceController.selectedColourSilver
-                            ),
+                                fontSize: 18.0,
+                                color: _bullionPriceController
+                                    .selectedColourSilver),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -524,8 +529,8 @@ class _BullionCityPageState extends State<BullionCityPage> {
               },
             ),
           ),
-        
-          // top products label 
+
+          // top products label
           // Visibility(
           //   visible: productList.isNotEmpty && _prodError==null,
           //   child: Padding(
@@ -540,51 +545,55 @@ class _BullionCityPageState extends State<BullionCityPage> {
 
           //top products carousel
           Visibility(
-            visible: productList.isNotEmpty && _prodError==null,
-            child: Container(
-              height :350,
-              color :Color(0xff004272),
-              //margin: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                    child: Text('New Arrivals',
-                      style:TextStyle(fontSize: 18, color: Colors.grey.shade200),
-                     ),
+              visible: productList.isNotEmpty && _prodError == null,
+              child: Container(
+                height: 350,
+                color: Color(0xff004272),
+                //margin: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                      child: Text(
+                        'New Arrivals',
+                        style: TextStyle(
+                            fontSize: 18, color: Colors.grey.shade200),
+                      ),
                     ),
-                  _buildProductCarousel(),
-                ],
-              ),)),
+                    _buildProductCarousel(),
+                  ],
+                ),
+              )),
 
-          //  // top post label 
+          //  // top post label
           Visibility(
-            visible: postList.isNotEmpty && _postError==null,
+            visible: postList.isNotEmpty && _postError == null,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 8.0),
               child: Text(
                 'Top Posts',
-                style:
-                    TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
+                style: TextStyle(
+                    fontSize: 18, color: Theme.of(context).accentColor),
               ),
             ),
           ),
 
           // // top posts carousel
           Visibility(
-            visible: postList.isNotEmpty && _postError==null,
-            child: Card(
-              color :Colors.grey.shade200,
-              margin: EdgeInsets.all(10),
-              child: _buildPostCarousel(),)),
+              visible: postList.isNotEmpty && _postError == null,
+              child: Card(
+                color: Colors.grey.shade200,
+                margin: EdgeInsets.all(10),
+                child: _buildPostCarousel(),
+              )),
         ],
       ),
     );
   }
 
 //Product Carousel
-Widget _buildProductCarousel() {
+  Widget _buildProductCarousel() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -615,7 +624,9 @@ Widget _buildProductCarousel() {
                                 products: productList,
                                 index: _currentProductIndex,
                                 onChange: (product) {
-                                  setState(() => productList[_currentProductIndex] = product);
+                                  setState(() =>
+                                      productList[_currentProductIndex] =
+                                          product);
                                 },
                               ),
                             ));
@@ -625,7 +636,7 @@ Widget _buildProductCarousel() {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top : 8.0),
+                              padding: const EdgeInsets.only(top: 8.0),
                               child: Container(
                                 //height: 150,
                                 //width: 150,
@@ -671,7 +682,10 @@ Widget _buildProductCarousel() {
                                         item.firm.name.isNotEmpty
                                             ? "${item.firm.name}"
                                             : "-",
-                                        style: TextStyle(color: Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 12),
+                                        style: TextStyle(
+                                            color: Color(0xff004272),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12),
                                         overflow: TextOverflow.fade,
                                         maxLines: 1,
                                         softWrap: false,
@@ -724,8 +738,7 @@ Widget _buildProductCarousel() {
     });
   }
 
-  fetchTopProducts(){
-    
+  fetchTopProducts() {
     setState(() {
       //isLoading = true;
       ProductService.getTopProducts().then((res) {
@@ -747,11 +760,10 @@ Widget _buildProductCarousel() {
     });
   }
 
-
 //post carousel
 
-Widget _buildPostCarousel() {
-  dynamic heroTag;
+  Widget _buildPostCarousel() {
+    dynamic heroTag;
     return Column(
       children: [
         CarouselSlider(
@@ -772,108 +784,121 @@ Widget _buildPostCarousel() {
           ),
           items: postList
               .map((post) => Card(
-      color: Colors.white,
-      child: GridTile(
-        child: GestureDetector(
-          onTap: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (_) => PostViewPage(
-            //         post: _posts[index],
-            //         heroTag: heroTag,
-            //         onChange: (post) {
-            //           setState(() => _posts[index] = post);
-            //         },
-            //       ),
-            //     ));
-          },
-          child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              //  Padding(
-              //    padding: const EdgeInsets.all(8.0),
-              //    child: GestureDetector(
-              //      child: Container(
-              //         width: 40.0,
-              //         height: 40.0,
-              //         child: post.firm.thumbUrl == null
-              //             ? Image.asset('images/placeholder.png')
-              //             : CachedNetworkImage(
-              //                 imageUrl: post.firm.thumbUrl,
-              //                 fit: BoxFit.contain,
-              //               ),
-              //       ),
-              //       onTap: () {
-              //       Navigator.of(context).push(
-              //         MaterialPageRoute(
-              //           builder: (_) => WholesalerViewPage(
-              //             wholesalerId: post.wholesalerFirmId,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //    ),
-              //  ),
-              
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    //width : 150,
-                    child: post.thumbUrl == null
-                        ? null
-                        : GestureDetector(
-                            onTap: () async {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => ImageView(
-                                    imageUrl: post.imageUrl,
-                                    heroTag: heroTag,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: CachedNetworkImage(
-                              imageUrl: post.thumbUrl,
-                              fit: BoxFit.contain,
-                              alignment: Alignment.center,
-                              errorWidget: (c, u, e) => Image.asset(
-                                "images/ic_launcher.png",
-                                fit: BoxFit.contain,
-                                alignment: Alignment.topCenter,
+                    color: Colors.white,
+                    //child: GridTile(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => PostViewPage(
+                                    posts: postList,
+                                    index: _currentPostIndex,
+                                  onChange: (post) {
+                                    setState(() =>
+                                    postList[_currentPostIndex] =
+                                        post);
+                                  },)));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (_) => PostViewPage(
+                        //         post: _posts[index],
+                        //         heroTag: heroTag,
+                        //         onChange: (post) {
+                        //           setState(() => _posts[index] = post);
+                        //         },
+                        //       ),
+                        //     ));
+                      },
+                      child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          //  Padding(
+                          //    padding: const EdgeInsets.all(8.0),
+                          //    child: GestureDetector(
+                          //      child: Container(
+                          //         width: 40.0,
+                          //         height: 40.0,
+                          //         child: post.firm.thumbUrl == null
+                          //             ? Image.asset('images/placeholder.png')
+                          //             : CachedNetworkImage(
+                          //                 imageUrl: post.firm.thumbUrl,
+                          //                 fit: BoxFit.contain,
+                          //               ),
+                          //       ),
+                          //       onTap: () {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (_) => WholesalerViewPage(
+                          //             wholesalerId: post.wholesalerFirmId,
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //    ),
+                          //  ),
+
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                //width : 150,
+                                child: post.thumbUrl == null
+                                    ? null:
+                                    // : GestureDetector(
+                                    //     onTap: () async {
+                                    //       // Navigator.of(context).push(
+                                    //       //   MaterialPageRoute(
+                                    //       //     builder: (_) => ImageView(
+                                    //       //       imageUrl: post.imageUrl,
+                                    //       //       heroTag: heroTag,
+                                    //       //     ),
+                                    //       //   ),
+                                    //       //);
+                                    //     },
+                                    //     child:
+                                   CachedNetworkImage(
+                                          imageUrl: post.thumbUrl,
+                                          fit: BoxFit.contain,
+                                          alignment: Alignment.center,
+                                          errorWidget: (c, u, e) => Image.asset(
+                                            "images/ic_launcher.png",
+                                            fit: BoxFit.contain,
+                                            alignment: Alignment.topCenter,
+                                          ),
+                                          // Icon(Icons.warning),
+                                          // placeholder: (c, u) => Center(
+                                          //     child:
+                                          //         CircularProgressIndicator(strokeWidth: 2.0)),
+                                        ),
+                                      ),
                               ),
-                              // Icon(Icons.warning),
-                              // placeholder: (c, u) => Center(
-                              //     child:
-                              //         CircularProgressIndicator(strokeWidth: 2.0)),
+                            ),
+                          //),
+
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              post.firm.name ?? '',
+                              style: TextStyle(
+                                  color: Color(0xff004272),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
                             ),
                           ),
-                  ),
-                ),
-              ),
 
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal : 4.0),
-                child: Text(post.firm.name ?? '' ,
-                  style: TextStyle(
-                    color: Color(0xff004272),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12),
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  softWrap: false,
-                ),
-              ),
-
-              SizedBox(height: 8),
-            ],
-          ),
-        ),
-      ),
-    ))
-      .toList(),
+                          SizedBox(height: 8),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -896,8 +921,7 @@ Widget _buildPostCarousel() {
     );
   }
 
-fetchTopPosts(){
-    
+  fetchTopPosts() {
     setState(() {
       //isLoading = true;
       PostService.getTopPosts().then((res) {
@@ -918,8 +942,6 @@ fetchTopPosts(){
       });
     });
   }
-
-
 
 //bullion
 
@@ -999,10 +1021,4 @@ fetchTopPosts(){
         });
     });
   }
-
-
-
-
-
-
 }
