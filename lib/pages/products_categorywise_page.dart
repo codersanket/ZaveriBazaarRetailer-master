@@ -58,7 +58,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
           style: TextStyle(fontFamily: 'serif'),
         ),
       ),
-      backgroundColor: widget.whatsNew ?Color(0xff004272) :Colors.grey.shade200,
+      backgroundColor: widget.whatsNew ? Color(0xff004272) : Colors.grey.shade200,
       drawer: !widget.onlyBookmarked
           ? DrawerWidget(scaffoldKey: _scaffoldKey)
           : null,
@@ -217,15 +217,15 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
   }
 
   Widget buildCarouselView() {
-    return ListView.separated(
+    return ListView.builder(
       controller: _scrollController,
       itemCount: _newProducts.length,
-      separatorBuilder: (ctx, i) => Divider(
-        height: 8,
-        //thickness: 2,
-        //color: Colors.blueGrey.shade100,
-        color: Color(0xff004272),
-      ),
+      // separatorBuilder: (ctx, i) => Divider(
+      //   height: 8,
+      //   //thickness: 2,
+      //   //color: Colors.blueGrey.shade100,
+      //   color: Color(0xff004272),
+      // ),
       itemBuilder: (context, index) {
         return _buildCarouselItem(context, index);
       },
@@ -240,11 +240,11 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
     }
     final firmName = _newProducts[index]["name"];
     return Container(
-      color: Color(0xff004272),
+      color: index.isEven ? Color(0xff004272) : Colors.grey.shade200,
       child: Column(
         //mainAxisAlignment: MainAxisAlignment.,
         children: [
-          Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: Colors.grey.shade200,fontWeight: FontWeight.bold,))),
+          Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: index.isEven ? Colors.grey.shade200 : Color(0xff004272),fontWeight: FontWeight.bold,))),
           CarouselSlider(
           options: CarouselOptions(
             autoPlay: true,
