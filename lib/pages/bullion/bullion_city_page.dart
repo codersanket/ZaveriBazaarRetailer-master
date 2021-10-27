@@ -877,15 +877,15 @@ Widget _buildPostCarousel() {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: productList.map((urlOfItem) {
-            int index = productList.indexOf(urlOfItem);
+          children: postList.map((urlOfItem) {
+            int index = postList.indexOf(urlOfItem);
             return Container(
               width: 5.0,
               height: 5.0,
               margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _currentProductIndex == index
+                color: _currentPostIndex == index
                     ? Color.fromRGBO(0, 0, 0, 0.8)
                     : Color.fromRGBO(0, 0, 0, 0.3),
               ),
