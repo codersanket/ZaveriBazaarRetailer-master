@@ -365,7 +365,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                           ),
                           //gold title text
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.20,
+                           // width: MediaQuery.of(context).size.width * 0.20,
                             child: Text(
                               'Gold',
                               style: TextStyle(
@@ -375,7 +375,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                           ),
                           // silver title text
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.20,
+                            //width: MediaQuery.of(context).size.width * 0.20,
                             margin: const EdgeInsets.only(left: 5.0),
                             child: Text(
                               'Silver',
@@ -628,6 +628,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
     );
   }
 
+//Builion dealer card
   Widget _buildBuliondealer(){
     return  Card(
       margin: const EdgeInsets.all(10.0),
@@ -770,6 +771,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
       ),
     );
   }
+
 //Product Carousel
   Widget _buildProductCarousel() {
     return Column(
