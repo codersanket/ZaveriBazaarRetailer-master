@@ -41,7 +41,7 @@ class _ProductsPageState extends State<ProductsPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Map<String, dynamic> params = {'page': 1, 'per_page': 30, 'query': null};
 
-  var isLoading = true, _error, totalPage = 0, rowCount = 0;
+  var isLoading = false, _error, totalPage = 0, rowCount = 0;
   List<Product> _products = [];
 
   List<Product> temp = [];

@@ -628,7 +628,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
     );
   }
 
-//Builion dealer card
+//Bullion dealer card
   Widget _buildBuliondealer(){
     return  Card(
       margin: const EdgeInsets.all(10.0),
