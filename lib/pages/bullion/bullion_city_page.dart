@@ -354,181 +354,217 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 children: [
                   // Bullion Dealer title text
                   Expanded(
-                    child: Text(
-                      'Bullion Dealer',
-                      style: TextStyle(
-                          fontSize: 16, color: Theme.of(context).accentColor),
+                    child: ExpansionTile(
+                      title:Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Bullion Dealer',
+                            style: TextStyle(
+                                fontSize: 16, color: Theme.of(context).accentColor),
+                          ),
+                          //gold title text
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            child: Text(
+                              'Gold',
+                              style: TextStyle(
+                                  fontSize: 16, color: Theme.of(context).accentColor),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          // silver title text
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            margin: const EdgeInsets.only(left: 5.0),
+                            child: Text(
+                              'Silver',
+                              style: TextStyle(
+                                  fontSize: 16, color: Theme.of(context).accentColor),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                      children: [
+                        _buildBuliondealer()
+                        // Text(
+                        //   'Bullion Dealer',
+                        //   style: TextStyle(
+                        //       fontSize: 16, color: Theme.of(context).accentColor),
+                        // ),
+                      ],
                     ),
                   ),
 
                   // gold title text
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Text(
-                      'Gold',
-                      style: TextStyle(
-                          fontSize: 16, color: Theme.of(context).accentColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  // Container(
+                  //   width: MediaQuery.of(context).size.width * 0.25,
+                  //   child: Text(
+                  //     'Gold',
+                  //     style: TextStyle(
+                  //         fontSize: 16, color: Theme.of(context).accentColor),
+                  //     textAlign: TextAlign.center,
+                  //   ),
+                  // ),
 
                   // silver title text
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    margin: const EdgeInsets.only(left: 5.0),
-                    child: Text(
-                      'Silver',
-                      style: TextStyle(
-                          fontSize: 16, color: Theme.of(context).accentColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  // Container(
+                  //   width: MediaQuery.of(context).size.width * 0.25,
+                  //   margin: const EdgeInsets.only(left: 5.0),
+                  //   child: Text(
+                  //     'Silver',
+                  //     style: TextStyle(
+                  //         fontSize: 16, color: Theme.of(context).accentColor),
+                  //     textAlign: TextAlign.center,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
           ),
 
           // Bullion Dealer card
-          Card(
-            margin: const EdgeInsets.all(10.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _vendorList.length,
-              separatorBuilder: (ctx, i) => Divider(height: 1),
-              itemBuilder: (context, index) {
-                BullionVendor model = _vendorList[index];
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            BullionVendorDetailPage(model, getLivePriceModel()),
-                      ),
-                    ).then((value) {
-                      //debugPrint(value);
-                      _reloadPage();
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Wrap(
-                                direction: Axis.horizontal,
-                                children: [
-                                  // dealer name and rating details
-                                  Text(
-                                    model.firm_name,
-                                    style: TextStyle(
-                                        fontSize: 11.0, color: Colors.black),
-                                  ),
-                                ],
-                              ),
-
-                              // mobile number
-                              Wrap(
-                                direction: Axis.horizontal,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: model.mobile != null
-                                              ? model.mobile
-                                              : 'NA',
-                                          style: TextStyle(
-                                              fontSize: 11.0,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                        TextSpan(
-                                          text: " (",
-                                          style: TextStyle(
-                                              fontSize: 11.0,
-                                              color: Colors.black),
-                                        ),
-                                        WidgetSpan(
-                                          alignment:
-                                              PlaceholderAlignment.middle,
-                                          child: Icon(
-                                            Icons.star,
-                                            color: Color(0xffdea321),
-                                            size: 16,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: model.avg_rating
-                                                  .roundToDouble()
-                                                  .toString() +
-                                              ")",
-                                          style: TextStyle(
-                                              fontSize: 11.0,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // gold price
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          margin: const EdgeInsets.only(left: 5.0),
-                          child: Text(
-                            model.is_gold_available == 1
-                                ? BullionPriceHelper.getLivePrice(
-                                    _bullionPriceController.goldPrice.value,
-                                    model.gold_price_margin)
-                                : '-',
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                color:
-                                    _bullionPriceController.selectedColourGold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-
-                        // silver price
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          margin: const EdgeInsets.only(left: 5.0),
-                          child: Text(
-                            model.is_silver_available == 1
-                                ? BullionPriceHelper.getLivePrice(
-                                    _bullionPriceController.silverPrice.value,
-                                    model.silver_price_margin)
-                                : '-',
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                color: _bullionPriceController
-                                    .selectedColourSilver),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          // Card(
+          //   margin: const EdgeInsets.all(10.0),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(8),
+          //   ),
+          //   clipBehavior: Clip.antiAlias,
+          //   child: ListView.separated(
+          //     shrinkWrap: true,
+          //     physics: NeverScrollableScrollPhysics(),
+          //     itemCount: _vendorList.length,
+          //     separatorBuilder: (ctx, i) => Divider(height: 1),
+          //     itemBuilder: (context, index) {
+          //       BullionVendor model = _vendorList[index];
+          //       return GestureDetector(
+          //         behavior: HitTestBehavior.opaque,
+          //         onTap: () {
+          //           Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (_) =>
+          //                   BullionVendorDetailPage(model, getLivePriceModel()),
+          //             ),
+          //           ).then((value) {
+          //             //debugPrint(value);
+          //             _reloadPage();
+          //           });
+          //         },
+          //         child: Padding(
+          //           padding: const EdgeInsets.all(8.0),
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.max,
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Expanded(
+          //                 child: Column(
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Wrap(
+          //                       direction: Axis.horizontal,
+          //                       children: [
+          //                         // dealer name and rating details
+          //                         Text(
+          //                           model.firm_name,
+          //                           style: TextStyle(
+          //                               fontSize: 11.0, color: Colors.black),
+          //                         ),
+          //                       ],
+          //                     ),
+          //
+          //                     // mobile number
+          //                     Wrap(
+          //                       direction: Axis.horizontal,
+          //                       children: [
+          //                         RichText(
+          //                           text: TextSpan(
+          //                             children: [
+          //                               TextSpan(
+          //                                 text: model.mobile != null
+          //                                     ? model.mobile
+          //                                     : 'NA',
+          //                                 style: TextStyle(
+          //                                     fontSize: 11.0,
+          //                                     color: Theme.of(context)
+          //                                         .primaryColor),
+          //                               ),
+          //                               TextSpan(
+          //                                 text: " (",
+          //                                 style: TextStyle(
+          //                                     fontSize: 11.0,
+          //                                     color: Colors.black),
+          //                               ),
+          //                               WidgetSpan(
+          //                                 alignment:
+          //                                     PlaceholderAlignment.middle,
+          //                                 child: Icon(
+          //                                   Icons.star,
+          //                                   color: Color(0xffdea321),
+          //                                   size: 16,
+          //                                 ),
+          //                               ),
+          //                               TextSpan(
+          //                                 text: model.avg_rating
+          //                                         .roundToDouble()
+          //                                         .toString() +
+          //                                     ")",
+          //                                 style: TextStyle(
+          //                                     fontSize: 11.0,
+          //                                     color: Colors.black),
+          //                               ),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //
+          //               // gold price
+          //               Container(
+          //                 width: MediaQuery.of(context).size.width * 0.25,
+          //                 margin: const EdgeInsets.only(left: 5.0),
+          //                 child: Text(
+          //                   model.is_gold_available == 1
+          //                       ? BullionPriceHelper.getLivePrice(
+          //                           _bullionPriceController.goldPrice.value,
+          //                           model.gold_price_margin)
+          //                       : '-',
+          //                   style: TextStyle(
+          //                       fontSize: 18.0,
+          //                       color:
+          //                           _bullionPriceController.selectedColourGold),
+          //                   textAlign: TextAlign.center,
+          //                 ),
+          //               ),
+          //
+          //               // silver price
+          //               Container(
+          //                 width: MediaQuery.of(context).size.width * 0.25,
+          //                 margin: const EdgeInsets.only(left: 5.0),
+          //                 child: Text(
+          //                   model.is_silver_available == 1
+          //                       ? BullionPriceHelper.getLivePrice(
+          //                           _bullionPriceController.silverPrice.value,
+          //                           model.silver_price_margin)
+          //                       : '-',
+          //                   style: TextStyle(
+          //                       fontSize: 18.0,
+          //                       color: _bullionPriceController
+          //                           .selectedColourSilver),
+          //                   textAlign: TextAlign.center,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
 
           // top products label
           // Visibility(
@@ -592,6 +628,148 @@ class _BullionCityPageState extends State<BullionCityPage> {
     );
   }
 
+  Widget _buildBuliondealer(){
+    return  Card(
+      margin: const EdgeInsets.all(10.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _vendorList.length,
+        separatorBuilder: (ctx, i) => Divider(height: 1),
+        itemBuilder: (context, index) {
+          BullionVendor model = _vendorList[index];
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      BullionVendorDetailPage(model, getLivePriceModel()),
+                ),
+              ).then((value) {
+                //debugPrint(value);
+                _reloadPage();
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          direction: Axis.horizontal,
+                          children: [
+                            // dealer name and rating details
+                            Text(
+                              model.firm_name,
+                              style: TextStyle(
+                                  fontSize: 11.0, color: Colors.black),
+                            ),
+                          ],
+                        ),
+
+                        // mobile number
+                        Wrap(
+                          direction: Axis.horizontal,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: model.mobile != null
+                                        ? model.mobile
+                                        : 'NA',
+                                    style: TextStyle(
+                                        fontSize: 11.0,
+                                        color: Theme.of(context)
+                                            .primaryColor),
+                                  ),
+                                  TextSpan(
+                                    text: " (",
+                                    style: TextStyle(
+                                        fontSize: 11.0,
+                                        color: Colors.black),
+                                  ),
+                                  WidgetSpan(
+                                    alignment:
+                                    PlaceholderAlignment.middle,
+                                    child: Icon(
+                                      Icons.star,
+                                      color: Color(0xffdea321),
+                                      size: 16,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: model.avg_rating
+                                        .roundToDouble()
+                                        .toString() +
+                                        ")",
+                                    style: TextStyle(
+                                        fontSize: 11.0,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // gold price
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    margin: const EdgeInsets.only(left: 5.0),
+                    child: Text(
+                      model.is_gold_available == 1
+                          ? BullionPriceHelper.getLivePrice(
+                          _bullionPriceController.goldPrice.value,
+                          model.gold_price_margin)
+                          : '-',
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          color:
+                          _bullionPriceController.selectedColourGold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+
+                  // silver price
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    margin: const EdgeInsets.only(left: 5.0),
+                    child: Text(
+                      model.is_silver_available == 1
+                          ? BullionPriceHelper.getLivePrice(
+                          _bullionPriceController.silverPrice.value,
+                          model.silver_price_margin)
+                          : '-',
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          color: _bullionPriceController
+                              .selectedColourSilver),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 //Product Carousel
   Widget _buildProductCarousel() {
     return Column(
