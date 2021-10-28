@@ -49,6 +49,7 @@ class _PostViewPageState extends State<PostViewPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Post details')),
       body: PageView(
+        controller: pageController,
         onPageChanged: (index) {},
         children: posts.map((post) {
           final heroTag = 'post - ${post.id}';
@@ -173,10 +174,9 @@ class _PostViewPageState extends State<PostViewPage> {
                       //FOLLOW
                       InkWell(
                         onTap: () {
-                          var index;
                           post.firm.followId == null
-                              ? follow(firm: post.firm, index: index)
-                              : unfollow(firm: post.firm, index: index);
+                              ? follow(firm: post.firm, index: widget.index)
+                              : unfollow(firm: post.firm, index: widget.index);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
