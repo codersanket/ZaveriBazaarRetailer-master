@@ -54,7 +54,7 @@ class _PostViewPageState extends State<PostViewPage> {
         children: posts.map((post) {
           final heroTag = 'post - ${post.id}';
           return Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(top: 10,bottom: 10,left: 3,right: 3),
             child: Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,23 +139,31 @@ class _PostViewPageState extends State<PostViewPage> {
                         textColor: Colors.green,
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         onPressed: () {
-                          // UserLogService.userLogById(
-                          //         post.wholesalerFirmId, "Feed")
-                          //     .then((res) {
-                          //   print("userLogById Success");
-                          // }).catchError((err) {
-                          //   print("userLogById Error:" + err.toString());
-                          // });
-                          // do whatsapp share process
-                          whatsappWholesaler(post.firm.mobile, post.createdAt,
-                              post.image_share);
+                          AuthService.getUser().then((res) {
+                            if (res.approved == 1) {
+                              // do whatsapp share process
+                              whatsappWholesaler(post.firm.mobile,
+                                  post.createdAt, post.image_share);
+                            } else {
+                              showInfoDialog(context, 'Info',
+                                  'Your account is not approved, please contact us on below number\n\n7208226814');
+                            }
+                          });
                         },
                       ),
                       //COLLECTION
                       InkWell(
                         onTap: () {
-                          viewCollection(
-                              context: context, firmId: post.wholesalerFirmId);
+                          AuthService.getUser().then((res) {
+                            if (res.approved == 1) {
+                              viewCollection(
+                                  context: context,
+                                  firmId: post.wholesalerFirmId);
+                            } else {
+                              showInfoDialog(context, 'Info',
+                                  'Your account is not approved, please contact us on below number\n\n7208226814');
+                            }
+                          });
                           // print(
                           //     "///////////////////////////////////////// FIRMMMMMMMM");
                           // print(post.firm.followId);
@@ -174,9 +182,17 @@ class _PostViewPageState extends State<PostViewPage> {
                       //FOLLOW
                       InkWell(
                         onTap: () {
-                          post.firm.followId == null
-                              ? follow(firm: post.firm, index: widget.index)
-                              : unfollow(firm: post.firm, index: widget.index);
+                          AuthService.getUser().then((res) {
+                            if (res.approved == 1) {
+                              post.firm.followId == null
+                                  ? follow(firm: post.firm)
+                                  : unfollow(
+                                      firm: post.firm);
+                            }else{
+                              showInfoDialog(context, 'Info',
+                                  'Your account is not approved, please contact us on below number\n\n7208226814');
+                            }
+                          });
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -238,16 +254,16 @@ class _PostViewPageState extends State<PostViewPage> {
       ),
     );
   }
-
-  void follow({WholesalerFirm firm, int index}) {
+  // void follow({WholesalerFirm firm, int index})
+  void follow({WholesalerFirm firm}) {
     setState(() => isLoading = true);
     FollowService.create(firmId: firm.id, mobile: firm.mobile).then((res) {
       ToastService.success(
         _scaffoldKey,
         'You are now following ${firm.name}!',
       );
-      //setState(() => firm.followId = res.id);
-      setState(() => posts[index].firm.followId = res.id);
+      setState(() => firm.followId = res.id);
+     // setState(() => posts[index].firm.followId = res.id);
     }).catchError((err) {
       ToastService.error(_scaffoldKey, err.toString());
     }).whenComplete(() {
@@ -255,15 +271,15 @@ class _PostViewPageState extends State<PostViewPage> {
     });
   }
 
-  void unfollow({WholesalerFirm firm, int index}) {
+  void unfollow({WholesalerFirm firm}) {
     setState(() => isLoading = true);
     FollowService.delete(firm.followId).then((res) {
       ToastService.success(
         _scaffoldKey,
         'You are no longer following ${firm.name}!',
       );
-      //setState(() => firm.followId = null);
-      setState(() => posts[index].firm.followId = null);
+      setState(() => firm.followId = null);
+     // setState(() => posts[index].firm.followId = null);
     }).catchError((err) {
       ToastService.error(_scaffoldKey, err.toString());
     }).whenComplete(() {
@@ -292,7 +308,7 @@ class _PostViewPageState extends State<PostViewPage> {
               SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child:
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     ButtonTheme(
                         minWidth: 25.0,
                         height: 40.0,
@@ -322,6 +338,7 @@ class _PostViewPageState extends State<PostViewPage> {
       },
     );
   }
+
   call() {
     launch("tel://917208226814");
   }
