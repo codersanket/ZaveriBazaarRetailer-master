@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -618,6 +620,7 @@ class _ProductsPageState extends State<ProductsPage> {
     print('Search KeyWord:-$keyword');
     fetchProducts();
   }
+
   fetchProducts() {
     setState(() {
       isLoading = true;
@@ -641,14 +644,14 @@ class _ProductsPageState extends State<ProductsPage> {
         setState(() {
           if (params['page'] == 1) _products.clear();
 
-          if(widget.firm==null){
+          if (widget.firm == null) {
             products.shuffle();
           }
           //products.shuffle();
           //
           //FOR TESTING THE CAROUSEL
           //
-        //temp = products.sublist(1, 5);
+          //temp = products.sublist(1, 5);
           _products.addAll(products);
 
           _error = null;
@@ -680,10 +683,10 @@ class _ProductsPageState extends State<ProductsPage> {
 
     params['whats_new'] = widget.whatsNew ? '1' : null;
 
-      if(widget.onlyBookmarked){
-        params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
-      }
-   // params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
+    if (widget.onlyBookmarked) {
+      params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
+    }
+    // params['bookmarked'] = widget.onlyBookmarked ? '1' : null;
 
     params['subcategory_id'] =
         filter.subcategories.where((c) => c.checked).map((c) => c.id).join(",");
@@ -770,7 +773,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightFromController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
@@ -789,7 +792,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightToController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
@@ -816,9 +819,15 @@ class _ProductsPageState extends State<ProductsPage> {
                       ),
                       onPressed: () {
                         setState(() {
-                          final from =
+                          double from =
                               double.tryParse(weightFromController.text);
-                          final to = double.tryParse(weightToController.text);
+                          double to = double.tryParse(weightToController.text);
+
+                          if(from>to){
+                            var temp=from;
+                            from=to;
+                            to=temp;
+                          }
                           filter.weightRangeLower =
                               from ?? filter.weightRange.lower;
 
@@ -826,9 +835,9 @@ class _ProductsPageState extends State<ProductsPage> {
                               to ?? filter.weightRange.upper;
                           params['page'] = 1;
                           print('Min value:-' +
-                              weightFromController.text.toString());
+                             weightFromController.text.toString());
                           print('Max value:-' +
-                              weightToController.text.toString());
+                             weightToController.text.toString());
                           fetchProducts();
                         });
                       },
