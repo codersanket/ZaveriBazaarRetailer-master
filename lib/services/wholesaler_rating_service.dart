@@ -3,6 +3,7 @@ import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/city.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/wholesaler_rating.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class WholesalerRatingService {
   static List<City> _cities = [];
@@ -16,7 +17,7 @@ class WholesalerRatingService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get wholesaler ratings', e.toString())));
     }
   }
   
@@ -32,7 +33,7 @@ class WholesalerRatingService {
       //var res = response.data;
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get rating by wholesaler id', e.toString())));
     }
   }
 
@@ -43,7 +44,7 @@ class WholesalerRatingService {
 
       return Future.value(WholesalerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Rating', e.toString())));
     }
   }
 
@@ -55,7 +56,7 @@ class WholesalerRatingService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get wholesaler by id', e.toString())));
     }
   }
 
@@ -67,7 +68,7 @@ class WholesalerRatingService {
 
       return Future.value(WholesalerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Create wholesaler rating', e.toString())));
     }
   }
 
@@ -81,7 +82,7 @@ class WholesalerRatingService {
 
       return Future.value(WholesalerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Update wholesaler rating', e.toString())));
     }
   }
 
@@ -93,7 +94,7 @@ class WholesalerRatingService {
 
       return Future.value(WholesalerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Delete wholesaler rating', e.toString())));
     }
   }
 
@@ -108,7 +109,7 @@ class WholesalerRatingService {
       }
       return Future.value(_cities);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get city with wholesaler rating', e.toString())));
     }
   }
 

@@ -5,6 +5,8 @@ import 'package:sonaar_retailer/models/bullion_vendor.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/get_live_price.dart';
 
+import 'Exception.dart';
+
 class BullionService {
   final BuildContext _context;
 
@@ -19,7 +21,7 @@ class BullionService {
 
       return Future.value(_stateList);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get state list', e.toString())));
     }
   }
 
@@ -35,7 +37,7 @@ class BullionService {
 
       return Future.value(_cityList);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get city list', e.toString())));
     }
   }
 
@@ -60,7 +62,7 @@ class BullionService {
 
       return Future.value(_vendorList);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get vendor list', e.toString())));
     }
   }
 
@@ -83,7 +85,7 @@ class BullionService {
 
       return Future.value(response.data['message']);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Update vendor rating', e.toString())));
     }
   }
 
@@ -97,7 +99,7 @@ class BullionService {
 
       return Future.value(_cityList);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get Bullion city list', e.toString())));
     }
   }
 
@@ -110,7 +112,7 @@ class BullionService {
 
       return Future.value(getLivePrice);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get Live price', e.toString())));
     }
   }
 

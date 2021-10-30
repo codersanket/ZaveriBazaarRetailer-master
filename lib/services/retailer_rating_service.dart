@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/retailer_rating.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class RetailerRatingService {
   /// Get all retailers
@@ -13,7 +14,7 @@ class RetailerRatingService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get all retailers', e.toString())));
     }
   }
 
@@ -24,7 +25,7 @@ class RetailerRatingService {
 
       return Future.value(RetailerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get retailer by id', e.toString())));
     }
   }
 
