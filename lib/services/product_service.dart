@@ -233,6 +233,17 @@ class ProductService {
     }
   }
 
+  //wholesaler - category list
+  static Future<dynamic> getWholesalerCategory({String wholesalerId}) async {
+    try {
+      var response = await DioProvider().dio().get("/products/wholesellerwisecategory/$wholesalerId");
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(UserException1.userException('Wholesaler category list', e.toString())));
+    }
+  }
+
+
   static _handleError(e) {
     return ErrorHandler.handleError(e);
   }

@@ -7,6 +7,7 @@ import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/posts_page.dart';
+import 'package:sonaar_retailer/pages/products_categorywise_page.dart';
 import 'package:sonaar_retailer/pages/products_page.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/follow_service.dart';
@@ -478,9 +479,14 @@ class Profile extends StatelessWidget {
   }
 
   viewCollection(BuildContext context) {
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (_) => ProductsPage(firm: firm),
+    //   ),
+    // );
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ProductsPage(firm: firm),
+        builder: (_) => ProductsCategorywisePage(firm: firm,),
       ),
     );
   }

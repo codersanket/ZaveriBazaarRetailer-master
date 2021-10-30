@@ -226,37 +226,27 @@ class _ProductViewState extends State<ProductViewPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        child: Stack(
-                          children: [
-                            Container(
-                              //decoration:BoxDecoration(),
-                              width: double.infinity,
-                              height: 300,
-                              color: Colors.white,
-                              child: Hero(
-                                tag: heroTag,
-                                child: CachedNetworkImage(
-                                  imageUrl: product.thumbUrl,
-                                  fit: BoxFit.contain,
-                                  errorWidget: (c, u, e) => Image.asset(
-                                    "images/ic_launcher.png",
-                                    fit: BoxFit.contain,
-                                    alignment: Alignment.topCenter,
-                                  ),
-                                  //   Icon(Icons.warning, color: Colors.white),
-                                  // placeholder: (c, u) => Center(
-                                  //     child: CircularProgressIndicator(
-                                  //         strokeWidth: 2.0)),
-                                ),
+                        child: Container(
+                          //decoration:BoxDecoration(),
+                          width: double.infinity,
+                          height: 300,
+                          color: Colors.white,
+                          child: Hero(
+                            tag: heroTag,
+                            child: CachedNetworkImage(
+                              imageUrl: product.thumbUrl,
+                              fit: BoxFit.contain,
+                              errorWidget: (c, u, e) => Image.asset(
+                                "images/ic_launcher.png",
+                                fit: BoxFit.contain,
+                                alignment: Alignment.topCenter,
                               ),
+                              //   Icon(Icons.warning, color: Colors.white),
+                              // placeholder: (c, u) => Center(
+                              //     child: CircularProgressIndicator(
+                              //         strokeWidth: 2.0)),
                             ),
-                            Positioned(child: Row(
-                              children: [
-                                Icon(Icons.error_outline_outlined, color:Colors.grey.shade300),
-                                Text("Click image to view in fullscreen", style:TextStyle(color: Colors.grey.shade300)),
-                              ],
-                            ),bottom:0,left: 5,),
-                          ],
+                          ),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -269,9 +259,18 @@ class _ProductViewState extends State<ProductViewPage> {
                           );
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                       Padding(
+                         padding: const EdgeInsets.all(10.0),
+                         child: Row(
+                                children: [
+                                  Icon(Icons.error_outline_outlined, color:Colors.grey.shade400,size: 15,),
+                                  Text("Click image to view in fullscreen", style:TextStyle(color: Colors.grey.shade400)),
+                                ],
+                              ),
+                       ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
