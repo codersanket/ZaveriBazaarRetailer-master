@@ -14,25 +14,60 @@ class Tracking {
   List<String> subcategories1 = [];
   PF.Filter filter;
 
-  ///filter data
-  static Future<void> getFilterData(String subcategories, String categoryId,
-      String min, String max,String searchKey, String cities, String productType) async {
+  ///filter data set at floatingaction button
+  static Future<void> track(
+    String min,
+    String max,
+    String categoryId,
+    String subcategories,
+    String cities,
+    String productType,
+  ) async {
     try {
-      var response = await DioProvider().dio().post(
-        '/search_track/insert',
-        data: {
-          'retailer_id': AuthService.user.id,
-          'name': AuthService.user.name,
-          'phone': AuthService.user.mobile,
-          'subcategories': subcategories,
-          'category_id': categoryId,
-          'min_weight': min,
-          'max_weight': max,
-          'search_key':searchKey,
-          'cities': cities,
-          'product_type': productType,
-        },
-      );
+      var response =
+          await DioProvider().dio().post('/search_track/insert', data: {
+        'retailer_id': AuthService.user.id,
+        'name': AuthService.user.name,
+        'phone': AuthService.user.mobile,
+        'min_weight': min,
+        'max_weight': max,
+        'category_id': categoryId,
+        'subcategories': subcategories,
+        'cities': cities,
+        'product_type': productType,
+            // remaining to  add result and search key
+      });
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+///set at apply button
+  static Future<void> track1(String searchKey, String categoryId, String min,
+      String max, String result) async {
+    try {
+      var response =
+          await DioProvider().dio().post('/search_track/insert', data: {
+        'retailer_id': AuthService.user.id,
+        'name': AuthService.user.name,
+        'phone': AuthService.user.mobile,
+        'search_Key': searchKey,
+        'category_id': categoryId,
+        'min_weight': min,
+        'max_weight': max,
+        'result': result
+      });
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
+  static Future<void> getResult(String result) async {
+    try {
+      var response = await DioProvider()
+          .dio()
+          .post('/search_track/insert', data: {'result': result});
       return Future.value(response.data);
     } catch (e) {
       return Future.error(_handleError(e));

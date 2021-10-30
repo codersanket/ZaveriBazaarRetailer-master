@@ -13,6 +13,7 @@ import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
+import 'package:sonaar_retailer/services/user_tracking.dart';
 import 'package:sonaar_retailer/services/userlog_service.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -618,6 +619,7 @@ class _ProductsPageState extends State<ProductsPage> {
     params['query'] = keyword;
     params['page'] = 1;
     print('Search KeyWord:-$keyword');
+    //Tracking.getSearch(keyword.toString());
     fetchProducts();
   }
 
@@ -633,10 +635,8 @@ class _ProductsPageState extends State<ProductsPage> {
       vWeightClearButton = false;
     });
     updateParams();
-
     ProductService.getAll(params).then((res) {
       List<Product> products = Product.listFromJson(res['data']);
-
       totalPage = res['last_page'];
       if (rowCount == 0) rowCount = res['total'];
 
@@ -653,10 +653,16 @@ class _ProductsPageState extends State<ProductsPage> {
           //
           //temp = products.sublist(1, 5);
           _products.addAll(products);
-
           _error = null;
           isLoading = false;
           print("load $isLoading");
+          Tracking.track1(
+              searchController.text,
+              widget.categoryId,
+              weightFromController.text.toString(),
+              weightToController.text.toString(),
+              products.length.toString());
+          Tracking.getResult(products.length.toString());
         });
     }).catchError((err) {
       if (mounted)
@@ -773,7 +779,9 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightFromController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
@@ -792,7 +800,9 @@ class _ProductsPageState extends State<ProductsPage> {
                       controller: weightToController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
                       decoration: InputDecoration(
                         hintStyle: TextStyle(fontSize: 12),
                         labelStyle: TextStyle(fontSize: 12),
@@ -823,10 +833,10 @@ class _ProductsPageState extends State<ProductsPage> {
                               double.tryParse(weightFromController.text);
                           double to = double.tryParse(weightToController.text);
 
-                          if(from>to){
-                            var temp=from;
-                            from=to;
-                            to=temp;
+                          if (from > to) {
+                            var temp = from;
+                            from = to;
+                            to = temp;
                           }
                           filter.weightRangeLower =
                               from ?? filter.weightRange.lower;
@@ -835,9 +845,10 @@ class _ProductsPageState extends State<ProductsPage> {
                               to ?? filter.weightRange.upper;
                           params['page'] = 1;
                           print('Min value:-' +
-                             weightFromController.text.toString());
+                              weightFromController.text.toString());
                           print('Max value:-' +
-                             weightToController.text.toString());
+                              weightToController.text.toString());
+                          //Tracking.getWeight(from.toString(), to.toString());
                           fetchProducts();
                         });
                       },

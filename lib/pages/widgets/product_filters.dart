@@ -49,27 +49,26 @@ class ProductFiltersState extends State<ProductFilters> {
             Material(
               color: Colors.grey.shade200,
               child: ListTile(
-                title: Text('Filter products'),
-                trailing: IconButton(
-                  icon: Icon(Icons.done),
-                  onPressed: () {
-                    final from = double.tryParse(weightFromController.text);
-                    filter.weightRangeLower = from ?? filter.weightRange.lower;
+                  title: Text('Filter products'),
+                  trailing: IconButton(
+                    icon: Icon(Icons.done),
+                    onPressed: () {
+                      final from = double.tryParse(weightFromController.text);
+                      filter.weightRangeLower =
+                          from ?? filter.weightRange.lower;
 
-                    final to = double.tryParse(weightToController.text);
-                    filter.weightRangeUpper = to ?? filter.weightRange.upper;
-                    Tracking.getFilterData(
-                        filter.subcategories1.toString(),
-                        filter.categoryId,
-                        weightFromController.text,
-                        weightToController.text,filter.searchkey,
-                        filter.cities1.toString(),
-                        filter.types1.toString());
-                    Navigator.pop(context, 'filter');
-                  },
-
-                )
-              ),
+                      final to = double.tryParse(weightToController.text);
+                      filter.weightRangeUpper = to ?? filter.weightRange.upper;
+                      Tracking.track(
+                          filter.weightRangeLower.toString(),
+                          filter.weightRangeUpper.toString(),
+                          filter.categoryId,
+                          filter.subcategories1.toString(),
+                          filter.cities1.toString(),
+                          filter.types1.toString());
+                      Navigator.pop(context, 'filter');
+                    },
+                  )),
             ),
             Expanded(
               child: ListView(
