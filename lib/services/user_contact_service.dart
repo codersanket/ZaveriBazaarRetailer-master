@@ -57,6 +57,20 @@ class UserContactService {
     }
   }
 
+
+  //new get all for suggestions
+  static Future<dynamic> getAllSuggestions(Map<String, dynamic> params) async {
+    try {
+      var response = await DioProvider()
+          .dio()
+          .post('/user-contacts/get_contacts_detail_new', queryParameters: params);
+
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
   static _handleError(e) {
     return ErrorHandler.handleError(e);
   }
