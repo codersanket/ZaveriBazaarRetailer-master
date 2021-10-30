@@ -3,6 +3,8 @@ import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/bullion_city.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 
+import 'Exception.dart';
+
 class CityService {
   static List<dynamic> _states = [];
 
@@ -18,7 +20,7 @@ class CityService {
       }
       return Future.value(_states);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get state based on city', e.toString())));
     }
   }
 
@@ -32,7 +34,7 @@ class CityService {
         dynamic _stateList = response.data['city'];
       return Future.value(_stateList);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get city from pin code', e.toString())));
     }
   }
 

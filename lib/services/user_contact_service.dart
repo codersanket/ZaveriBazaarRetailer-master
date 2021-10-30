@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class UserContactService {
   /// Get all contacts
@@ -13,7 +14,7 @@ class UserContactService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get all contacts', e.toString())));
     }
   }
 
@@ -24,7 +25,7 @@ class UserContactService {
 
       return Future.value(UserContact.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get Contact by id', e.toString())));
     }
   }
 
@@ -36,7 +37,7 @@ class UserContactService {
 
       return Future.value(UserContact.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Create contact', e.toString())));
     }
   }
 
@@ -52,7 +53,7 @@ class UserContactService {
 
       return Future.value(UserContact.listFromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Sync contact', e.toString())));
     }
   }
 

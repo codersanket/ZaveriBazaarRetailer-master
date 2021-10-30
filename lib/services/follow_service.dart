@@ -3,6 +3,8 @@ import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/follow.dart';
 
+import 'Exception.dart';
+
 class FollowService {
   /// Get all follows
   static Future<dynamic> getAll(Map<String, dynamic> params) async {
@@ -12,7 +14,7 @@ class FollowService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get followers on follow page', e.toString())));
     }
   }
 
@@ -23,7 +25,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('follows get by id', e.toString())));
     }
   }
 
@@ -34,7 +36,7 @@ class FollowService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get wholesaler by id', e.toString())));
     }
   }
 
@@ -49,7 +51,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Create follows', e.toString())));
     }
   }
 
@@ -61,7 +63,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Accept follow request', e.toString())));
     }
   }
 
@@ -73,7 +75,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Ignore follow', e.toString())));
     }
   }
 
@@ -84,7 +86,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Delete followers', e.toString())));
     }
   }
 

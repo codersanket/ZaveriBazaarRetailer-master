@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class WholesalerFirmService {
   /// Get all wholesalerfirms
@@ -13,7 +14,7 @@ class WholesalerFirmService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get all wholesaler', e.toString())));
     }
   }
 
@@ -24,7 +25,7 @@ class WholesalerFirmService {
 
       return Future.value(WholesalerFirm.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get wholesaler by id', e.toString())));
     }
   }
 

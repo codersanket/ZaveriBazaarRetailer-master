@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
 import 'package:sonaar_retailer/models/post.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class PostService {
   /// Get all posts
@@ -12,7 +13,7 @@ class PostService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get all post in Post Page', e.toString())));
     }
   }
 
@@ -23,7 +24,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get post on id', e.toString())));
     }
   }
 
@@ -34,7 +35,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Create post', e.toString())));
     }
   }
 
@@ -46,7 +47,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Update post', e.toString())));
     }
   }
 
@@ -57,7 +58,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Delete post', e.toString())));
     }
   }
 
@@ -68,7 +69,7 @@ class PostService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Top 10 Post', e.toString())));
     }
   }
 

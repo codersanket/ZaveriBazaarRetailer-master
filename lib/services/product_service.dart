@@ -11,6 +11,7 @@ import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/product_type.dart';
 import 'package:sonaar_retailer/models/subcategory.dart';
 import 'package:sonaar_retailer/models/weight_range.dart';
+import 'package:sonaar_retailer/services/Exception.dart';
 
 class ProductService {
   static List<Category> _categories = [];
@@ -28,7 +29,7 @@ class ProductService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get all products', e.toString())));
     }
   }
 
@@ -43,7 +44,7 @@ class ProductService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get sorted product', e.toString())));
     }
   }
 
@@ -53,7 +54,7 @@ class ProductService {
 
       return Future.value(Product.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Product get by id', e.toString())));
     }
   }
 
@@ -65,7 +66,7 @@ class ProductService {
 
       return Future.value(Product.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Create product', e.toString())));
     }
   }
 
@@ -78,7 +79,7 @@ class ProductService {
 
       return Future.value(Product.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Update product', e.toString())));
     }
   }
 
@@ -93,7 +94,7 @@ class ProductService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('BookMark product', e.toString())));
     }
   }
 
@@ -110,7 +111,7 @@ class ProductService {
 
       return Future.value(_categories);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get filter category', e.toString())));
     }
   }
 
@@ -121,7 +122,7 @@ class ProductService {
 
       return Future.value(Subcategory.listFromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get filter subcategories', e.toString())));
     }
   }
 
@@ -136,7 +137,7 @@ class ProductService {
       }
       return Future.value(_types);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get type of product', e.toString())));
     }
   }
 
@@ -151,7 +152,7 @@ class ProductService {
       }
       return Future.value(_brands);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('get Product brand', e.toString())));
     }
   }
 
@@ -166,7 +167,7 @@ class ProductService {
       }
       return Future.value(_meltings);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get meltings', e.toString())));
     }
   }
 
@@ -177,7 +178,7 @@ class ProductService {
 
       return Future.value(City.listFromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get city', e.toString())));
     }
   }
 
@@ -189,7 +190,7 @@ class ProductService {
       }
       return Future.value(_weightRange);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get weight range ', e.toString())));
     }
   }
 
@@ -206,7 +207,7 @@ class ProductService {
       }
       return Future.value(_tags);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Get tags', e.toString())));
     }
   }
 
@@ -218,7 +219,7 @@ class ProductService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Top 10 product', e.toString())));
     }
   }
 
@@ -228,7 +229,7 @@ class ProductService {
       var response = await DioProvider().dio().get("/m/add_new_arrivals");
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(e));
+      return Future.error(_handleError(UserException1.userException('Product new arrivals', e.toString())));
     }
   }
 
