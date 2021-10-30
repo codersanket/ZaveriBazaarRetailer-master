@@ -151,7 +151,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       itemCount: _categories.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2,
+        childAspectRatio: 1,
         //crossAxisSpacing: 2,
         //mainAxisSpacing: 2,
       ),
@@ -185,19 +185,22 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
           },
           child: Column(
             children: <Widget>[
-              SizedBox(
-                width: double.infinity,
-                child: CachedNetworkImage(
-                  imageUrl: category['product_thumb_url'],
-                  fit: BoxFit.cover,
-                  // alignment: Alignment.topCenter,
-                  errorWidget: (c, u, e) => Icon(Icons.warning),
-                  placeholder: (c, u) => Center(
-                      child: CircularProgressIndicator(strokeWidth: 2.0)),
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: category['product_thumb_url'],
+                    fit: BoxFit.cover,
+                    // alignment: Alignment.topCenter,
+                    errorWidget: (c, u, e) => Icon(Icons.warning),
+                    placeholder: (c, u) => Center(
+                        child: CircularProgressIndicator(strokeWidth: 2.0)),
+                  ),
                 ),
               ),
               Container(
-                color: Colors.black.withOpacity(0.7),
+                color: Color(0xff004272),
+                //Colors.black.withOpacity(0.4),
                 alignment: Alignment.center,
                 padding: EdgeInsets.all(8),
                 child: Text(
