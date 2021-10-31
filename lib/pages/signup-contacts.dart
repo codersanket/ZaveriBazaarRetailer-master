@@ -184,15 +184,16 @@ class _ContactsPageState extends State<ContactsPage> {
               elevation: 4,
               highlightElevation: 2,
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LoginPage(
-                      afterSignup: true,
-                    ),
-                  ),
-                );
-              },
+              //   Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (_) => LoginPage(
+              //         afterSignup: true,
+              //       ),
+              //     ),
+              //   );
+              showInfoDialog(context);
+               },
               backgroundColor: Colors.white,
               foregroundColor: Theme.of(context).primaryColor,
               label: Text(
@@ -488,5 +489,58 @@ class _ContactsPageState extends State<ContactsPage> {
     if (mobile.length > 10) mobile = mobile.substring(mobile.length - 10);
 
     return mobile;
+  }
+
+  Future<String> showInfoDialog(
+      BuildContext context) {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Signup Completed"),
+                  CloseButton(
+                      color: Colors.black87,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ]),
+            content: Container(
+              height: 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("THANK YOU\nFOR PROVIDING YOUR INFORMATION\n\nPLEASE LOGIN TO CONTINUE"),
+                  ]
+                  ),
+            ),
+                actions: [
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child:ButtonTheme(
+                            minWidth: 25.0,
+                            height: 40.0,
+                            child: RaisedButton(
+                              textColor: Theme.of(context).primaryColor,
+                              child: Text('Login', style:TextStyle(fontSize: 18,color: Colors.grey.shade200)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                //whatsappRetailer();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => LoginPage(
+                                      afterSignup: true,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )),
+                          )
+                ]);
+      },
+    );
   }
 }

@@ -185,6 +185,7 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                   categoryName: category['name'].toString(),
                   onlyBookmarked: widget.onlyBookmarked,
                   whatsNew: widget.whatsNew,
+                  firm: widget.firm != null ? widget.firm : null,
                 ),
               ),
             );
@@ -254,9 +255,9 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
       child: Padding(
         padding: const EdgeInsets.only(bottom:8.0),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.,
+         // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: index.isEven ? Colors.grey.shade200 : Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 16))),
+            Padding(padding: EdgeInsets.all(10), child: Text(firmName,style: TextStyle(color: index.isEven ? Colors.grey.shade200 : Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 18))),
             CarouselSlider(
             options: CarouselOptions(
               autoPlay: true,
@@ -359,9 +360,10 @@ class _ProductsCategorywisePageState extends State<ProductsCategorywisePage> {
                   );
                 },
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('see more',
-                      style: TextStyle(color: index.isEven ? Colors.grey.shade200 : Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 12)
+                      style: TextStyle(color: index.isEven ? Colors.grey.shade200 : Color(0xff004272),fontWeight: FontWeight.bold,fontSize: 14)
                     ),
                     Icon(Icons.navigate_next,color: index.isEven ? Colors.grey.shade200 : Color(0xff004272)),
                   ],

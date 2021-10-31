@@ -58,6 +58,7 @@ class _PostViewPageState extends State<PostViewPage> {
             child: Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ListTile(
                       leading: Container(
@@ -88,11 +89,7 @@ class _PostViewPageState extends State<PostViewPage> {
                           },
                         );
                       }),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 4.0, bottom: 16.0, left: 16.0, right: 16.0),
-                    child: Text(post.text),
-                  ),
+                  
                   ConstrainedBox(
                     constraints: BoxConstraints(maxHeight: 300.0),
                     child: post.thumbUrl == null
@@ -123,6 +120,12 @@ class _PostViewPageState extends State<PostViewPage> {
                               //         CircularProgressIndicator(strokeWidth: 2.0)),
                             ),
                           ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 4.0, bottom: 16.0, left: 16.0, right: 16.0),
+                    child: Text(post.text),
                   ),
                   Divider(),
                   Row(
@@ -164,9 +167,7 @@ class _PostViewPageState extends State<PostViewPage> {
                                   'Your account is not approved, please contact us on below number\n\n7208226814');
                             }
                           });
-                          // print(
-                          //     "///////////////////////////////////////// FIRMMMMMMMM");
-                          // print(post.firm.followId);
+                          
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
