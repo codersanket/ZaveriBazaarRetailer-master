@@ -22,6 +22,7 @@ class Tracking {
     String subcategories,
     String cities,
     String productType,
+    String searchKey,
   ) async {
     try {
       var response =
@@ -35,14 +36,16 @@ class Tracking {
         'subcategories': subcategories,
         'cities': cities,
         'product_type': productType,
-            // remaining to  add result and search key
+        'search_Key': searchKey,
+        // remaining to  add result and search key
       });
       return Future.value(response.data);
     } catch (e) {
       return Future.error(_handleError(e));
     }
   }
-///set at apply button
+
+  ///set at apply button
   static Future<void> track1(String searchKey, String categoryId, String min,
       String max, String result) async {
     try {

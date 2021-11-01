@@ -37,7 +37,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Signup',e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -61,7 +61,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Quick Signup', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -80,7 +80,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Verify Otp', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -107,7 +107,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Login', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -127,7 +127,7 @@ class AuthService {
         Navigator.of(_context).pushNamedAndRemoveUntil('/login', (r) => false);
       }
 
-      return Future.error(_handleError(UserException1.userException('User profile', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -144,7 +144,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Update Profile', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -160,7 +160,7 @@ class AuthService {
       User user = User.fromJson(response.data);
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Update User password', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -192,7 +192,7 @@ class AuthService {
 
       return Future.value(user);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('User Reset Password', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -265,7 +265,7 @@ class AuthService {
 
       return Future.value(response);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Sync |User contact', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

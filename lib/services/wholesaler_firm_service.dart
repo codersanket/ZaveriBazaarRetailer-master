@@ -14,7 +14,7 @@ class WholesalerFirmService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get all wholesaler', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -25,7 +25,7 @@ class WholesalerFirmService {
 
       return Future.value(WholesalerFirm.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get wholesaler by id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

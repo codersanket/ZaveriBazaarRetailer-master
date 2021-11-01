@@ -14,7 +14,7 @@ class FollowService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get followers on follow page', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -25,7 +25,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('follows get by id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -36,7 +36,7 @@ class FollowService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get wholesaler by id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -51,7 +51,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Create follows', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -63,7 +63,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Accept follow request', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -75,7 +75,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Ignore follow', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -86,7 +86,7 @@ class FollowService {
 
       return Future.value(Follow.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Delete followers', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

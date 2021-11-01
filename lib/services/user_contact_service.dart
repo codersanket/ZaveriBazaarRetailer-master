@@ -14,7 +14,7 @@ class UserContactService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get all contacts', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -25,7 +25,7 @@ class UserContactService {
 
       return Future.value(UserContact.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get Contact by id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -37,7 +37,7 @@ class UserContactService {
 
       return Future.value(UserContact.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Create contact', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -53,7 +53,7 @@ class UserContactService {
 
       return Future.value(UserContact.listFromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Sync contact', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

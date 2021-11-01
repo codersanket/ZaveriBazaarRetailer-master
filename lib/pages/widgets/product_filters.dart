@@ -6,6 +6,7 @@ import 'package:sonaar_retailer/models/city.dart';
 import 'package:sonaar_retailer/models/product_type.dart';
 import 'package:sonaar_retailer/models/subcategory.dart';
 import 'package:sonaar_retailer/models/weight_range.dart';
+import 'package:sonaar_retailer/pages/products_page.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart' as RS;
 import 'package:sonaar_retailer/services/user_tracking.dart';
@@ -13,8 +14,8 @@ import 'package:sonaar_retailer/services/user_tracking.dart';
 class ProductFilters extends StatefulWidget {
   final Filter filter;
   final BuildContext parentContext;
-
-  ProductFilters(this.filter, this.parentContext);
+final String searchKey;
+  ProductFilters(this.filter, this.parentContext,this.searchKey);
 
   @override
   ProductFiltersState createState() => ProductFiltersState(filter);
@@ -65,7 +66,8 @@ class ProductFiltersState extends State<ProductFilters> {
                           filter.categoryId,
                           filter.subcategories1.toString(),
                           filter.cities1.toString(),
-                          filter.types1.toString());
+                          filter.types1.toString(),
+                      widget.searchKey.toString());
                       Navigator.pop(context, 'filter');
                     },
                   )),

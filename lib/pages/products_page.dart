@@ -607,7 +607,7 @@ class _ProductsPageState extends State<ProductsPage> {
     final result = await showModalBottomSheet<String>(
       context: context,
       //isScrollControlled: true,
-      builder: (_) => PF.ProductFilters(filter, context),
+      builder: (_) => PF.ProductFilters(filter, context,searchController.text,),
     );
     if (result == 'filter') {
       params['page'] = 1;

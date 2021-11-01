@@ -21,7 +21,7 @@ class BullionService {
 
       return Future.value(_stateList);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get state list', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -37,7 +37,7 @@ class BullionService {
 
       return Future.value(_cityList);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get city list', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -62,7 +62,7 @@ class BullionService {
 
       return Future.value(_vendorList);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get vendor list', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -85,7 +85,7 @@ class BullionService {
 
       return Future.value(response.data['message']);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Update vendor rating', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -99,7 +99,7 @@ class BullionService {
 
       return Future.value(_cityList);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get Bullion city list', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -112,7 +112,7 @@ class BullionService {
 
       return Future.value(getLivePrice);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get Live price', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

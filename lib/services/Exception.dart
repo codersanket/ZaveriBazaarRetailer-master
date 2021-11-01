@@ -22,7 +22,6 @@ class UserException1 {
 
         return Future.value();
       }).catchError((err) {
-        print(err);
       });
     } catch (e) {
       return Future.error(_handleError(e));

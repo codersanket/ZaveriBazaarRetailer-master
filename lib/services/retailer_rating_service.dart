@@ -14,7 +14,7 @@ class RetailerRatingService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get all retailers', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -25,7 +25,7 @@ class RetailerRatingService {
 
       return Future.value(RetailerRating.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get retailer by id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

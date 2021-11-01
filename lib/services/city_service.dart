@@ -20,7 +20,7 @@ class CityService {
       }
       return Future.value(_states);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get state based on city', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -34,7 +34,7 @@ class CityService {
         dynamic _stateList = response.data['city'];
       return Future.value(_stateList);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get city from pin code', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 

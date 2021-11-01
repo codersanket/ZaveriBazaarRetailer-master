@@ -13,7 +13,7 @@ class PostService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Get all post in Post Page', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -24,7 +24,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('get post on id', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -35,7 +35,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Create post', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -47,7 +47,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Update post', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -58,7 +58,7 @@ class PostService {
 
       return Future.value(Post.fromJson(response.data));
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Delete post', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
@@ -69,7 +69,7 @@ class PostService {
 
       return Future.value(response.data);
     } catch (e) {
-      return Future.error(_handleError(UserException1.userException('Top 10 Post', e.toString())));
+      return Future.error(_handleError(e));
     }
   }
 
