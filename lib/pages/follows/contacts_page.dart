@@ -245,31 +245,39 @@ class _ContactsPageState extends State<ContactsPage> {
           title: Text(contact.name),
           subtitle: Text(contact.mobile),
           trailing: FlatButton(
-            disabledTextColor: Colors.grey.shade500,
-            child: Text(
-              getActionText(contact),
-              style: TextStyle(letterSpacing: 1),
-            ),
-            color: Theme.of(context).accentColor,
-            onPressed: contact.canFollow || contact.canInvite
-                ? () async {
-                    if (contact.canFollow) {
-                      _followWholesaler(contact, index);
-                    } else {
-                      _inviteWholesaler(contact);
-                    }
-                  }
-                : null,
-          ),
+              disabledTextColor: Colors.grey.shade500,
+              child: Text(
+                getActionText(contact),
+                style: TextStyle(letterSpacing: 1),
+              ),
+              color: Theme.of(context).accentColor,
+              onPressed:
+              (){
+                if (contact.canFollow) {
+                  _followWholesaler(contact, index);
+                } else {
+                  _inviteWholesaler(contact);
+                }
+              }
+              // contact.canFollow!=false || contact.canInvite!=false
+              //     ? () async {
+              //         if (contact.canFollow) {
+              //           _followWholesaler(contact, index);
+              //         } else {
+              //           _inviteWholesaler(contact);
+              //         }
+              //       }
+              //     : null,
+              ),
         );
       },
     );
   }
 
   String getActionText(UserContact contact) {
-    if (contact.canInvite) return 'INVITE';
-    if (contact.canFollow) return 'FOLLOW';
-    return 'FOLLOWING';
+   if (contact.canFollow!=false) return 'FOLLOW';
+    if (contact.canInvite!=false) return 'INVITE';
+   return 'FOLLOWING';
   }
 
   void _followWholesaler(UserContact contact, int index) {
@@ -340,7 +348,6 @@ class _ContactsPageState extends State<ContactsPage> {
         await UserContactService.sync(newContacts, onSendProgress);
       } catch (ignored) {}
     }
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('contacts_synced', true);
 
@@ -385,26 +392,24 @@ class _ContactsPageState extends State<ContactsPage> {
       });
     });
 
+    final user = AuthService.user;
+    var param = {"id": user.id};
+    //param["id"] = user.id;
+    UserContactService.getAllSuggestions(param).then((res) {
+      List<UserContact> contacts = UserContact.listFromJson(res['data']);
+      totalPage = res['last_page'];
+      if (rowCount == 0) rowCount = res['total'];
 
-
-    //   final user = AuthService.user;
-    //   var param = {"id" : user.id};
-    //   //param["id"] = user.id;
-    //   UserContactService.getAllSuggestions(param).then((res) {
-    //   List<UserContact> contacts = UserContact.listFromJson(res['data']);
-    //   totalPage = res['last_page'];
-    //   if (rowCount == 0) rowCount = res['total'];
-
-    //   setState(() {
-    //     _contacts.addAll(contacts);
-    //     isLoading = false;
-    //   });
-    // }).catchError((err) {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // });
-    }
+      setState(() {
+        _contacts.addAll(contacts);
+        isLoading = false;
+      });
+    }).catchError((err) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   Future<bool> _checkPermissions() async {
     PermissionStatus permission = await PermissionHandler()

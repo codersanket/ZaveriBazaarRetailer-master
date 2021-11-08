@@ -27,7 +27,7 @@ dependencies:
   image_picker: ^0.6.1+10
   package_info: ^0.4.0+10
   url_launcher: ^5.2.5
-  contacts_service: ^0.3.9
+  contacts_service: ^0.4.2
   permission_handler: ^4.0.0
   share: ^0.6.3+1
   qrcode_reader:
