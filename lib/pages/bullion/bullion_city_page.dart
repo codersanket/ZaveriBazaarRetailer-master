@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sonaar_retailer/models/bullion_city.dart';
 import 'package:sonaar_retailer/models/bullion_vendor.dart';
 import 'package:sonaar_retailer/models/get_live_price.dart';
@@ -623,6 +624,20 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 margin: EdgeInsets.all(10),
                 child: _buildPostCarousel(),
               )),
+
+          Card(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children : [
+                Text('Planning to visit Mumbai?\nGet in touch with us.'),
+                IconButton(
+                  onPressed: (){
+                    showModalBottomSheet(context: context, builder: (_) => showDates());
+                  }, 
+                  icon: Icon(Icons.arrow_forward_ios_outlined)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -1122,6 +1137,53 @@ class _BullionCityPageState extends State<BullionCityPage> {
       });
     });
   }
+
+
+// visit mumbai
+Widget showDates(){
+  String arrivalText, departureText;
+  return Column(
+    mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+    children: [
+      Row(
+        children: [
+          TextButton.icon(
+                   onPressed: ()async{
+                      DateTime arrival = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
+                      setState(() {
+                        if (arrival!=null) {
+                           arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
+                          }
+                      });
+                      
+                    }, 
+                    icon: Icon(Icons.date_range_outlined), 
+                    label: Text("Pick visit start date"),
+                 ),
+          Visibility(
+            visible: arrivalText != null,
+            child: Text(arrivalText ?? "")),
+        ],
+      ),
+      Row(
+        children: [
+          TextButton.icon(
+                   onPressed: ()async{
+                      DateTime departure = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
+                      setState(() {
+                        if (departure!=null) {
+                           departureText = DateFormat('dd-MM-yyyy').format(departure);
+                          }
+                      });
+                      
+                    }, 
+                    icon: Icon(Icons.date_range_outlined), 
+                    label: Text("Pick visit end date"),
+                 ),
+        ],
+      ), 
+    ]);
+}
 
 //bullion
 
