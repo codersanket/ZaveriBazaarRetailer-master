@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
 import 'package:sonaar_retailer/pages/follows/all_contacts_page.dart';
 import 'package:sonaar_retailer/pages/login_page.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/dialog_service.dart';
 import 'package:sonaar_retailer/services/follow_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
@@ -304,15 +305,18 @@ class _ContactsPageState extends State<ContactsPage> {
                   style: TextStyle(letterSpacing: 1),
                 ),
                 color: Theme.of(context).accentColor,
-                onPressed: contact.canFollow || contact.canInvite
-                    ? () async {
-                        if (contact.canFollow) {
-                          _followWholesaler(contact, index);
-                        } else {
-                          _inviteWholesaler(contact);
-                        }
-                      }
-                    : null,
+                // onPressed: contact.canFollow || contact.canInvite
+                //     ? () async {
+                //         if (contact.canFollow) {
+                //           _followWholesaler(contact, index);
+                //         } else {
+                //           _inviteWholesaler(contact);
+                //         }
+                //       }
+                //     : null,
+                onPressed: (){
+                  _followWholesaler(contact, index);
+                },
               ),
             ],
           ),
@@ -425,7 +429,25 @@ class _ContactsPageState extends State<ContactsPage> {
       }
     });
 
-    UserContactService.getAll(params).then((res) {
+    // UserContactService.getAll(params).then((res) {
+    //   List<UserContact> contacts = UserContact.listFromJson(res['data']);
+    //   totalPage = res['last_page'];
+    //   if (rowCount == 0) rowCount = res['total'];
+
+    //   setState(() {
+    //     _contacts.addAll(contacts);
+    //     isLoading = false;
+    //   });
+    // }).catchError((err) {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
+
+    final user = AuthService.user;
+    var param = {"id": user.id};
+    //param["id"] = user.id;
+    UserContactService.getAllSuggestions(param).then((res) {
       List<UserContact> contacts = UserContact.listFromJson(res['data']);
       totalPage = res['last_page'];
       if (rowCount == 0) rowCount = res['total'];

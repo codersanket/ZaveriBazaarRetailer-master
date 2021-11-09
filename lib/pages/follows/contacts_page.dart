@@ -253,11 +253,12 @@ class _ContactsPageState extends State<ContactsPage> {
               color: Theme.of(context).accentColor,
               onPressed:
               (){
-                if (contact.canFollow) {
-                  _followWholesaler(contact, index);
-                } else {
-                  _inviteWholesaler(contact);
-                }
+                // if (contact.canFollow) {
+                //   _followWholesaler(contact, index);
+                // } else {
+                //   _inviteWholesaler(contact);
+                // }
+                _followWholesaler(contact, index);
               }
               // contact.canFollow!=false || contact.canInvite!=false
               //     ? () async {
@@ -276,7 +277,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   String getActionText(UserContact contact) {
    if (contact.canFollow!=false) return 'FOLLOW';
-    if (contact.canInvite!=false) return 'INVITE';
+    //if (contact.canInvite!=false) return 'INVITE';
    return 'FOLLOWING';
   }
 
@@ -377,20 +378,20 @@ class _ContactsPageState extends State<ContactsPage> {
       }
     });
 
-    UserContactService.getAll(params).then((res) {
-      List<UserContact> contacts = UserContact.listFromJson(res['data']);
-      totalPage = res['last_page'];
-      if (rowCount == 0) rowCount = res['total'];
+    // UserContactService.getAll(params).then((res) {
+    //   List<UserContact> contacts = UserContact.listFromJson(res['data']);
+    //   totalPage = res['last_page'];
+    //   if (rowCount == 0) rowCount = res['total'];
 
-      setState(() {
-        _contacts.addAll(contacts);
-        isLoading = false;
-      });
-    }).catchError((err) {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    //   setState(() {
+    //     _contacts.addAll(contacts);
+    //     isLoading = false;
+    //   });
+    // }).catchError((err) {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
 
     final user = AuthService.user;
     var param = {"id": user.id};
