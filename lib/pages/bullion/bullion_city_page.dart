@@ -66,6 +66,12 @@ class _BullionCityPageState extends State<BullionCityPage> {
   List<Product> productList = [];
   List<Post> postList = [];
 
+  //date
+  String arrivalText, departureText;
+  DateTime arrival,departure;
+  TextEditingController _itemDateController1 = TextEditingController();
+  TextEditingController _itemDateController2 = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -657,14 +663,28 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 child: _buildPostCarousel(),
               )),
 
+          Row(
+            children: [
+              Card(child: InkWell(
+                onTap: (){},
+                child: Text("Orders"),
+              )),
+              Card(child: InkWell(
+                onTap: (){},
+                child: Text("Repairs"),
+              )),
+            ],
+          ),
+
           Card(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children : [
                 Text('Planning to visit Mumbai?\nGet in touch with us.'),
                 IconButton(
-                  onPressed: (){
-                    showModalBottomSheet(context: context, builder: (_) => showDates());
+                  onPressed: ()async{
+                    //await showModalBottomSheet(context: context, builder: (_) => showDates());
+                    await _displayTextInputDialog(context);
                   }, 
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
               ],
@@ -1173,11 +1193,12 @@ class _BullionCityPageState extends State<BullionCityPage> {
 
 // visit mumbai
 Widget showDates(){
-  String arrivalText, departureText;
   return Column(
     mainAxisAlignment:MainAxisAlignment.spaceEvenly,
     children: [
+      Text("Choose Dates"),
       Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton.icon(
                    onPressed: ()async{
@@ -1198,6 +1219,7 @@ Widget showDates(){
         ],
       ),
       Row(
+        mainAxisAlignment : MainAxisAlignment.center,
         children: [
           TextButton.icon(
                    onPressed: ()async{
@@ -1212,10 +1234,79 @@ Widget showDates(){
                     icon: Icon(Icons.date_range_outlined), 
                     label: Text("Pick visit end date"),
                  ),
+          Visibility(
+            visible: departureText != null,
+            child: Text(departureText ?? "")),
         ],
-      ), 
+      ),
+      ElevatedButton(onPressed: (){}, child: Text("submit")),
     ]);
 }
+
+
+Future<void> _displayTextInputDialog(BuildContext context) async {
+    //clear();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Choose Date'),
+          content: Container(
+            height: 120,
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.spaceA,
+              children: [
+               Expanded(
+                 child: TextButton.icon(
+                  onPressed: ()async{
+                      arrival = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
+                      setState(() {
+                        if (arrival!=null) {
+                           arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
+                           _itemDateController1.text = DateFormat('dd-MM-yyyy').format(arrival);
+                          }
+                      });
+                      
+                    }, 
+                    icon: Icon(Icons.date_range_outlined), 
+                    label: Text("arrival date"),
+                 ),
+               ),
+               Expanded(
+                 child: Visibility(visible: arrivalText!=null,child: TextFormField(
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.datetime,
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: _itemDateController1,
+                  //maxLength:10,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0)),),
+                    contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),),
+                  style: TextStyle(fontSize: 12),
+                    ),),
+               ),
+               
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('submit'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 //bullion
 
