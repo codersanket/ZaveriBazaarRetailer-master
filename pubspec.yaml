@@ -29,6 +29,7 @@ dependencies:
   url_launcher: ^5.2.5
   contacts_service: ^0.4.2
   permission_handler: ^4.0.0
+  youtube_player_flutter: ^7.0.0
   share: ^0.6.3+1
   qrcode_reader:
     path: ./qrcode_reader

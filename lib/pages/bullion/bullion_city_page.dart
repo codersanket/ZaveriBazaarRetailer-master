@@ -16,6 +16,7 @@ import 'package:sonaar_retailer/models/post.dart';
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
+import 'package:sonaar_retailer/pages/VideoScreen.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/post_view.dart';
 import 'package:sonaar_retailer/pages/product_view.dart';
@@ -580,7 +581,38 @@ class _BullionCityPageState extends State<BullionCityPage> {
           //   ),
           // ),
 
-          //top products carousel
+          /// Youtube video
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20.0),
+            height: 110.0,
+            child: ListView.builder(
+              //itemCount: youtubeVideoList.length,
+              scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+              return Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context)=>VideoScreen(index: index,)));},
+                    child: Card(
+                      child: Container(
+                        width: 110,
+                        height: 110,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  "https://1.bp.blogspot.com/-5NBQv5hi4fw/XfBkPpizYeI/AAAAAAAAjls/8bVTseXp39IQnRUNUN-2xoP89LRsMCDJQCLcBGAsYHQ/s1600/Divine%2B4-001.jpg"),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                ],
+              );
+            }),
+          ),
+
           Visibility(
               visible: productList.isNotEmpty && _prodError == null,
               child: Container(
