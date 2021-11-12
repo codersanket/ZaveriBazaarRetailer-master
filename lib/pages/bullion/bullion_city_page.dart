@@ -19,6 +19,7 @@ import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/pages/Repaire_page.dart';
 import 'package:sonaar_retailer/pages/VideoScreen.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
+import 'package:sonaar_retailer/pages/orders_add.dart';
 import 'package:sonaar_retailer/pages/post_view.dart';
 import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/pages/wholesaler_view.dart';
@@ -620,6 +621,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
             }),
           ),
 
+          //top products
           Visibility(
               visible: productList.isNotEmpty && _prodError == null,
               child: Container(
@@ -664,29 +666,48 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 child: _buildPostCarousel(),
               )),
 
-          Row(
-            children: [
-              Card(child: InkWell(
-                onTap: (){},
-                child: Text("Orders"),
-              )),
-              Card(child: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Repair()));
-                },
-                child: Text("Repairs"),
-              )),
-            ],
+          Container(
+            color : Color(0xff004272),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      child: TextButton.icon(
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddOrder()));
+                        }, 
+                        icon: Icon(Icons.library_books_outlined),
+                        label:Text("Orders") )
+                      ),
+                  ),
+                  Expanded(
+                    child: Card(
+                      child: TextButton.icon(
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Repair()));
+                        }, 
+                        icon: Icon(Icons.design_services_rounded),
+                        label:Text("Repairs") )
+                      ),
+                  ),
+                ],
+              ),
+            ),
           ),
 
-          Card(
+          Container(
+            color: Colors.blueAccent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children : [
-                Text('Planning to visit Mumbai?\nGet in touch with us.'),
+                Text('Planning to visit Mumbai?\nGet in touch with us.',
+                  style: TextStyle(fontSize: 16),),
                 IconButton(
                   onPressed: ()async{
                     //await showModalBottomSheet(context: context, builder: (_) => showDates());
+                    arrivalText = null;
                     await _displayTextInputDialog(context);
                   }, 
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
@@ -1257,7 +1278,6 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
           content: Container(
             height: 120,
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.spaceA,
               children: [
                Expanded(
                  child: TextButton.icon(
@@ -1275,19 +1295,19 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
                     label: Text("arrival date"),
                  ),
                ),
-               Expanded(
-                 child: Visibility(visible: arrivalText!=null,child: TextFormField(
+               Visibility(visible: arrival!=null,child: Expanded(
+                 child: TextFormField(
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.datetime,
                   textAlignVertical: TextAlignVertical.center,
                   controller: _itemDateController1,
                   //maxLength:10,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0)),),
+                    border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),),
                   style: TextStyle(fontSize: 12),
-                    ),),
-               ),
+                    ),
+               ),),
                
               ],
             ),
