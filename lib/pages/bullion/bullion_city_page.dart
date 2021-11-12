@@ -16,6 +16,7 @@ import 'package:sonaar_retailer/models/post.dart';
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
+import 'package:sonaar_retailer/pages/Repaire_page.dart';
 import 'package:sonaar_retailer/pages/VideoScreen.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/post_view.dart';
@@ -670,7 +671,9 @@ class _BullionCityPageState extends State<BullionCityPage> {
                 child: Text("Orders"),
               )),
               Card(child: InkWell(
-                onTap: (){},
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Repair()));
+                },
                 child: Text("Repairs"),
               )),
             ],
