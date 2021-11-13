@@ -9,12 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
 import 'package:sonaar_retailer/services/user_contact_service.dart';
 
-class Repair extends StatefulWidget {
+class RepairAdd extends StatefulWidget {
   @override
-  _RepairState createState() => _RepairState();
+  _RepairAddState createState() => _RepairAddState();
 }
 
-class _RepairState extends State<Repair> {
+class _RepairAddState extends State<RepairAdd> {
   DateTime selectedDate = DateTime.now();
   File _image;
   bool loading = false;
@@ -68,7 +68,7 @@ class _RepairState extends State<Repair> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Repair"),
+        title: Text("Repair Add"),
       ),
       body: Container(
         child: SingleChildScrollView(
@@ -118,17 +118,6 @@ class _RepairState extends State<Repair> {
                                       ),
                                     );
                                   });
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (BuildContext context) {
-                              //       return Material(
-                              //         child: new Container(
-                              //           height: 200,
-                              //           width: 200,
-                              //           child: _buildListView(),
-                              //         ),
-                              //       );
-                              //     });
                             },
                             child: Icon(
                               Icons.phone,
@@ -233,7 +222,7 @@ class _RepairState extends State<Repair> {
       ),
     );
   }
-
+///get Contact
   fetchContacts() async {
     setState(() {
       isLoading = true;
@@ -258,7 +247,7 @@ class _RepairState extends State<Repair> {
       });
     });
   }
-
+///show dialog listview
   Widget _buildListView() {
     return ListView.builder(
       shrinkWrap: true,
