@@ -21,6 +21,8 @@ class _VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     String videoId1 = YoutubePlayer.convertUrlToId(
        "https://www.youtube.com/watch?v=nuGgJqWn9Rs");
+    // String videoId1 = YoutubePlayer.convertUrlToId(
+    //     widget.videoId);
     print(videoId1);
     YoutubePlayerController _controller = YoutubePlayerController(
       initialVideoId: videoId1.toString(),

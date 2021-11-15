@@ -49,7 +49,7 @@ class BullionCityPage extends StatefulWidget {
 
 class _BullionCityPageState extends State<BullionCityPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var isLoading = true, _error, _prodError, _postError;
+  var isLoading = true, _error, _prodError, _postError,_videoError;
   List<BullionCity> _cityList = [];
   BullionService bullionService;
 
@@ -600,31 +600,45 @@ class _BullionCityPageState extends State<BullionCityPage> {
             margin: const EdgeInsets.symmetric(vertical: 20.0),
             height: 110.0,
             child: ListView.builder(
-              //itemCount: youtubeVideoList.length,
-              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+               // itemCount: videoList.length,
+                scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-              return Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context)=>VideoScreen(index: index,)));},
-                    child: Card(
-                      child: Container(
-                        width: 110,
-                        height: 110,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://1.bp.blogspot.com/-5NBQv5hi4fw/XfBkPpizYeI/AAAAAAAAjls/8bVTseXp39IQnRUNUN-2xoP89LRsMCDJQCLcBGAsYHQ/s1600/Divine%2B4-001.jpg"),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(10)),
+                  return Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VideoScreen(
+                                        youtubeVideo: videoList,
+                                        index: index,
+                                        videoId: videoList[index].url,
+                                        onChange: (video) {
+                                          setState(
+                                              () => videoList[index] = video);
+                                        },
+                                      )));
+                        },
+                        child: Card(
+                          child: Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://1.bp.blogspot.com/-5NBQv5hi4fw/XfBkPpizYeI/AAAAAAAAjls/8bVTseXp39IQnRUNUN-2xoP89LRsMCDJQCLcBGAsYHQ/s1600/Divine%2B4-001.jpg"),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              );
-            }),
+                      SizedBox(width: 10),
+                    ],
+                  );
+                }),
           ),
 
           //top products
@@ -706,7 +720,10 @@ class _BullionCityPageState extends State<BullionCityPage> {
                     child: Card(
                         child: TextButton.icon(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewRequirement()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewRequirement()));
                             },
                             icon: Icon(Icons.format_list_numbered),
                             label: Text("Require-\n ment"))),
@@ -1052,7 +1069,22 @@ class _BullionCityPageState extends State<BullionCityPage> {
 
   fetchVideo() {
     setState(() {
-      BullionService.getAll();
+      BullionService.getAll().then((res) {
+        List<YoutubeVideo> video=YoutubeVideo.listFromJson(res);
+        if(mounted)
+          setState(() {
+            video.shuffle();
+            videoList.addAll(video);
+            _videoError=null;
+            isLoading=false;
+          });
+      }).catchError((err){
+        if (mounted)
+          setState(() {
+            _prodError = err;
+            //isLoading = false;
+          });
+      });
     });
   }
 //post carousel
@@ -1087,13 +1119,13 @@ class _BullionCityPageState extends State<BullionCityPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => PostViewPage(
-                                    posts: postList,
-                                    index: _currentPostIndex,
-                                  onChange: (post) {
-                                    setState(() =>
-                                    postList[_currentPostIndex] =
-                                        post);
-                                  },)));
+                                      posts: postList,
+                                      index: _currentPostIndex,
+                                      onChange: (post) {
+                                        setState(() =>
+                                            postList[_currentPostIndex] = post);
+                                      },
+                                    )));
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(
@@ -1141,7 +1173,8 @@ class _BullionCityPageState extends State<BullionCityPage> {
                               child: Container(
                                 //width : 150,
                                 child: post.thumbUrl == null
-                                    ? null:
+                                    ? null
+                                    :
                                     // : GestureDetector(
                                     //     onTap: () async {
                                     //       // Navigator.of(context).push(
@@ -1154,23 +1187,23 @@ class _BullionCityPageState extends State<BullionCityPage> {
                                     //       //);
                                     //     },
                                     //     child:
-                                   CachedNetworkImage(
-                                          imageUrl: post.thumbUrl,
+                                    CachedNetworkImage(
+                                        imageUrl: post.thumbUrl,
+                                        fit: BoxFit.contain,
+                                        alignment: Alignment.center,
+                                        errorWidget: (c, u, e) => Image.asset(
+                                          "images/ic_launcher.png",
                                           fit: BoxFit.contain,
-                                          alignment: Alignment.center,
-                                          errorWidget: (c, u, e) => Image.asset(
-                                            "images/ic_launcher.png",
-                                            fit: BoxFit.contain,
-                                            alignment: Alignment.topCenter,
-                                          ),
-                                          // Icon(Icons.warning),
-                                          // placeholder: (c, u) => Center(
-                                          //     child:
-                                          //         CircularProgressIndicator(strokeWidth: 2.0)),
+                                          alignment: Alignment.topCenter,
                                         ),
+                                        // Icon(Icons.warning),
+                                        // placeholder: (c, u) => Center(
+                                        //     child:
+                                        //         CircularProgressIndicator(strokeWidth: 2.0)),
                                       ),
                               ),
                             ),
+                          ),
                           //),
 
                           Padding(
@@ -1238,61 +1271,61 @@ class _BullionCityPageState extends State<BullionCityPage> {
     });
   }
 
-
 // visit mumbai
-Widget showDates(){
-  return Column(
-    mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-    children: [
+  Widget showDates() {
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       Text("Choose Dates"),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton.icon(
-                   onPressed: ()async{
-                      DateTime arrival = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
-                      setState(() {
-                        if (arrival!=null) {
-                           arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
-                          }
-                      });
-                      
-                    }, 
-                    icon: Icon(Icons.date_range_outlined), 
-                    label: Text("Pick visit start date"),
-                 ),
+            onPressed: () async {
+              DateTime arrival = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 7)));
+              setState(() {
+                if (arrival != null) {
+                  arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
+                }
+              });
+            },
+            icon: Icon(Icons.date_range_outlined),
+            label: Text("Pick visit start date"),
+          ),
           Visibility(
-            visible: arrivalText != null,
-            child: Text(arrivalText ?? "")),
+              visible: arrivalText != null, child: Text(arrivalText ?? "")),
         ],
       ),
       Row(
-        mainAxisAlignment : MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton.icon(
-                   onPressed: ()async{
-                      DateTime departure = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
-                      setState(() {
-                        if (departure!=null) {
-                           departureText = DateFormat('dd-MM-yyyy').format(departure);
-                          }
-                      });
-                      
-                    }, 
-                    icon: Icon(Icons.date_range_outlined), 
-                    label: Text("Pick visit end date"),
-                 ),
+            onPressed: () async {
+              DateTime departure = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 7)));
+              setState(() {
+                if (departure != null) {
+                  departureText = DateFormat('dd-MM-yyyy').format(departure);
+                }
+              });
+            },
+            icon: Icon(Icons.date_range_outlined),
+            label: Text("Pick visit end date"),
+          ),
           Visibility(
-            visible: departureText != null,
-            child: Text(departureText ?? "")),
+              visible: departureText != null, child: Text(departureText ?? "")),
         ],
       ),
-      ElevatedButton(onPressed: (){}, child: Text("submit")),
+      ElevatedButton(onPressed: () {}, child: Text("submit")),
     ]);
-}
+  }
 
-
-Future<void> _displayTextInputDialog(BuildContext context) async {
+  Future<void> _displayTextInputDialog(BuildContext context) async {
     //clear();
     return showDialog(
       context: context,
@@ -1303,36 +1336,46 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
             height: 120,
             child: Column(
               children: [
-               Expanded(
-                 child: TextButton.icon(
-                  onPressed: ()async{
-                      arrival = await showDatePicker(context: context, initialDate: DateTime.now(),firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 7)));
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      arrival = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 7)));
                       setState(() {
-                        if (arrival!=null) {
-                           arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
-                           _itemDateController1.text = DateFormat('dd-MM-yyyy').format(arrival);
-                          }
+                        if (arrival != null) {
+                          arrivalText =
+                              DateFormat('dd-MM-yyyy').format(arrival);
+                          _itemDateController1.text =
+                              DateFormat('dd-MM-yyyy').format(arrival);
+                        }
                       });
-                      
-                    }, 
-                    icon: Icon(Icons.date_range_outlined), 
+                    },
+                    icon: Icon(Icons.date_range_outlined),
                     label: Text("arrival date"),
-                 ),
-               ),
-               Visibility(visible: arrival!=null,child: Expanded(
-                 child: TextFormField(
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.datetime,
-                  textAlignVertical: TextAlignVertical.center,
-                  controller: _itemDateController1,
-                  //maxLength:10,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),),
-                  style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                Visibility(
+                  visible: arrival != null,
+                  child: Expanded(
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.datetime,
+                      textAlignVertical: TextAlignVertical.center,
+                      controller: _itemDateController1,
+                      //maxLength:10,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 10.0),
+                      ),
+                      style: TextStyle(fontSize: 12),
                     ),
-               ),),
-               
+                  ),
+                ),
               ],
             ),
           ),
