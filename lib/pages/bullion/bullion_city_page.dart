@@ -16,8 +16,10 @@ import 'package:sonaar_retailer/models/post.dart';
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/wholesaler_firm.dart';
+import 'package:sonaar_retailer/models/youtube_video.dart';
 import 'package:sonaar_retailer/pages/Repair_page.dart';
 import 'package:sonaar_retailer/pages/Repair_add.dart';
+import 'package:sonaar_retailer/pages/Requirement_create.dart';
 import 'package:sonaar_retailer/pages/VideoScreen.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/orders_add.dart';
@@ -34,6 +36,7 @@ import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:sonaar_retailer/services/userlog_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../Requirement_view.dart';
 import 'bullion_price_controller.dart';
 import 'bullion_price_helper.dart';
 import 'bullion_vendor_detail_page.dart';
@@ -65,13 +68,14 @@ class _BullionCityPageState extends State<BullionCityPage> {
   //for carousel
   int _currentProductIndex = 0;
   int _currentPostIndex = 0;
+  int _currentVideoIndex = 0;
   User authUser;
   List<Product> productList = [];
   List<Post> postList = [];
-
+  List<YoutubeVideo> videoList = [];
   //date
   String arrivalText, departureText;
-  DateTime arrival,departure;
+  DateTime arrival, departure;
   TextEditingController _itemDateController1 = TextEditingController();
   TextEditingController _itemDateController2 = TextEditingController();
 
@@ -90,6 +94,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
 
     fetchTopProducts();
     fetchTopPosts();
+    fetchVideo();
   }
 
   @override
@@ -668,30 +673,43 @@ class _BullionCityPageState extends State<BullionCityPage> {
               )),
 
           Container(
-            color : Color(0xff004272),
+            color: Color(0xff004272),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   Expanded(
                     child: Card(
-                      child: TextButton.icon(
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddOrder()));
-                        }, 
-                        icon: Icon(Icons.library_books_outlined),
-                        label:Text("Orders") )
-                      ),
+                        child: TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddOrder()));
+                            },
+                            icon: Icon(Icons.library_books_outlined),
+                            label: Text("Orders"))),
                   ),
                   Expanded(
                     child: Card(
-                      child: TextButton.icon(
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Repair()));
-                        }, 
-                        icon: Icon(Icons.design_services_rounded),
-                        label:Text("Repairs") )
-                      ),
+                        child: TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Repair()));
+                            },
+                            icon: Icon(Icons.design_services_rounded),
+                            label: Text("Repairs"))),
+                  ),
+                  Expanded(
+                    child: Card(
+                        child: TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewRequirement()));
+                            },
+                            icon: Icon(Icons.format_list_numbered),
+                            label: Text("Require-\n ment"))),
                   ),
                 ],
               ),
@@ -1032,6 +1050,11 @@ class _BullionCityPageState extends State<BullionCityPage> {
     });
   }
 
+  fetchVideo() {
+    setState(() {
+      BullionService.getAll();
+    });
+  }
 //post carousel
 
   Widget _buildPostCarousel() {
