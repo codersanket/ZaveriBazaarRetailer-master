@@ -11,10 +11,10 @@ class AddOrder extends StatefulWidget {
 class _AddOrderState extends State<AddOrder> {
   DateTime selectedDate = DateTime.now();
   File _image;
+  List images = [];
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _datetimeController = TextEditingController();
-  TextEditingController _idController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
@@ -35,15 +35,6 @@ class _AddOrderState extends State<AddOrder> {
                 Container(
                   height: 45,
                   child: TextFormField(
-                    controller: _idController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Order Id'),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  height: 45,
-                  child: TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -51,6 +42,21 @@ class _AddOrderState extends State<AddOrder> {
                         prefixIcon: Icon(Icons.person)),
                     validator: (v) {
                       return v.isEmpty ? 'Please enter Name' : null;
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  height: 45,
+                  child: TextFormField(
+                    controller: _nameController,
+                    //maxLength: 10,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Phone number',
+                        prefixIcon: Icon(Icons.phone)),
+                    validator: (v) {
+                      return v.isEmpty ? 'Please enter number' : v.length < 10 ? "Enter valid number": null;
                     },
                   ),
                 ),
@@ -78,20 +84,92 @@ class _AddOrderState extends State<AddOrder> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Material(
-                  //color: Colors.white,
-                  child: ListTile(
-                    onTap: pickImage,
-                    trailing: Icon(Icons.image, color: Colors.blue),
-                    title: Text('Photo'),
-                    subtitle: _image == null
-                        ? null
-                        : Container(
-                            padding: EdgeInsets.only(top: 8.0),
-                            height: 200.0,
-                            child: Image.file(_image, fit: BoxFit.cover),
+                // Material(
+                //   //color: Colors.white,
+                //   child: ListTile(
+                //     onTap: pickImage,
+                //     trailing: Icon(Icons.image, color: Colors.blue),
+                //     title: Text('Photo'),
+                //     subtitle: _image == null
+                //         ? null
+                //         : Container(
+                //             padding: EdgeInsets.only(top: 8.0),
+                //             height: 200.0,
+                //             child: Image.file(_image, fit: BoxFit.cover),
+                //           ),
+                //   ),
+                // ),
+                Column(
+                  children: [
+                    Padding(padding: const EdgeInsets.all(10.0),child: Text("Add order details"),),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 35,
+                                child: TextFormField(
+                                controller: _nameController,
+                                //maxLength: 10,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Product name',
+                                  //prefixIcon: Icon(Icons.phone)
+                                  ),
+                                validator: (v) {
+                                  return v.isEmpty ? 'Please enter product name': null;
+                                },
+                              ),
                           ),
-                  ),
+                            ),
+                          
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 35,
+                                child: TextFormField(
+                                controller: _nameController,
+                                keyboardType : TextInputType.number,
+                                //maxLength: 10,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Weight',
+                                ),
+                                validator: (v) {
+                                  return v.isEmpty ? 'Please enter weight' : null;
+                                },
+                              ),
+                          ),
+                            ),
+                          
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 35,
+                                child: TextFormField(
+                                controller: _nameController,
+                                //maxLength: 10,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Melting',
+                                ),
+                                validator: (v) {
+                                  return v.isEmpty ? 'Please enter melting' : null;
+                                },
+                              ),
+                          ),
+                            ),
+                            
+                            
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(height: 20),
                 Container(
@@ -131,7 +209,6 @@ class _AddOrderState extends State<AddOrder> {
                         ? null
                         : () {
                       if (_formKey.currentState.validate()) {
-                       print(_idController.text,);
                        print(_nameController.text);
                        print(_datetimeController.text);
                        print(_remarkController.text);
@@ -203,4 +280,44 @@ class _AddOrderState extends State<AddOrder> {
     // );
     setState(() => _image = file);
   }
+
+  // Widget buildGridView() {
+  //   return GridView.builder(
+  //     itemCount: images.length + 1,
+  //     padding: EdgeInsets.only(bottom: 70),
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 3,
+  //       childAspectRatio: 0.7,
+  //       crossAxisSpacing: 2,
+  //       mainAxisSpacing: 2,
+  //     ),
+  //     itemBuilder: (context, i) {
+  //       if (i == images.length) return buildGridAddItem(context);
+  //       return buildGridProductItem(context, i);
+  //     },
+  //   );
+  // }
+
+  // Widget buildGridAddItem(BuildContext context) {
+  //   final isMax = images.length == 10;
+  //   return GridTile(
+  //     child: GestureDetector(
+  //       onTap: isMax ? null : () => pickImages(),
+  //       child: Container(
+  //         color: Colors.grey.shade300,
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             Icon(isMax ? Icons.error_outline : Icons.add_photo_alternate),
+  //             SizedBox(height: 4),
+  //             Text(
+  //               isMax ? 'Max 10 images\nare allowed' : 'Add images',
+  //               textAlign: TextAlign.center,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

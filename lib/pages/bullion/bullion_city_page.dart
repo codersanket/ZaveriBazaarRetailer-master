@@ -601,7 +601,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
             height: 110.0,
             child: ListView.builder(
               shrinkWrap: true,
-               // itemCount: videoList.length,
+              itemCount: videoList.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
                   return Row(
@@ -1070,7 +1070,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
   fetchVideo() {
     setState(() {
       BullionService.getAll().then((res) {
-        List<YoutubeVideo> video=YoutubeVideo.listFromJson(res);
+        List<YoutubeVideo> video=YoutubeVideo.listFromJson(res['data']);
         if(mounted)
           setState(() {
             video.shuffle();
