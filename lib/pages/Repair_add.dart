@@ -2,9 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
 import 'package:sonaar_retailer/services/user_contact_service.dart';
@@ -133,7 +130,7 @@ class _RepairAddState extends State<RepairAdd> {
                       controller: _datetimeController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Repair date',
+                        labelText: 'Repair issue date',
                         suffixIcon: GestureDetector(
                           onTap: () {
                             _selectDate(context);
