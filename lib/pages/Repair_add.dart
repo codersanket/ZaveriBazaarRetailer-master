@@ -1,9 +1,16 @@
 import 'dart:io';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
+import 'package:sonaar_retailer/services/repair_service.dart';
+import 'package:sonaar_retailer/services/status_service.dart';
+import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:sonaar_retailer/services/user_contact_service.dart';
 
 class RepairAdd extends StatefulWidget {
@@ -14,16 +21,19 @@ class RepairAdd extends StatefulWidget {
 class _RepairAddState extends State<RepairAdd> {
   DateTime selectedDate = DateTime.now();
   File _image;
-  bool loading = false;
+  Status _statusValue;
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<UserContact> _contacts = [];
+  //List<Contact> _contacts = [];
   ScrollController _scrollController;
   var isLoading = false, isSyncing = false, totalPage = 0, rowCount = 0;
   Map<String, dynamic> params = {'page': 1, 'per_page': 50};
   double progress = 0;
   String deviceId;
   int selectedIndex;
+  List<Status> _status = [];
 
   TextEditingController _datetimeController = TextEditingController();
   TextEditingController _noController = TextEditingController();
@@ -33,22 +43,22 @@ class _RepairAddState extends State<RepairAdd> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
-        if (!isLoading) {
-          if ((params['page'] + 1) <= totalPage) {
-            params['page'] = params['page'] + 1;
-            fetchContacts();
-          }
-        }
-      }
-    });
+    _fetchStatusList();
+    // _scrollController = ScrollController();
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels >=
+    //       _scrollController.position.maxScrollExtent - 200) {
+    //     if (!isLoading) {
+    //       if ((params['page'] + 1) <= totalPage) {
+    //         params['page'] = params['page'] + 1;
+    //         fetchContacts();
+    //       }
+    //     }
+    //   }
+    // });
 
-    checkStatusAndInit();
+    // checkStatusAndInit();
   }
 
   checkStatusAndInit() async {
@@ -63,159 +73,192 @@ class _RepairAddState extends State<RepairAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Repair Add"),
+        title: Text("Add Repair item"),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding:
-            const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 30),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Container(
-                    height: 45,
-                    child: TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Customer Name',
-                          prefixIcon: Icon(Icons.person)),
-                      validator: (v) {
-                        return v.isEmpty ? 'Please enter Name' : null;
-                      },
+      body: Stack(
+        children: [
+          Container(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding:
+              const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 30),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 45,
+                      child: TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Customer Name',
+                            prefixIcon: Icon(Icons.person)),
+                        validator: (v) {
+                          return v.isEmpty ? 'Please enter Name' : null;
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 45,
-                    child: TextFormField(
-                      controller: _noController,
-                      decoration: InputDecoration(
+                    SizedBox(height: 20),
+                    Container(
+                      height: 45,
+                      child: TextFormField(
+                        controller: _noController,
+                        validator: (v) {
+                          return v.isEmpty ? 'Please select customer contact' : v.length > 12 || v.length < 10 ? 'Please enter valid number': null;
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Customer Number',
+                            suffixIcon: GestureDetector(
+                              onTap: () async {
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (BuildContext context) {
+                                //       return AlertDialog(
+                                //         title: Text("Contact"),
+                                //         content: Container(
+                                //           width: double.maxFinite,
+                                //           child: Column(
+                                //             mainAxisSize: MainAxisSize.min,
+                                //             children: [
+                                //               Expanded(child: _buildListView())
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       );
+                                //     });
+                              },
+                              child: Icon(
+                                Icons.phone,
+                                color: Colors.blue,
+                              ),
+                            )),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      height: 45,
+                      child: TextFormField(
+                        controller: _datetimeController,
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Customer Number',
+                          labelText: 'Repair issue date',
                           suffixIcon: GestureDetector(
-                            onTap: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Contact"),
-                                      content: Container(
-                                        width: double.maxFinite,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(child: _buildListView())
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
+                            onTap: () {
+                              _selectDate(context);
                             },
                             child: Icon(
-                              Icons.phone,
+                              Icons.calendar_today,
                               color: Colors.blue,
                             ),
-                          )),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 45,
-                    child: TextFormField(
-                      controller: _datetimeController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Repair issue date',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                          child: Icon(
-                            Icons.calendar_today,
-                            color: Colors.blue,
                           ),
                         ),
-                      ),
-                      validator: (v) {
-                        return v.isEmpty ? 'Please select Date' : null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Material(
-                    //color: Colors.white,
-                    child: ListTile(
-                      onTap: pickImage,
-                      trailing: Icon(Icons.image, color: Colors.blue),
-                      title: Text('Photo'),
-                      subtitle: _image == null
-                          ? null
-                          : Container(
-                        padding: EdgeInsets.only(top: 8.0),
-                        height: 200.0,
-                        child: Image.file(_image, fit: BoxFit.cover),
+                        validator: (v) {
+                          return v.isEmpty ? 'Please select Date' : null;
+                        },
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 45,
-                    child: TextFormField(
-                      controller: _remarkController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Remark',
+                    SizedBox(height: 20),
+                    Material(
+                      //color: Colors.white,
+                      child: ListTile(
+                        onTap: pickImage,
+                        trailing: Icon(Icons.image, color: Colors.blue),
+                        title: Text('Photo'),
+                        subtitle: _image == null
+                            ? null
+                            : Container(
+                          padding: EdgeInsets.only(top: 8.0),
+                          height: 200.0,
+                          child: Image.file(_image, fit: BoxFit.cover),
+                        ),
                       ),
-                      validator: (v) {
-                        return v.isEmpty ? 'Please enter Remark data' : null;
-                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 45,
-                    child: TextFormField(
-                      controller: _weightController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Weight',
+                    SizedBox(height: 20),
+                    Container(
+                      height: 45,
+                      child: TextFormField(
+                        controller: _remarkController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Remark',
+                        ),
+                        // validator: (v) {
+                        //   return v.isEmpty ? 'Please enter Remark data' : null;
+                        // },
                       ),
-                      validator: (v) {
-                        return v.isEmpty ? 'Please enter Weight' : null;
-                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: RaisedButton(
-                      padding: EdgeInsets.symmetric(horizontal: 75),
-                      child: Text("Submit"),
-                      onPressed: loading
-                          ? null
-                          : () {
-                        if (_formKey.currentState.validate()) {
-                          print(_nameController.text);
-                          print(_noController.text);
-                          print(_datetimeController.text);
-                          print(_remarkController.text);
-                          print(_weightController.text);
-                          print(_image.path);
-                        }
-                        Navigator.pop(context, true);
-                      },
+                    SizedBox(height: 20),
+                    Container(
+                      height: 45,
+                      child: TextFormField(
+                        controller: _weightController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Weight',
+                        ),
+                        // validator: (v) {
+                        //   return v.isEmpty ? 'Please enter Weight' : null;
+                        // },
+                      ),
                     ),
-                  )
-                ],
+                    SizedBox(height: 20),
+                    DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                items: _status.map((Status value) {
+                                  return DropdownMenuItem<Status>(
+                                    value: value,
+                                    child: Text(value.statusName),
+                                  );
+                                }).toList(),
+                                hint: Text(
+                                  _statusValue == null ? "choose initial status" : _statusValue.statusName,
+                                  ),
+                                onChanged: (Status newValue) {
+                                  setState(() {
+                                    _statusValue = newValue;
+                                  });
+                                },
+                              ),
+                            ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: RaisedButton(
+                        padding: EdgeInsets.symmetric(horizontal: 75),
+                        child: Text("Submit"),
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                          if (_formKey.currentState.validate()) {
+                            // print(_nameController.text);
+                            // print(_noController.text);
+                            // print(_datetimeController.text);
+                            // print(_remarkController.text);
+                            // print(_weightController.text);
+                            // print(_image.path);
+                            _submit();
+                          }
+                          //Navigator.pop(context, true);
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         ),
+          Visibility(
+                  visible: isLoading,
+                  child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2.0)),
+                ),
+        ] 
       ),
     );
   }
@@ -223,25 +266,34 @@ class _RepairAddState extends State<RepairAdd> {
   fetchContacts() async {
     setState(() {
       isLoading = true;
-      if (params['page'] == 1) {
-        _contacts.clear();
-        rowCount = 0;
-      }
+      // if (params['page'] == 1) {
+      //   _contacts.clear();
+      //   rowCount = 0;
+      // }
     });
 
-    UserContactService.getAll(params).then((res) {
-      List<UserContact> posts = UserContact.listFromJson(res['data']);
-      totalPage = res['last_page'];
-      if (rowCount == 0) rowCount = res['total'];
+    // UserContactService.getAll(params).then((res) {
+    //   List<UserContact> posts = UserContact.listFromJson(res['data']);
+    //   totalPage = res['last_page'];
+    //   if (rowCount == 0) rowCount = res['total'];
 
-      setState(() {
-        _contacts.addAll(posts);
-        isLoading = false;
-      });
-    }).catchError((err) {
-      setState(() {
-        isLoading = false;
-      });
+    //   setState(() {
+    //     _contacts.addAll(posts);
+    //     isLoading = false;
+    //   });
+    // }).catchError((err) {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
+
+    ContactsService.getContacts(withThumbnails: false).then((res){
+      
+    }).catchError((err){
+     if (mounted)
+        setState(() {
+          isLoading = false;
+        });
     });
   }
 ///show dialog listview
@@ -323,4 +375,70 @@ class _RepairAddState extends State<RepairAdd> {
     // );
     setState(() => _image = file);
   }
+
+  _submit() async{
+    if(_image == null){
+      ToastService.error(_scaffoldKey, 'Please pick image');
+      return;
+    }
+    if(_statusValue== null){
+      ToastService.error(_scaffoldKey, 'Please choose status value');
+      return;
+    }
+    
+
+      final Map<String, dynamic> data = {
+      'customer_name': _nameController.text,
+      'customer_number': _noController.text,
+      'inward_date': _datetimeController.text,
+      'image': await MultipartFile.fromFile(_image.path),
+      'remark': _remarkController.text,
+      'weight': _weightController.text,
+      'assign_status': _statusValue.id,
+      'user_id': AuthService.user.id,
+    };
+
+    FormData formData = FormData.fromMap(data);
+
+    setState(() => this.isLoading = true);
+
+    RepairService.create(formData).then((res) {
+        Navigator.pop(context, true);
+      }).catchError((err) {
+        _showError(err.toString());
+      }).whenComplete(() {
+        setState(() => this.isLoading = false);
+      });
+  }
+
+  _fetchStatusList(){
+    setState(() => isLoading = true);
+
+    StatusService.getAll({"repairing" : "1"}).then((res){
+      List<Status> status = Status.listFromJson(res["data"]);
+      if(mounted){
+        setState(() {
+          _status.addAll(status);
+          isLoading=false;
+        });
+      }
+
+    }).catchError((err){
+      _showError(err.toString());
+      if (mounted)
+        setState(() {
+          isLoading = false;
+        });
+    });
+  }
+
+  void _showError(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.red.shade600,
+    ));
+  }
+
+
 }

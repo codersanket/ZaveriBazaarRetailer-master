@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:sonaar_retailer/models/status.dart';
+import 'package:sonaar_retailer/models/user.dart';
 
 class Repairs{
 
   String id;
+  String userId;
   String customerName;
   String customerNumber;
   String remark;
@@ -16,9 +18,11 @@ class Repairs{
   //Map<String, dynamic> statusDetails;
   Status statusDetails;
   String inwardDate;
+  //User user;
 
   Repairs({
     this.id,
+    this.userId,
     this.customerName,
     this.customerNumber,
     this.createdAt,
@@ -33,6 +37,7 @@ class Repairs{
 
   factory Repairs.fromJson(Map<String, dynamic> parsedJson) => Repairs(
         id: parsedJson['id']?.toString(),
+        userId: parsedJson['user_id'].toString(),
         customerName: parsedJson['customer_name']?.toString(),
         customerNumber: parsedJson['customer_number']?.toString(),
         thumbUrl: parsedJson['thumb_url']?.toString(),
@@ -49,6 +54,7 @@ class Repairs{
 
    Map<String, dynamic> toJson() => {
         'id': id,
+        'user_id':userId,
         'customer_name': customerName,
         'customer_number': customerNumber,
         'thumb_url': thumbUrl,

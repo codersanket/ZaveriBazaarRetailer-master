@@ -45,9 +45,9 @@ class RepairService{
   }
 
   //delete
-  static Future<Repairs> delete(String id) async {
+  static Future<Repairs> delete({String id, String userId}) async {
     try {
-      var response = await DioProvider().dio().delete('/repairing/delete',queryParameters: {"id" : id});
+      var response = await DioProvider().dio().delete('/repairing/delete',queryParameters: {"id" : id,"user_id" : userId});
 
       return Future.value(Repairs.fromJson(response.data));
     } catch (e) {

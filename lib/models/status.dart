@@ -29,4 +29,29 @@ class Status {
     data['created_at'] = this.createdAt;
     return data;
   }
+
+  static List<Status> listFromJson(List<dynamic> list) {
+    List<Status> rows = list.map((i) => Status.fromJson(i)).toList();
+    return rows;
+  }
+
+  String getStatusName(){
+    return statusName;
+  }
+  
+  static List<Status> listOrderStatus(List<dynamic> list) {
+    List<Status> rows = list.map((i) => Status.fromJson(i)).where((element) => element.createOrder=="1").toList();
+    //List<String> data; 
+    //rows.forEach((element) { data.add(element.getStatusName());});
+    //return data;
+    return rows;
+  }
+
+  static List<Status> listRepairStatus(List<dynamic> list) {
+    List<Status> rows = list.map((i) => Status.fromJson(i)).where((element) => element.repairing=="1").toList();
+    //List<String> data; 
+    //rows.forEach((element) { data.add(element.getStatusName());});
+    //return data;
+    return rows;
+  }
 }

@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sonaar_retailer/models/repairs.dart';
+import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/pages/Repair_edit.dart';
 import 'package:sonaar_retailer/pages/Repair_add.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/services/repair_service.dart';
+import 'package:sonaar_retailer/services/status_service.dart';
+import 'package:dio/dio.dart';
 
 class Repair extends StatefulWidget {
   @override
@@ -14,7 +17,7 @@ class Repair extends StatefulWidget {
 class _RepairState extends State<Repair> {
   String initalValue = "Change Status";
 
-  var statusList = ['Unassigned', 'Assigned', 'Received', 'Delivered', 'Cancel'];
+  //var statusList = ['Unassigned', 'Assigned', 'Received', 'Delivered', 'Cancel'];
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController;
@@ -23,6 +26,7 @@ class _RepairState extends State<Repair> {
 
   var isLoading = true, _error, totalPage = 0, rowCount = 0;
   List<Repairs> _repairs = [];
+  List<Status> _status = [];
 
 
   @override
@@ -42,7 +46,7 @@ class _RepairState extends State<Repair> {
         }
       }
     });
-
+    _fetchStatusList();
     _fetchRepairs();
   }
 
@@ -51,7 +55,7 @@ class _RepairState extends State<Repair> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Repairing Page"),
+        title: Text("Repairs Page"),
       ),
       body: _error != null
           ? buildErrorWidget()
@@ -68,8 +72,7 @@ class _RepairState extends State<Repair> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RepairAdd()));
+          _createRepair();
         },
       ),
     );
@@ -194,6 +197,25 @@ class _RepairState extends State<Repair> {
                               ),
                             ),
                             ),
+                            Visibility(
+                              visible: repair.remark != null,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                                child: RichText(
+                                  overflow: TextOverflow.fade,
+                                  text: new TextSpan(
+                                    style: new TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.black,
+                                    ),
+                                  children: <TextSpan>[
+                                    new TextSpan(text: 'remark: '),
+                                    new TextSpan(text: '${repair.remark}', style: new TextStyle(fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                              ),
+                            ),
                           ],
                         ),
                         
@@ -205,38 +227,37 @@ class _RepairState extends State<Repair> {
                         children: [
                           RaisedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RepairEdit()));
+                              _editRepair(index);
                             },
                             child: Text("Edit"),
                           ),
                           RaisedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _deleteRepair(index);
+                            },
                             child: Text("Delete"),
                           ),
                           DropdownButtonHideUnderline(
                             child: DropdownButton(
-                              items: statusList.map((String value) {
-                                return DropdownMenuItem<String>(
+                              items: _status.map((Status value) {
+                                return DropdownMenuItem<Status>(
                                   value: value,
-                                  child: Text(value),
+                                  child: Text(value.statusName),
                                 );
                               }).toList(),
                               hint: Text(
                                 " ${repair.statusDetails.statusName} ",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  // backgroundColor: repair.assignedStatus == 3 || repair.assignedStatus == 4 ?
-                                  //   repair.assignedStatus == 3 ? Colors.green : Colors.red : Colors.grey.shade400,
+                                  backgroundColor: repair.statusDetails.statusName == "DELIVERED" ? Colors.green : repair.statusDetails.statusName == "CANCELLED" ? Colors.red :Colors.grey.shade400,
                                 ),
                                 ),
                               // value:  initalValue,
-                              onChanged: (String newValue) {
+                              onChanged: (Status newValue) {
                                 // setState(() {
                                 //   initalValue = newValue;
                                 // });
+                                _updateStatus(id: newValue.id, index: index);
                               },
                             ),
                           )
@@ -247,6 +268,29 @@ class _RepairState extends State<Repair> {
                 ),
               );
     }
+
+  _fetchStatusList(){
+    setState(() => isLoading = true);
+
+    StatusService.getAll({"repairing" : "1"}).then((res){
+      List<Status> status = Status.listFromJson(res["data"]);
+      if(mounted){
+        setState(() {
+          _status.addAll(status);
+          _error=null;
+          isLoading=false;
+        });
+      }
+
+    }).catchError((err){
+      _showError(err.toString());
+      if (mounted)
+        setState(() {
+          _error = err;
+          isLoading = false;
+        });
+    });
+  }
 
   _fetchRepairs() {
     setState(() => isLoading = true);
@@ -264,33 +308,106 @@ class _RepairState extends State<Repair> {
           isLoading = false;
         });
     }).catchError((err){
+      _showError(err.toString());
       if (mounted)
         setState(() {
           _error = err;
           isLoading = false;
         });
     });
-}
-  //   PostService.getAll(params).then((res) {
-  //     List<Post> posts = Post.listFromJson(res['data']);
-  //     totalPage = res['last_page'];
-  //     if (rowCount == 0) rowCount = res['total'];
+  }
 
-  //     if (mounted)
-  //       setState(() {
-  //         _posts.addAll(posts);
-  //         //print(_posts[0]);
-  //         _error = null;
-  //         isLoading = false;
-  //       });
-  //   }).catchError((err) {
-  //     if (mounted)
-  //       setState(() {
-  //         _error = err;
-  //         isLoading = false;
-  //       });
-  //   });
-  // }
+  _createRepair() async {
+    final refresh = await Navigator.push(
+        context, MaterialPageRoute(builder: (_) => RepairAdd()));
+    if (refresh != null && refresh) {
+      _repairs = [];
+      params['page'] = 1;
+      this._fetchRepairs();
+    }
+  }
+
+  _editRepair(int index) {
+    Navigator.of(context)
+        .push(
+      MaterialPageRoute(
+        builder: (_) => RepairEdit(repair: _repairs[index]),
+      ),
+    )
+        .then((res) {
+      if (res != null) {
+        setState(() => _repairs[index] = res);
+      }
+    });
+  }
+
+  _updateStatus({int id, int index}) async{
+    setState(() => isLoading = true);
+
+    Repairs data = _repairs[index];
+    data.assignedStatus = id;
+    FormData formData = FormData.fromMap(data.toJson());
+
+    RepairService.update(formData).then((res){
+      setState(() {
+        _repairs[index] = res;
+      });
+    }).catchError((err){
+      _showError(err.toString());
+      if (mounted)      
+        setState(() {
+          isLoading = false;
+        });
+    }).whenComplete((){
+      setState(() {
+        isLoading = false;
+      });
+    });
+
+  }
+
+  _deleteRepair(int index) async {
+    final result = await _showConfirmationDialog();
+    if (result == 'yes') {
+      RepairService.delete(id: _repairs[index].id, userId: _repairs[index].userId).then((res) {
+        setState(() => _repairs.removeAt(index));
+      }).catchError((err) => _showError(err.toString()));
+    }
+  }
+
+  _showConfirmationDialog() {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete item'),
+          content: Text(
+            'Are you sure you want to remove this repair item?',
+          ),
+          actions: <Widget>[
+            FlatButton(
+              textColor: Colors.red,
+              child: Text('No'),
+              onPressed: () => Navigator.of(context).pop('no'),
+            ),
+            FlatButton(
+              textColor: Theme.of(context).primaryColor,
+              child: Text('Yes'),
+              onPressed: () => Navigator.of(context).pop('yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showError(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.red.shade600,
+    ));
+  }
 }
 
 //Alternate to row UI
