@@ -9,7 +9,7 @@ import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/repair_service.dart';
-import 'package:sonaar_retailer/services/status_service.dart';
+import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
 import 'package:sonaar_retailer/services/user_contact_service.dart';
 
@@ -365,14 +365,6 @@ class _RepairAddState extends State<RepairAdd> {
     );
 
     var file = await ImagePicker.pickImage(source: source);
-
-    // Directory tempDir = await getTemporaryDirectory();
-    // String targetPath = tempDir.path + randomAlpha(5);
-    // file = await FlutterImageCompress.compressAndGetFile(
-    //   file.absolute.path,
-    //   targetPath,
-    //   quality: 80,
-    // );
     setState(() => _image = file);
   }
 
@@ -386,8 +378,7 @@ class _RepairAddState extends State<RepairAdd> {
       return;
     }
     
-
-      final Map<String, dynamic> data = {
+    final Map<String, dynamic> data = {
       'customer_name': _nameController.text,
       'customer_number': _noController.text,
       'inward_date': _datetimeController.text,
@@ -414,7 +405,7 @@ class _RepairAddState extends State<RepairAdd> {
   _fetchStatusList(){
     setState(() => isLoading = true);
 
-    StatusService.getAll({"repairing" : "1"}).then((res){
+    HomePageService.getAllStatus({"repairing" : "1"}).then((res){
       List<Status> status = Status.listFromJson(res["data"]);
       if(mounted){
         setState(() {

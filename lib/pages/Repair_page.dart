@@ -6,7 +6,7 @@ import 'package:sonaar_retailer/pages/Repair_edit.dart';
 import 'package:sonaar_retailer/pages/Repair_add.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/services/repair_service.dart';
-import 'package:sonaar_retailer/services/status_service.dart';
+import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:dio/dio.dart';
 
 class Repair extends StatefulWidget {
@@ -272,7 +272,7 @@ class _RepairState extends State<Repair> {
   _fetchStatusList(){
     setState(() => isLoading = true);
 
-    StatusService.getAll({"repairing" : "1"}).then((res){
+    HomePageService.getAllStatus({"repairing" : "1"}).then((res){
       List<Status> status = Status.listFromJson(res["data"]);
       if(mounted){
         setState(() {

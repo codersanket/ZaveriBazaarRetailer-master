@@ -1,13 +1,9 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
 import 'package:sonaar_retailer/models/bullion_city.dart';
 import 'package:sonaar_retailer/models/bullion_vendor.dart';
@@ -15,27 +11,19 @@ import 'package:sonaar_retailer/models/get_live_price.dart';
 import 'package:sonaar_retailer/models/post.dart';
 import 'package:sonaar_retailer/models/product.dart';
 import 'package:sonaar_retailer/models/user.dart';
-import 'package:sonaar_retailer/models/wholesaler_firm.dart';
 import 'package:sonaar_retailer/models/youtube_video.dart';
 import 'package:sonaar_retailer/pages/Repair_page.dart';
-import 'package:sonaar_retailer/pages/Repair_add.dart';
-import 'package:sonaar_retailer/pages/Requirement_create.dart';
 import 'package:sonaar_retailer/pages/VideoScreen.dart';
-import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/orders_add.dart';
 import 'package:sonaar_retailer/pages/post_view.dart';
 import 'package:sonaar_retailer/pages/product_view.dart';
-import 'package:sonaar_retailer/pages/wholesaler_view.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/bullion_service.dart';
-import 'package:sonaar_retailer/services/follow_service.dart';
+import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/post_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
-import 'package:sonaar_retailer/services/userlog_service.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../Requirement_view.dart';
 import 'bullion_price_controller.dart';
 import 'bullion_price_helper.dart';
@@ -77,7 +65,6 @@ class _BullionCityPageState extends State<BullionCityPage> {
   String arrivalText, departureText;
   DateTime arrival, departure;
   TextEditingController _itemDateController1 = TextEditingController();
-  TextEditingController _itemDateController2 = TextEditingController();
 
   @override
   void initState() {
@@ -95,6 +82,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
     fetchTopProducts();
     fetchTopPosts();
     fetchVideo();
+    _itemDateController1.clear();
   }
 
   @override
@@ -582,19 +570,6 @@ class _BullionCityPageState extends State<BullionCityPage> {
           //   ),
           // ),
 
-          // top products label
-          // Visibility(
-          //   visible: productList.isNotEmpty && _prodError==null,
-          //   child: Padding(
-          //     padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-          //     child: Text(
-          //       'Top Products',
-          //       style:
-          //           TextStyle(fontSize: 16, color: Theme.of(context).accentColor),
-          //     ),
-          //   ),
-          // ),
-
           /// Youtube video
           Visibility(
             visible: videoList.isNotEmpty,
@@ -754,6 +729,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                   onPressed: ()async{
                     //await showModalBottomSheet(context: context, builder: (_) => showDates());
                     arrivalText = null;
+                    _itemDateController1.clear();
                     await _displayTextInputDialog(context);
                   }, 
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
@@ -1040,21 +1016,6 @@ class _BullionCityPageState extends State<BullionCityPage> {
     );
   }
 
-  void bookmarkProduct(Product product) {
-    setState(() {
-      product.bookmarked = !product.bookmarked;
-    });
-
-    ProductService.toggleBookmark(product.id, !product.bookmarked)
-        .then((value) {})
-        .catchError((err) {
-      ToastService.error(_scaffoldKey, err.toString());
-      setState(() {
-        product.bookmarked = !product.bookmarked;
-      });
-    });
-  }
-
   fetchTopProducts() {
     setState(() {
       //isLoading = true;
@@ -1079,7 +1040,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
 
   fetchVideo() {
     setState(() {
-      BullionService.getAll().then((res) {
+      HomePageService.getAllVideo().then((res) {
         List<YoutubeVideo> video=YoutubeVideo.listFromJson(res['data']);
         if(mounted)
           setState(() {
@@ -1282,72 +1243,20 @@ class _BullionCityPageState extends State<BullionCityPage> {
   }
 
 // visit mumbai
-  Widget showDates() {
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      Text("Choose Dates"),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextButton.icon(
-            onPressed: () async {
-              DateTime arrival = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 7)));
-              setState(() {
-                if (arrival != null) {
-                  arrivalText = DateFormat('dd-MM-yyyy').format(arrival);
-                }
-              });
-            },
-            icon: Icon(Icons.date_range_outlined),
-            label: Text("Pick visit start date"),
-          ),
-          Visibility(
-              visible: arrivalText != null, child: Text(arrivalText ?? "")),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextButton.icon(
-            onPressed: () async {
-              DateTime departure = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 7)));
-              setState(() {
-                if (departure != null) {
-                  departureText = DateFormat('dd-MM-yyyy').format(departure);
-                }
-              });
-            },
-            icon: Icon(Icons.date_range_outlined),
-            label: Text("Pick visit end date"),
-          ),
-          Visibility(
-              visible: departureText != null, child: Text(departureText ?? "")),
-        ],
-      ),
-      ElevatedButton(onPressed: () {}, child: Text("submit")),
-    ]);
-  }
-
   Future<void> _displayTextInputDialog(BuildContext context) async {
-    //clear();
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('Choose Date'),
           content: Container(
-            height: 120,
-            child: Column(
-              children: [
-                Expanded(
-                  child: TextButton.icon(
+            height: 100,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ListTile(
+                  leading: IconButton(
+                    icon: Icon(Icons.date_range_outlined),
+                    color: Color(0xff004272),
                     onPressed: () async {
                       arrival = await showDatePicker(
                           context: context,
@@ -1363,30 +1272,22 @@ class _BullionCityPageState extends State<BullionCityPage> {
                               DateFormat('dd-MM-yyyy').format(arrival);
                         }
                       });
-                    },
-                    icon: Icon(Icons.date_range_outlined),
-                    label: Text("arrival date"),
-                  ),
-                ),
-                Visibility(
-                  visible: arrival != null,
-                  child: Expanded(
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.datetime,
-                      textAlignVertical: TextAlignVertical.center,
-                      controller: _itemDateController1,
-                      //maxLength:10,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                      ),
-                      style: TextStyle(fontSize: 12),
+                    },),
+                  title: TextFormField(
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.datetime,
+                    textAlignVertical: TextAlignVertical.center,
+                    controller: _itemDateController1,
+                    //maxLength:10,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 10.0),
                     ),
+                    style: TextStyle(fontSize: 12),
                   ),
+                  subtitle:  Text("arrival date"),
                 ),
-              ],
             ),
           ),
           actions: <Widget>[
@@ -1399,13 +1300,52 @@ class _BullionCityPageState extends State<BullionCityPage> {
             TextButton(
               child: Text('submit'),
               onPressed: () {
-                Navigator.pop(context);
+                if(arrivalText == null || arrivalText.isEmpty){
+                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text("Please select arrival date"),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.red.shade600,
+                  ));
+                  //Navigator.pop(context);
+                  return;
+                }
+                _sendDate();
               },
             ),
           ],
         );
       },
     );
+  }
+
+  _sendDate(){
+    setState(() {
+      isLoading = true;
+    });
+
+    dio.FormData formData = dio.FormData.fromMap({
+      'user_id' : AuthService.user.id,
+      'arrival_date' : arrivalText,
+    });
+
+    HomePageService.visitMumbai(formData).then((res){
+      if(res != null){
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("Thankyou! \nOur team will get in touch with you."),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.green,
+        ));
+        Navigator.pop(context);
+      }
+    }).catchError((err){
+      if (mounted)
+        setState(() {
+          _error = err;
+          isLoading = false;
+        });
+    }).whenComplete(() => setState(() {
+      isLoading = false;
+    }));
   }
 
 //bullion

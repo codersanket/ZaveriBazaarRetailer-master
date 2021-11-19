@@ -38,6 +38,7 @@ class _VideoScreenState extends State<VideoScreen> {
       appBar: AppBar(title: Text(youtubeVideo.title, overflow: TextOverflow.fade,),),
       body: Center(
         child: Container(
+          color: Colors.black,
           child: YoutubePlayer(
             controller: _controller,
             showVideoProgressIndicator: true,

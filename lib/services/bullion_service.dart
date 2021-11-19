@@ -24,16 +24,7 @@ class BullionService {
       return Future.error(_handleError(e));
     }
   }
-  ///youtube video
-  static Future<dynamic> getAll() async {
-    try {
-      var response = await DioProvider().dio().get('/youtube_video');
-
-      return Future.value(response.data);
-    } catch (e) {
-      return Future.error(_handleError(e));
-    }
-  }
+  
   /// get city list
   Future<List<BullionCity>> getCityList(String state) async {
     try {

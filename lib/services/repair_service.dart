@@ -1,4 +1,3 @@
-//import 'dart:html';
 import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/dio_provider.dart';
 import 'package:sonaar_retailer/models/error_handler.dart';
