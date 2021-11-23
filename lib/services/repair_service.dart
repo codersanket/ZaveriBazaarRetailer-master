@@ -54,10 +54,23 @@ class RepairService{
     }
   }
 
+  //search
+  static Future<Repairs> search() async {
+    try {
+      var response =
+          await DioProvider().dio().get('/repairing/repairing_search/');
+      return Future.value(Repairs.fromJson(response.data));
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
+
   //getByid
   static Future<Repairs> getById(String id) async {
     try {
-      var response = await DioProvider().dio().get('/repairing/info',queryParameters: {"id" : id});
+      var response = await DioProvider()
+          .dio()
+          .get('/repairing/info', queryParameters: {"id": id});
 
       return Future.value(Repairs.fromJson(response.data));
     } catch (e) {

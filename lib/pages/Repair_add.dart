@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
@@ -33,7 +34,9 @@ class _RepairAddState extends State<RepairAdd> {
   double progress = 0;
   String deviceId;
   int selectedIndex;
+
   List<Status> _status = [];
+  bool shouldShowInfo = false;
 
   TextEditingController _datetimeController = TextEditingController();
   TextEditingController _noController = TextEditingController();
@@ -52,13 +55,15 @@ class _RepairAddState extends State<RepairAdd> {
     //     if (!isLoading) {
     //       if ((params['page'] + 1) <= totalPage) {
     //         params['page'] = params['page'] + 1;
-    //         fetchContacts();
+    // syncContacts();
+    //         //fetchContacts();
     //       }
     //     }
     //   }
     // });
-
-    // checkStatusAndInit();
+    // syncContacts();
+   // fetchContacts();
+    //checkStatusAndInit();
   }
 
   checkStatusAndInit() async {
@@ -67,7 +72,7 @@ class _RepairAddState extends State<RepairAdd> {
     deviceId = prefs.getString('device_id');
     params['device_id'] = deviceId;
 
-    fetchContacts();
+    //fetchContacts();
   }
 
   @override
@@ -78,13 +83,12 @@ class _RepairAddState extends State<RepairAdd> {
       appBar: AppBar(
         title: Text("Add Repair item"),
       ),
-      body: Stack(
-        children: [
-          Container(
+      body: Stack(children: [
+        Container(
           child: SingleChildScrollView(
             child: Padding(
-              padding:
-              const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 30),
+              padding: const EdgeInsets.only(
+                  top: 30, left: 15, right: 15, bottom: 30),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -115,22 +119,23 @@ class _RepairAddState extends State<RepairAdd> {
                             labelText: 'Customer Number',
                             suffixIcon: GestureDetector(
                               onTap: () async {
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (BuildContext context) {
-                                //       return AlertDialog(
-                                //         title: Text("Contact"),
-                                //         content: Container(
-                                //           width: double.maxFinite,
-                                //           child: Column(
-                                //             mainAxisSize: MainAxisSize.min,
-                                //             children: [
-                                //               Expanded(child: _buildListView())
-                                //             ],
-                                //           ),
-                                //         ),
-                                //       );
-                                //     });
+                                syncContacts();
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Contact"),
+                                        content: Container(
+                                          width: double.maxFinite,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Expanded(child: _buildListView())
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
                               },
                               child: Icon(
                                 Icons.phone,
@@ -172,10 +177,10 @@ class _RepairAddState extends State<RepairAdd> {
                         subtitle: _image == null
                             ? null
                             : Container(
-                          padding: EdgeInsets.only(top: 8.0),
-                          height: 200.0,
-                          child: Image.file(_image, fit: BoxFit.cover),
-                        ),
+                                padding: EdgeInsets.only(top: 8.0),
+                                height: 200.0,
+                                child: Image.file(_image, fit: BoxFit.cover),
+                              ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -263,48 +268,139 @@ class _RepairAddState extends State<RepairAdd> {
     );
   }
 ///get Contact
-  fetchContacts() async {
+//   fetchContacts() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     if (prefs.getBool('contacts_synced') == null) {
+//       syncContacts();
+//       return;
+//     }
+//
+//     setState(() {
+//       isLoading = true;
+//       if (params['page'] == 1) {
+//         _contacts.clear();
+//         rowCount = 0;
+//       }
+//     });
+//
+//     UserContactService.getAll(params).then((res) {
+//       List<UserContact> contacts = UserContact.listFromJson(res['data']);
+//       totalPage = res['last_page'];
+//       if (rowCount == 0) rowCount = res['total'];
+//
+//       setState(() {
+//         _contacts.addAll(contacts);
+//         isLoading = false;
+//       });
+//     }).catchError((err) {
+//       setState(() {
+//         isLoading = false;
+//       });
+//     });
+//
+//     // final user = AuthService.user;
+//     // var param = {"id": user.id};
+//     // //param["id"] = user.id;
+//     // UserContactService.getAllSuggestions(param).then((res) {
+//     //   List<UserContact> contacts = UserContact.listFromJson(res['data']);
+//     //   totalPage = res['last_page'];
+//     //   if (rowCount == 0) rowCount = res['total'];
+//     //
+//     //   setState(() {
+//     //     _contacts.addAll(contacts);
+//     //     isLoading = false;
+//     //   });
+//     // }).catchError((err) {
+//     //   setState(() {
+//     //     isLoading = false;
+//     //   });
+//     // });
+//   }
+  void syncContacts() async {
+    bool granted = await _checkPermissions();
+    if (!granted) return;
+
     setState(() {
-      isLoading = true;
-      // if (params['page'] == 1) {
-      //   _contacts.clear();
-      //   rowCount = 0;
-      // }
+      isSyncing = true;
+      progress = 0;
+      shouldShowInfo = false;
     });
 
-    // UserContactService.getAll(params).then((res) {
-    //   List<UserContact> posts = UserContact.listFromJson(res['data']);
-    //   totalPage = res['last_page'];
-    //   if (rowCount == 0) rowCount = res['total'];
+    // phone contacts
+    final Iterable<Contact> pContacts =
+    await ContactsService.getContacts(withThumbnails: false);
 
-    //   setState(() {
-    //     _contacts.addAll(posts);
-    //     isLoading = false;
-    //   });
-    // }).catchError((err) {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // });
+    // temp contacts array
+    final List<UserContact> newContacts = [];
 
-    ContactsService.getContacts(withThumbnails: false).then((res){
-      
-    }).catchError((err){
-     if (mounted)
-        setState(() {
-          isLoading = false;
-        });
-    });
+    for (var pc in pContacts) {
+      for (var phone in pc.phones) {
+        final mobile = normalizeMobileNumber(phone.value);
+        if (mobile == null) continue;
+
+        newContacts.add(UserContact(
+            name: pc.displayName, mobile: mobile, deviceId: deviceId));
+      }
+    }
+
+    if (newContacts.length > 0) {
+      try {
+        await UserContactService.sync(newContacts, onSendProgress);
+
+      } catch (ignored) {}
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('contacts_synced', true);
+
+    setState(() => isSyncing = false);
+
+   // fetchContacts();
   }
-///show dialog listview
+  Future<bool> _checkPermissions() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.contacts);
+
+    if (permission == PermissionStatus.granted) return true;
+
+    Map status = await PermissionHandler()
+        .requestPermissions([PermissionGroup.contacts]);
+
+    if (status[PermissionGroup.contacts] == PermissionStatus.granted)
+      return true;
+
+    bool showRationale = await PermissionHandler()
+        .shouldShowRequestPermissionRationale(PermissionGroup.contacts);
+
+    if (showRationale) {
+      // return _checkPermissions();
+      return false;
+    } else {
+      //openSettings();
+    }
+
+    return false;
+  }
+  String normalizeMobileNumber(String mobile) {
+    if (mobile == null || mobile.length < 10) return null;
+
+    mobile = mobile.replaceAll(new RegExp(r"[^\d]+"), "");
+    if (mobile.length > 10) mobile = mobile.substring(mobile.length - 10);
+
+    return mobile;
+  }
+  void onSendProgress(int sent, int total) {
+    setState(() => progress = sent / total);
+  }
+  ///show dialog listview
   Widget _buildListView() {
+    List<UserContact> newContacts = [];
     return ListView.builder(
       shrinkWrap: true,
       controller: _scrollController,
-      itemCount: _contacts.length,
+      itemCount:newContacts.length,
       //separatorBuilder: (ctx, i) => Divider(height: 0),
       itemBuilder: (context, index) {
-        final contact = _contacts[index];
+        final contact = newContacts[index];
         return ListTile(
             title: Text(
               contact.name,
@@ -430,6 +526,4 @@ class _RepairAddState extends State<RepairAdd> {
       backgroundColor: Colors.red.shade600,
     ));
   }
-
-
 }

@@ -1,3 +1,4 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sonaar_retailer/models/repairs.dart';
@@ -10,6 +11,8 @@ import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:dio/dio.dart';
 
 class Repair extends StatefulWidget {
+  final bool focusSearch;
+  Repair({this.focusSearch=false});
   @override
   _RepairState createState() => _RepairState();
 }
@@ -27,13 +30,16 @@ class _RepairState extends State<Repair> {
   var isLoading = true, _error, totalPage = 0, rowCount = 0;
   List<Repairs> _repairs = [];
   List<Status> _status = [];
-
-
+  bool searchVisible = false;
+  final searchKey = GlobalKey<AutoCompleteTextFieldState<String>>();
+  FocusNode searchFocusNode;
+  final searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
     //initalValue = statusList[1].toString();
-
+    searchFocusNode = new FocusNode();
+    searchVisible = widget.focusSearch;
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -48,6 +54,11 @@ class _RepairState extends State<Repair> {
     });
     _fetchStatusList();
     _fetchRepairs();
+    if (widget.focusSearch) {
+      searchFocusNode.requestFocus();
+    } else {
+      fetchData();
+    }
   }
 
   @override
@@ -56,12 +67,67 @@ class _RepairState extends State<Repair> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Repairs Page"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              if (searchVisible && params['query'] != null) {
+                 searchProducts(null);
+              }
+              setState(() => searchVisible = !searchVisible);
+            },
+          )
+        ],
       ),
       body: _error != null
           ? buildErrorWidget()
           : Stack(
               children: <Widget>[
                 _buildListView(),
+                Visibility(
+                  visible: searchVisible,
+                  child: Card(
+                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+                    elevation: 2,
+                    child: AutoCompleteTextField(
+                       key: searchKey,
+                       focusNode: searchFocusNode,
+                       controller: searchController,
+                      // suggestions: tags,
+                      clearOnSubmit: false,
+                      itemBuilder: (BuildContext context, String suggestion) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(suggestion),
+                            )
+                          ],
+                        );
+                      },
+                      itemSorter: (String a, String b) {
+                        return a.compareTo(b);
+                      },
+                      itemFilter: (String suggestion, String query) {
+                        return suggestion.toLowerCase().contains(query.toLowerCase());
+                      },
+                      itemSubmitted: searchProducts,
+                      textSubmitted: searchProducts,
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search, size: 18),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+                ),
                 Visibility(
                   visible: isLoading,
                   child: Center(
@@ -98,8 +164,27 @@ class _RepairState extends State<Repair> {
       },
     );
   }
-
-
+  searchProducts(String keyword) {
+    params['query'] = keyword;
+    params['page'] = 1;
+    print('Search KeyWord:-$keyword');
+    //fetchProducts();
+    fetchData();
+  }
+fetchData(){
+    setState(() {
+      RepairService.getAll(params).then((res){
+        List<Repairs> repair=Repairs.listFromJson(res['data']);
+        if(mounted)
+          setState(() {
+            repair.shuffle();
+            //_repairs.addAll(repair);
+            //_videoError=null;
+            isLoading=false;
+          });
+      });
+    });
+}
    Widget _buildListItem(BuildContext context, int index) {
     final heroTag = 'post - ${_repairs[index].id}';
     final repair = _repairs[index];
@@ -145,7 +230,7 @@ class _RepairState extends State<Repair> {
                                                 ),
                           ),
               ),
-                        
+
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -218,9 +303,9 @@ class _RepairState extends State<Repair> {
                             ),
                           ],
                         ),
-                        
+
                       ],
-                    ),               
+                    ),
                       SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
