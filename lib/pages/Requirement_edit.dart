@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sonaar_retailer/models/requirement.dart';
 
 enum SingingCharacter { lafayette, jefferson }
 
 class EditRequirement extends StatefulWidget {
+  final Requirement requirement;
+  EditRequirement({this.requirement});
   @override
   _EditRequirementState createState() => _EditRequirementState();
 }
