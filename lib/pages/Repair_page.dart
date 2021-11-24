@@ -164,6 +164,7 @@ class _RepairState extends State<Repair> {
       },
     );
   }
+
   searchProducts(String keyword) {
     params['query'] = keyword;
     params['page'] = 1;
@@ -171,6 +172,7 @@ class _RepairState extends State<Repair> {
     //fetchProducts();
     fetchData();
   }
+  
 fetchData(){
     setState(() {
       RepairService.getAll(params).then((res){

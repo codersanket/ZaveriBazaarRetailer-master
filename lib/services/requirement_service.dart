@@ -6,7 +6,7 @@ import 'package:sonaar_retailer/models/requirement.dart';
 
 class RequirementService{
 
-  //get all repairs
+  //get all requirement
   static Future<dynamic> getAll(Map<String, dynamic> params) async {
     try {
       var response =
@@ -19,7 +19,7 @@ class RequirementService{
     }
   }
 
-  //create repair request
+  //create requirement request
   static Future<Requirement> create(FormData formData) async {
     try {
       var response =

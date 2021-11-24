@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/models/user_contact.dart';
 import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/repair_service.dart';
 import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/toast_service.dart';
-import 'package:sonaar_retailer/services/user_contact_service.dart';
 
 class RepairAdd extends StatefulWidget {
   @override
@@ -27,17 +25,11 @@ class _RepairAddState extends State<RepairAdd> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<UserContact> _contacts = [];
-  //List<Contact> _contacts = [];
   ScrollController _scrollController;
-  var isLoading = false, isSyncing = false, totalPage = 0, rowCount = 0;
-  Map<String, dynamic> params = {'page': 1, 'per_page': 50};
-  double progress = 0;
-  String deviceId;
-  int selectedIndex;
+  var isLoading = false, isSyncing = false;
 
   List<Status> _status = [];
-  bool shouldShowInfo = false;
-
+  
   TextEditingController _datetimeController = TextEditingController();
   TextEditingController _noController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
@@ -48,31 +40,6 @@ class _RepairAddState extends State<RepairAdd> {
   void initState() {
     super.initState();
     _fetchStatusList();
-    // _scrollController = ScrollController();
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels >=
-    //       _scrollController.position.maxScrollExtent - 200) {
-    //     if (!isLoading) {
-    //       if ((params['page'] + 1) <= totalPage) {
-    //         params['page'] = params['page'] + 1;
-    // syncContacts();
-    //         //fetchContacts();
-    //       }
-    //     }
-    //   }
-    // });
-    // syncContacts();
-   // fetchContacts();
-    //checkStatusAndInit();
-  }
-
-  checkStatusAndInit() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    deviceId = prefs.getString('device_id');
-    params['device_id'] = deviceId;
-
-    //fetchContacts();
   }
 
   @override
@@ -120,22 +87,6 @@ class _RepairAddState extends State<RepairAdd> {
                             suffixIcon: GestureDetector(
                               onTap: () async {
                                 syncContacts();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("Contact"),
-                                        content: Container(
-                                          width: double.maxFinite,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Expanded(child: _buildListView())
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
                               },
                               child: Icon(
                                 Icons.phone,
@@ -267,63 +218,32 @@ class _RepairAddState extends State<RepairAdd> {
       ),
     );
   }
-///get Contact
-//   fetchContacts() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     if (prefs.getBool('contacts_synced') == null) {
-//       syncContacts();
-//       return;
-//     }
-//
-//     setState(() {
-//       isLoading = true;
-//       if (params['page'] == 1) {
-//         _contacts.clear();
-//         rowCount = 0;
-//       }
-//     });
-//
-//     UserContactService.getAll(params).then((res) {
-//       List<UserContact> contacts = UserContact.listFromJson(res['data']);
-//       totalPage = res['last_page'];
-//       if (rowCount == 0) rowCount = res['total'];
-//
-//       setState(() {
-//         _contacts.addAll(contacts);
-//         isLoading = false;
-//       });
-//     }).catchError((err) {
-//       setState(() {
-//         isLoading = false;
-//       });
-//     });
-//
-//     // final user = AuthService.user;
-//     // var param = {"id": user.id};
-//     // //param["id"] = user.id;
-//     // UserContactService.getAllSuggestions(param).then((res) {
-//     //   List<UserContact> contacts = UserContact.listFromJson(res['data']);
-//     //   totalPage = res['last_page'];
-//     //   if (rowCount == 0) rowCount = res['total'];
-//     //
-//     //   setState(() {
-//     //     _contacts.addAll(contacts);
-//     //     isLoading = false;
-//     //   });
-//     // }).catchError((err) {
-//     //   setState(() {
-//     //     isLoading = false;
-//     //   });
-//     // });
-//   }
+
+  void dialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Contact"),
+            content: Container(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(child: _buildListView())
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   void syncContacts() async {
     bool granted = await _checkPermissions();
     if (!granted) return;
 
     setState(() {
       isSyncing = true;
-      progress = 0;
-      shouldShowInfo = false;
     });
 
     // phone contacts
@@ -339,23 +259,22 @@ class _RepairAddState extends State<RepairAdd> {
         if (mobile == null) continue;
 
         newContacts.add(UserContact(
-            name: pc.displayName, mobile: mobile, deviceId: deviceId));
+            name: pc.displayName, mobile: mobile));
       }
     }
 
     if (newContacts.length > 0) {
-      try {
-        await UserContactService.sync(newContacts, onSendProgress);
-
-      } catch (ignored) {}
+      setState(() {
+        _contacts = newContacts;
+        isSyncing = false;
+        dialog(context);
+      });
+    }else{
+      setState(() => isSyncing = false);
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('contacts_synced', true);
-
-    setState(() => isSyncing = false);
-
-   // fetchContacts();
   }
+
+
   Future<bool> _checkPermissions() async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.contacts);
@@ -380,6 +299,7 @@ class _RepairAddState extends State<RepairAdd> {
 
     return false;
   }
+  
   String normalizeMobileNumber(String mobile) {
     if (mobile == null || mobile.length < 10) return null;
 
@@ -388,19 +308,16 @@ class _RepairAddState extends State<RepairAdd> {
 
     return mobile;
   }
-  void onSendProgress(int sent, int total) {
-    setState(() => progress = sent / total);
-  }
+
   ///show dialog listview
   Widget _buildListView() {
-    List<UserContact> newContacts = [];
     return ListView.builder(
       shrinkWrap: true,
       controller: _scrollController,
-      itemCount:newContacts.length,
+      itemCount:_contacts.length,
       //separatorBuilder: (ctx, i) => Divider(height: 0),
       itemBuilder: (context, index) {
-        final contact = newContacts[index];
+        final contact = _contacts[index];
         return ListTile(
             title: Text(
               contact.name,
@@ -409,9 +326,7 @@ class _RepairAddState extends State<RepairAdd> {
             subtitle: Text(contact.mobile),
             onTap: () {
               setState(() {
-                selectedIndex = index;
                 _noController.text = contact.mobile;
-                print(contact.mobile);
                 Navigator.pop(context);
               });
             });
@@ -527,3 +442,5 @@ class _RepairAddState extends State<RepairAdd> {
     ));
   }
 }
+
+

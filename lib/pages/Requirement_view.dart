@@ -184,7 +184,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
                                   ),
                                 children: <TextSpan>[
                                   //new TextSpan(text: 'item type: '),
-                                  new TextSpan(text: '${requirement.jewelleryType}  ${requirement.productCategoryType}', style: new TextStyle(fontWeight: FontWeight.bold)),
+                                  new TextSpan(text: '${requirement.jewelleryType}\n${requirement.productCategoryType}', style: new TextStyle(fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ),
