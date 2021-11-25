@@ -599,7 +599,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                           },
                           child: Card(
                             child: Container(
-                              width: 110,
+                              width: 170,
                               height: 110,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -612,7 +612,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                                   
                               child: Center(child: Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: Text(videoList[index].title,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white), overflow: TextOverflow.fade,),
+                                child: Text(videoList[index].title,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white), overflow: TextOverflow.fade,maxLines: 2,),
                               )),
                             ),
                           ),
