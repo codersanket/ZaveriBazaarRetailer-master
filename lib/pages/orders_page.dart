@@ -1,3 +1,4 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +6,14 @@ import 'package:sonaar_retailer/models/order.dart';
 import 'package:sonaar_retailer/models/status.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/pages/orders_add.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/order_service.dart';
 
 
 class OrdersPage extends StatefulWidget {
+  final bool focusSearch;
+  OrdersPage({this.focusSearch=false});
   @override
   _OrdersPageState createState() => _OrdersPageState();
 }
@@ -20,13 +24,21 @@ class _OrdersPageState extends State<OrdersPage> {
 
   Map<String, dynamic> params = {'page': 1, 'per_page': 30};
 
-  var isLoading = true, _error, totalPage = 0, rowCount = 0;
+  var isLoading = false, _error, totalPage = 0, rowCount = 0;
   List<Orders> _orders = [];
   List<Status> _status = [];
+
+  List<String> tags=[];
+  bool searchVisible = false;
+  Map<String, dynamic> param = {};
+  final searchKey = GlobalKey<AutoCompleteTextFieldState<String>>();
+  FocusNode searchFocusNode;
+  final searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    searchVisible = widget.focusSearch;
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -40,7 +52,12 @@ class _OrdersPageState extends State<OrdersPage> {
       }
     });
     _fetchStatusList();
-    _fetchOrders();
+    //_fetchOrders();
+    if (widget.focusSearch) {
+      searchFocusNode.requestFocus();
+    } else {
+      fetchData();
+    }
   }
 
   @override
@@ -49,12 +66,69 @@ class _OrdersPageState extends State<OrdersPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Orders'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              if (searchVisible && param['query'] != null) {
+                searchProducts(null);
+              }
+              setState(() => searchVisible = !searchVisible);
+            },
+          )
+        ],
       ),
       body: _error != null
           ? buildErrorWidget()
           : Stack(
               children: <Widget>[
                 _buildListView(),
+                Visibility(
+                  visible: searchVisible,
+                  child: Card(
+                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+                    elevation: 2,
+                    child: AutoCompleteTextField(
+                      key: searchKey,
+                      focusNode: searchFocusNode,
+                      controller: searchController,
+                      suggestions: tags,
+                      clearOnSubmit: false,
+                      itemBuilder: (BuildContext context, String suggestion) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(suggestion),
+                            )
+                          ],
+                        );
+                      },
+                      itemSorter: (String a, String b) {
+                        return a.compareTo(b);
+                      },
+                      itemFilter: (String suggestion, String query) {
+                        return suggestion
+                            .toLowerCase()
+                            .contains(query.toLowerCase());
+                      },
+                      itemSubmitted: searchProducts,
+                      textSubmitted: searchProducts,
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search, size: 18),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+                ),
                 Visibility(
                   visible: isLoading,
                   child: Center(
@@ -256,7 +330,41 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
   //Text(element.product, overflow: TextOverflow.fade)
-  
+
+  searchProducts(String keyword) {
+    // param['user_id']=AuthService.user.id;
+    param['query'] = keyword;
+    // params['page'] = 1;
+    print('Search KeyWord:-$keyword');
+    fetchData();
+  }
+
+  fetchData() {
+    param['user_id']=AuthService.user.id;
+    setState(() {
+      isLoading = true;
+      _orders.clear();
+    });
+    OrderService.search(param).then((res) {
+      List<Orders> order = Orders.listFromJson(res['data']);
+      if (mounted)
+        setState(() {
+          _orders.addAll(order);
+          // _repairs = res ;
+          _error = null;
+          isLoading = false;
+        });
+    }).catchError((err) {
+      if (mounted)
+        setState(() {
+          _orders.clear();
+          _error = err;
+          isLoading = false;
+        });
+    });
+
+  }
+
   _fetchStatusList(){
     setState(() => isLoading = true);
 

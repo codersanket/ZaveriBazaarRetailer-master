@@ -17,7 +17,18 @@ class OrderService{
       return Future.error( _handleError(e));
     }
   }
+//search
+  static Future<dynamic> search(Map<String, dynamic> params) async {
+    try {
+      var response =
+      await DioProvider().dio().get('/create_order/order_search', queryParameters: params);
 
+      return Future.value(response.data);
+    }
+    catch (e) {
+      return Future.error( _handleError(e));
+    }
+  }
   //create order request
   static Future<Orders> create(FormData formData) async {
     try {
