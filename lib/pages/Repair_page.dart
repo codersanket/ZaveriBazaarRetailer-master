@@ -59,7 +59,7 @@ class _RepairState extends State<Repair> {
       }
     });
     _fetchStatusList();
-    _fetchRepairs();
+   // _fetchRepairs();
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
@@ -174,7 +174,7 @@ class _RepairState extends State<Repair> {
   }
 
   searchProducts(String keyword) {
-    param['user_id']=AuthService.user.id;
+    // param['user_id']=AuthService.user.id;
     param['query'] = keyword;
    // params['page'] = 1;
     print('Search KeyWord:-$keyword');
@@ -182,6 +182,7 @@ class _RepairState extends State<Repair> {
   }
 
   fetchData() {
+    param['user_id']=AuthService.user.id;
     setState(() {
       isLoading = true;
       _repairs.clear();

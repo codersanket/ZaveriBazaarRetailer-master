@@ -47,7 +47,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
         }
       }
     });
-    _fetchRequirements();
+  //  _fetchRequirements();
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
@@ -343,13 +343,14 @@ class _ViewRequirementState extends State<ViewRequirement> {
               );
     }
   searchProducts(String keyword) {
-    param['user_id']=AuthService.user.id;
+    // param['user_id']=AuthService.user.id;
     param['query'] = keyword;
     // params['page'] = 1;
     print('Search KeyWord:-$keyword');
     fetchData();
   }
   fetchData() {
+    param['user_id']=AuthService.user.id;
     setState(() {
       isLoading = true;
       _requirements.clear();
