@@ -44,7 +44,7 @@ class OrderService{
   }
 
   //delete
-  static Future<Orders> delete({String id, String userId}) async {
+  static Future<Orders> delete({int id, int userId}) async {
     try {
       var response = await DioProvider().dio().delete('/create_order/delete',queryParameters: {"id" : id,"user_id" : userId});
 

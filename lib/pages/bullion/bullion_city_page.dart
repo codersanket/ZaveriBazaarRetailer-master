@@ -14,7 +14,7 @@ import 'package:sonaar_retailer/models/user.dart';
 import 'package:sonaar_retailer/models/youtube_video.dart';
 import 'package:sonaar_retailer/pages/Repair_page.dart';
 import 'package:sonaar_retailer/pages/VideoScreen.dart';
-import 'package:sonaar_retailer/pages/orders_add.dart';
+import 'package:sonaar_retailer/pages/orders_page.dart';
 import 'package:sonaar_retailer/pages/post_view.dart';
 import 'package:sonaar_retailer/pages/product_view.dart';
 import 'package:sonaar_retailer/pages/widgets/drawer_widget.dart';
@@ -23,7 +23,6 @@ import 'package:sonaar_retailer/services/bullion_service.dart';
 import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/post_service.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
-import 'package:sonaar_retailer/services/toast_service.dart';
 import '../Requirement_view.dart';
 import 'bullion_price_controller.dart';
 import 'bullion_price_helper.dart';
@@ -683,7 +682,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddOrder()));
+                                      builder: (context) => OrdersPage()));
                             },
                             icon: Icon(Icons.library_books_outlined),
                             label: Text("Orders"))),

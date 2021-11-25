@@ -28,6 +28,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
   var isLoading = false, _error, totalPage = 0, rowCount = 0;
   List<Requirement> _requirements = [];
   bool searchVisible = false;
+  List<String> tags = [];
   final searchKey = GlobalKey<AutoCompleteTextFieldState<String>>();
   FocusNode searchFocusNode;
   final searchController = TextEditingController();
@@ -86,7 +87,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
                       key: searchKey,
                       focusNode: searchFocusNode,
                       controller: searchController,
-                      //suggestions: tags,
+                      suggestions: tags,
                       clearOnSubmit: false,
                       itemBuilder: (BuildContext context, String suggestion) {
                         return Column(
