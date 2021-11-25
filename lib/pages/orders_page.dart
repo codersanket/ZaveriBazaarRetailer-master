@@ -7,12 +7,12 @@ import 'package:sonaar_retailer/pages/Requirement_edit.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
 import 'package:sonaar_retailer/services/requirement_service.dart';
 
-class ViewRequirement extends StatefulWidget {
+class OrdersPage extends StatefulWidget {
   @override
-  _ViewRequirementState createState() => _ViewRequirementState();
+  _OrdersPageState createState() => _OrdersPageState();
 }
 
-class _ViewRequirementState extends State<ViewRequirement> {
+class _OrdersPageState extends State<OrdersPage> {
   String initalValue = 'Status';
   var statusList = ['Open', 'Close'];
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -391,6 +391,9 @@ class _ViewRequirementState extends State<ViewRequirement> {
     ));
   }
 }
+
+
+  
 
 
 

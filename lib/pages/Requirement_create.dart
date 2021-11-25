@@ -88,8 +88,8 @@ class _CreateRequirementState extends State<CreateRequirement> {
                             ),
                             SizedBox(height: 20),
                             Container(
-                          height: 45,
-                          child: TextFormField(
+                            height: 45,
+                            child: TextFormField(
                             controller: _noController,
                             validator: (v) {
                               return v.isEmpty ? 'Please select customer contact' : v.length > 12 || v.length < 10 ? 'Please enter valid number': null;
@@ -107,8 +107,8 @@ class _CreateRequirementState extends State<CreateRequirement> {
                                   ),
                                 )
                               ),
-                          ),
-                        ),
+                                                    ),
+                                                  ),
                             SizedBox(height: 20),
                             Text(
                               "Requirement of",
@@ -529,6 +529,7 @@ class _CreateRequirementState extends State<CreateRequirement> {
             onTap: () {
               setState(() {
                 _noController.text = contact.mobile;
+                _nameController.text = contact.name;
                 Navigator.pop(context);
               });
             });
