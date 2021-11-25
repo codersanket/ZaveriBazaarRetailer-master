@@ -1,3 +1,4 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +6,14 @@ import 'package:sonaar_retailer/models/requirement.dart';
 import 'package:sonaar_retailer/pages/Requirement_create.dart';
 import 'package:sonaar_retailer/pages/Requirement_edit.dart';
 import 'package:sonaar_retailer/pages/image_view.dart';
+import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/requirement_service.dart';
 
 enum SingingCharacter { lafayette, jefferson }
 
 class ViewRequirement extends StatefulWidget {
+  final bool focusSearch;
+  ViewRequirement({this.focusSearch=false});
   @override
   _ViewRequirementState createState() => _ViewRequirementState();
 }
@@ -21,13 +25,18 @@ class _ViewRequirementState extends State<ViewRequirement> {
   ScrollController _scrollController;
 
   Map<String, dynamic> params = {'page': 1, 'per_page': 30};
+  Map<String, dynamic> param = {};
 
-  var isLoading = true, _error, totalPage = 0, rowCount = 0;
+  var isLoading = false, _error, totalPage = 0, rowCount = 0;
   List<Requirement> _requirements = [];
-
+  bool searchVisible = false;
+  final searchKey = GlobalKey<AutoCompleteTextFieldState<String>>();
+  FocusNode searchFocusNode;
+  final searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
+    searchFocusNode = new FocusNode();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -41,6 +50,11 @@ class _ViewRequirementState extends State<ViewRequirement> {
       }
     });
     _fetchRequirements();
+    if (widget.focusSearch) {
+      searchFocusNode.requestFocus();
+    } else {
+      fetchData();
+    }
   }
 
   @override
@@ -49,12 +63,66 @@ class _ViewRequirementState extends State<ViewRequirement> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('View Requirements'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              if (searchVisible && params['query'] != null) {
+                searchProducts(null);
+              }
+              setState(() => searchVisible = !searchVisible);
+            },
+          )
+        ],
       ),
       body: _error != null
           ? buildErrorWidget()
           : Stack(
               children: <Widget>[
-                _buildListView(),
+                _buildListView(),  Visibility(
+                  visible: searchVisible,
+                  child: Card(
+                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+                    elevation: 2,
+                    child: AutoCompleteTextField(
+                      key: searchKey,
+                      focusNode: searchFocusNode,
+                      controller: searchController,
+                      //suggestions: tags,
+                      clearOnSubmit: false,
+                      itemBuilder: (BuildContext context, String suggestion) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey.shade300,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(suggestion),
+                            )
+                          ],
+                        );
+                      },
+                      itemSorter: (String a, String b) {
+                        return a.compareTo(b);
+                      },
+                      itemFilter: (String suggestion, String query) {
+                        return suggestion.toLowerCase().contains(query.toLowerCase());
+                      },
+                      itemSubmitted: searchProducts,
+                      textSubmitted: searchProducts,
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search, size: 18),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+                ),
                 Visibility(
                   visible: isLoading,
                   child: Center(
@@ -276,7 +344,41 @@ class _ViewRequirementState extends State<ViewRequirement> {
                 ),
               );
     }
+  searchProducts(String keyword) {
+    param['user_id']=AuthService.user.id;
+    param['query'] = keyword;
+    // params['page'] = 1;
+    print('Search KeyWord:-$keyword');
+    fetchData();
+  }
+  fetchData() {
+    setState(() {
+      isLoading = true;
+      // if (params['page'] == 1) {
+      //   _repairs.clear();
+      //   rowCount = 0;
+      // }
+    });
 
+    RequirementService.search(param).then((res) {
+      List<Requirement> repairs ;
+      if (mounted)
+        setState(() {
+          // _repairs.addAll(repairs);
+          _requirements = res;
+          _error = null;
+          isLoading = false;
+        });
+    }).catchError((err) {
+      if (mounted)
+        setState(() {
+          _requirements.clear();
+          _error = err;
+          isLoading = false;
+        });
+    });
+
+  }
   _fetchRequirements() {
     setState(() => isLoading = true);
 

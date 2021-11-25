@@ -58,15 +58,27 @@ class RequirementService{
   //getByid
   static Future<Requirement> getById(String id) async {
     try {
-      var response = await DioProvider().dio().get('/requirement/info',queryParameters: {"id" : id});
+      var response = await DioProvider()
+          .dio()
+          .get('/requirement/info', queryParameters: {"id": id});
 
       return Future.value(Requirement.fromJson(response.data));
     } catch (e) {
       return Future.error(_handleError(e));
     }
   }
+//search
+  static Future<dynamic> search(Map<String, dynamic> params) async {
+    try {
+      var response = await DioProvider()
+          .dio()
+          .get('requirement/requirement_search', queryParameters: params);
 
-
+      return Future.value(response.data);
+    } catch (e) {
+      return Future.error(_handleError(e));
+    }
+  }
   static _handleError(e) {
     return ErrorHandler.handleError(e);
   }
