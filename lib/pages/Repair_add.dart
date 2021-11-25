@@ -92,31 +92,47 @@ class _RepairAddState extends State<RepairAdd> {
                                 Icons.phone,
                                 color: Colors.blue,
                               ),
-                            )),
+                            )
+                            ),
                       ),
                     ),
                     SizedBox(height: 20),
-                    Container(
-                      height: 45,
-                      child: TextFormField(
-                        controller: _datetimeController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Repair issue date',
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                            child: Icon(
-                              Icons.calendar_today,
-                              color: Colors.blue,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 45,
+                            child: TextFormField(
+                              enabled: false,
+                              controller: _datetimeController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Repair issue date',
+                                // suffixIcon: GestureDetector(
+                                //   onTap: () {
+                                //     _selectDate(context);
+                                //   },
+                                //   child: Icon(
+                                //     Icons.calendar_today,
+                                //     color: Colors.blue,
+                                //   ),
+                                // ),
+                              ),
+                              validator: (v) {
+                                return v.isEmpty ? 'Please select Date' : null;
+                              },
                             ),
                           ),
                         ),
-                        validator: (v) {
-                          return v.isEmpty ? 'Please select Date' : null;
-                        },
-                      ),
+                        IconButton(
+                          onPressed: (){_selectDate(context);},
+                          icon: Icon(
+                              Icons.calendar_today,
+                              color: Colors.blue,
+                            )
+                          ),
+                          
+                      ],
                     ),
                     SizedBox(height: 20),
                     Material(
@@ -327,6 +343,7 @@ class _RepairAddState extends State<RepairAdd> {
             onTap: () {
               setState(() {
                 _noController.text = contact.mobile;
+                _nameController.text = contact.name;
                 Navigator.pop(context);
               });
             });
