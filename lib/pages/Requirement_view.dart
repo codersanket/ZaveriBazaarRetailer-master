@@ -352,18 +352,15 @@ class _ViewRequirementState extends State<ViewRequirement> {
   fetchData() {
     setState(() {
       isLoading = true;
-      // if (params['page'] == 1) {
-      //   _repairs.clear();
-      //   rowCount = 0;
-      // }
+      _requirements.clear();
     });
 
     RequirementService.search(param).then((res) {
-      List<Requirement> repairs ;
+      List<Requirement> requirements = Requirement.listFromJson(res['data']);
       if (mounted)
         setState(() {
-          // _repairs.addAll(repairs);
-          _requirements = res;
+          _requirements.addAll(requirements);
+          //_requirements = res;
           _error = null;
           isLoading = false;
         });

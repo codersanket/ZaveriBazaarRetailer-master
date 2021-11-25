@@ -191,9 +191,8 @@ class _RepairState extends State<Repair> {
        if (mounted)
          setState(() {
           _repairs.addAll(repairs);
-           _repairs = res ;
+          // _repairs = res ;
            _error = null;
-           print("Heo"+_error);
            isLoading = false;
          });
     }).catchError((err) {
@@ -205,26 +204,6 @@ class _RepairState extends State<Repair> {
         });
     });
 
-    // RepairService.getAll(params).then((res) {
-    //   List<Repairs> repairs = Repairs.listFromJson(res['data']);
-    //   totalPage = res['last_page'];
-    //   if (rowCount == 0) rowCount = res['total'];
-    //
-    //   if (mounted)
-    //     setState(() {
-    //       _repairs.addAll(repairs);
-    //       //print(_posts[0]);
-    //       _error = null;
-    //       isLoading = false;
-    //     });
-    // }).catchError((err) {
-    //   _showError(err.toString());
-    //   if (mounted)
-    //     setState(() {
-    //       _error = err;
-    //       isLoading = false;
-    //     });
-    // });
   }
 
   Widget _buildListItem(BuildContext context, int index) {
