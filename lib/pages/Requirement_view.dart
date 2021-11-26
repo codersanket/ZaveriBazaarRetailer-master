@@ -11,7 +11,7 @@ import 'package:sonaar_retailer/services/requirement_service.dart';
 
 class ViewRequirement extends StatefulWidget {
   final bool focusSearch;
-  ViewRequirement({this.focusSearch=false});
+  ViewRequirement({this.focusSearch = false});
   @override
   _ViewRequirementState createState() => _ViewRequirementState();
 }
@@ -48,7 +48,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
         }
       }
     });
-  //  _fetchRequirements();
+    //  _fetchRequirements();
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
@@ -74,65 +74,125 @@ class _ViewRequirementState extends State<ViewRequirement> {
           )
         ],
       ),
-      body: _error != null
-          ? buildErrorWidget()
-          : Stack(
-              children: <Widget>[
-                _buildListView(),  Visibility(
-                  visible: searchVisible,
-                  child: Card(
-                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-                    elevation: 2,
-                    child: AutoCompleteTextField(
-                      key: searchKey,
-                      focusNode: searchFocusNode,
-                      controller: searchController,
-                      suggestions: tags,
-                      clearOnSubmit: false,
-                      itemBuilder: (BuildContext context, String suggestion) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              color: Colors.grey.shade300,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(suggestion),
-                            )
-                          ],
-                        );
-                      },
-                      itemSorter: (String a, String b) {
-                        return a.compareTo(b);
-                      },
-                      itemFilter: (String suggestion, String query) {
-                        return suggestion.toLowerCase().contains(query.toLowerCase());
-                      },
-                      itemSubmitted: searchProducts,
-                      textSubmitted: searchProducts,
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search, size: 18),
-                        contentPadding: EdgeInsets.all(16),
+      body: Column(
+        children: [
+          Visibility(
+            visible: searchVisible,
+            child: Card(
+              margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+              elevation: 2,
+              child: AutoCompleteTextField(
+                key: searchKey,
+                focusNode: searchFocusNode,
+                controller: searchController,
+                suggestions: tags,
+                clearOnSubmit: false,
+                itemBuilder: (BuildContext context, String suggestion) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey.shade300,
                       ),
-                    ),
-                  ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(suggestion),
+                      )
+                    ],
+                  );
+                },
+                itemSorter: (String a, String b) {
+                  return a.compareTo(b);
+                },
+                itemFilter: (String suggestion, String query) {
+                  return suggestion.toLowerCase().contains(query.toLowerCase());
+                },
+                itemSubmitted: searchProducts,
+                textSubmitted: searchProducts,
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, size: 18),
+                  contentPadding: EdgeInsets.all(16),
                 ),
-                Visibility(
-                  visible: isLoading,
-                  child: Center(
-                      child: CircularProgressIndicator(strokeWidth: 2.0)),
-                ),
-              ],
+              ),
             ),
+          ),
+          Expanded(
+            child: _error != null
+                ? buildErrorWidget()
+                : Stack(children: <Widget>[
+                    _buildListView(),
+                    Visibility(
+                      visible: isLoading,
+                      child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2.0)),
+                    ),
+                  ]),
+          )
+        ],
+      ),
+      // body: _error != null
+      //     ? buildErrorWidget()
+      //     : Stack(
+      //         children: <Widget>[
+      //           _buildListView(),  Visibility(
+      //             visible: searchVisible,
+      //             child: Card(
+      //               margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+      //               elevation: 2,
+      //               child: AutoCompleteTextField(
+      //                 key: searchKey,
+      //                 focusNode: searchFocusNode,
+      //                 controller: searchController,
+      //                 suggestions: tags,
+      //                 clearOnSubmit: false,
+      //                 itemBuilder: (BuildContext context, String suggestion) {
+      //                   return Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: <Widget>[
+      //                       Divider(
+      //                         height: 1,
+      //                         thickness: 1,
+      //                         color: Colors.grey.shade300,
+      //                       ),
+      //                       Padding(
+      //                         padding: const EdgeInsets.all(12.0),
+      //                         child: Text(suggestion),
+      //                       )
+      //                     ],
+      //                   );
+      //                 },
+      //                 itemSorter: (String a, String b) {
+      //                   return a.compareTo(b);
+      //                 },
+      //                 itemFilter: (String suggestion, String query) {
+      //                   return suggestion.toLowerCase().contains(query.toLowerCase());
+      //                 },
+      //                 itemSubmitted: searchProducts,
+      //                 textSubmitted: searchProducts,
+      //                 decoration: InputDecoration(
+      //                   hintText: 'Search',
+      //                   border: InputBorder.none,
+      //                   prefixIcon: Icon(Icons.search, size: 18),
+      //                   contentPadding: EdgeInsets.all(16),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           Visibility(
+      //             visible: isLoading,
+      //             child: Center(
+      //                 child: CircularProgressIndicator(strokeWidth: 2.0)),
+      //           ),
+      //         ],
+      //       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: (){
-         _createRequirement();
+        onPressed: () {
+          _createRequirement();
         },
       ),
     );
@@ -163,186 +223,206 @@ class _ViewRequirementState extends State<ViewRequirement> {
     final heroTag = 'post - ${_requirements[index].id}';
     final requirement = _requirements[index];
     return Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20,bottom: 20,left: 15,right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: ConstrainedBox(
-                            constraints:  BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width * 0.35,
-                              maxHeight: MediaQuery.of(context).size.width * 0.28,
-                            ),
-                            child: requirement.thumbUrl == null
-                                              ? null
-                                              : GestureDetector(
-                                                  onTap: () async {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ImageView(
-                                  imageUrl: requirement.imageUrl,
-                                  heroTag: heroTag,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 20, bottom: 20, left: 15, right: 15),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.35,
+                      maxHeight: MediaQuery.of(context).size.width * 0.28,
+                    ),
+                    child: requirement.thumbUrl == null
+                        ? null
+                        : GestureDetector(
+                            onTap: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => ImageView(
+                                    imageUrl: requirement.imageUrl,
+                                    heroTag: heroTag,
+                                  ),
                                 ),
-                              ),
-                            );
-                                                  },
-                                                  child: CachedNetworkImage(
-                            imageUrl: requirement.thumbUrl,
-                            fit: BoxFit.contain,
-                            alignment: Alignment.center,
-                            errorWidget: (c, u, e) => Image.asset(
-                              "images/ic_launcher.png",
+                              );
+                            },
+                            child: CachedNetworkImage(
+                              imageUrl: requirement.thumbUrl,
                               fit: BoxFit.contain,
-                              alignment: Alignment.topCenter,
+                              alignment: Alignment.center,
+                              errorWidget: (c, u, e) => Image.asset(
+                                "images/ic_launcher.png",
+                                fit: BoxFit.contain,
+                                alignment: Alignment.topCenter,
+                              ),
                             ),
-                                                  ),
-                                                ),
                           ),
-              ),
-                        
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  new TextSpan(text: 'name: '),
-                                  new TextSpan(text: '${requirement.customerName}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                ],
-                              ),
-                            ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  new TextSpan(text: 'contact: '),
-                                  new TextSpan(text: '${requirement.customerNumber}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  //new TextSpan(text: 'item type: '),
-                                  new TextSpan(text: '${requirement.jewelleryType}\n${requirement.productCategoryType}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  new TextSpan(text: 'issue date: '),
-                                  new TextSpan(text: '${requirement.createdAt.substring(0,10)}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            ),
-                            Visibility(
-                              visible: requirement.remark != null,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                child: RichText(
-                                  overflow: TextOverflow.fade,
-                                  text: new TextSpan(
-                                    style: new TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.black,
-                                    ),
-                                  children: <TextSpan>[
-                                    new TextSpan(text: 'remark: '),
-                                    new TextSpan(text: '${requirement.remark}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
-                              ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        
-                      ],
-                    ),               
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RaisedButton(
-                            onPressed: () {
-                              _editRequirement(index);
-                            },
-                            child: Text("Edit"),
-                          ),
-                          RaisedButton(
-                            onPressed: () {
-                              _deleteRequirement(index);
-                            },
-                            child: Text("Delete"),
-                          ),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              items: statusList.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              hint: Text(
-                                " ${requirement.status} ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  backgroundColor: requirement.status == "open" ? Colors.green : Colors.red,
-                                ),
-                                ),
-                              // value:  initalValue,
-                              onChanged: (String newValue) {
-                                // setState(() {
-                                //   initalValue = newValue;
-                                // });
-                                _updateStatus(status: newValue.toLowerCase(), index: index);
-                              },
-                            ),
-                          )
-                        ],
-                      )
-                    ],
                   ),
                 ),
-              );
-    }
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'name: '),
+                            new TextSpan(
+                                text: '${requirement.customerName}',
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'contact: '),
+                            new TextSpan(
+                                text: '${requirement.customerNumber}',
+                                style:
+                                    new TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            //new TextSpan(text: 'item type: '),
+                            new TextSpan(
+                                text:
+                                    '${requirement.jewelleryType}\n${requirement.productCategoryType}',
+                                style:
+                                    new TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'issue date: '),
+                            new TextSpan(
+                                text:
+                                    '${requirement.createdAt.substring(0, 10)}',
+                                style:
+                                    new TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: requirement.remark != null,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                        child: RichText(
+                          overflow: TextOverflow.fade,
+                          text: new TextSpan(
+                            style: new TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.black,
+                            ),
+                            children: <TextSpan>[
+                              new TextSpan(text: 'remark: '),
+                              new TextSpan(
+                                  text: '${requirement.remark}',
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RaisedButton(
+                  onPressed: () {
+                    _editRequirement(index);
+                  },
+                  child: Text("Edit"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    _deleteRequirement(index);
+                  },
+                  child: Text("Delete"),
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    items: statusList.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      " ${requirement.status} ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        backgroundColor: requirement.status == "open"
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                    // value:  initalValue,
+                    onChanged: (String newValue) {
+                      // setState(() {
+                      //   initalValue = newValue;
+                      // });
+                      _updateStatus(
+                          status: newValue.toLowerCase(), index: index);
+                    },
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   searchProducts(String keyword) {
     // param['user_id']=AuthService.user.id;
     param['query'] = keyword;
@@ -350,8 +430,9 @@ class _ViewRequirementState extends State<ViewRequirement> {
     print('Search KeyWord:-$keyword');
     fetchData();
   }
+
   fetchData() {
-    param['user_id']=AuthService.user.id;
+    param['user_id'] = AuthService.user.id;
     setState(() {
       isLoading = true;
       _requirements.clear();
@@ -374,12 +455,12 @@ class _ViewRequirementState extends State<ViewRequirement> {
           isLoading = false;
         });
     });
-
   }
+
   _fetchRequirements() {
     setState(() => isLoading = true);
 
-    RequirementService.getAll(params).then((res){
+    RequirementService.getAll(params).then((res) {
       List<Requirement> repairs = Requirement.listFromJson(res['data']);
       totalPage = res['last_page'];
       if (rowCount == 0) rowCount = res['total'];
@@ -391,7 +472,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
           _error = null;
           isLoading = false;
         });
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       if (mounted)
         setState(() {
@@ -425,24 +506,24 @@ class _ViewRequirementState extends State<ViewRequirement> {
     });
   }
 
-  _updateStatus({String status, int index}) async{
+  _updateStatus({String status, int index}) async {
     setState(() => isLoading = true);
 
     Requirement data = _requirements[index];
     data.status = status;
     FormData formData = FormData.fromMap(data.toJson());
 
-    RequirementService.update(formData).then((res){
+    RequirementService.update(formData).then((res) {
       setState(() {
         _requirements[index] = res;
       });
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
-      if (mounted)      
+      if (mounted)
         setState(() {
           isLoading = false;
         });
-    }).whenComplete((){
+    }).whenComplete(() {
       setState(() {
         isLoading = false;
       });
@@ -452,7 +533,9 @@ class _ViewRequirementState extends State<ViewRequirement> {
   _deleteRequirement(int index) async {
     final result = await _showConfirmationDialog();
     if (result == 'yes') {
-      RequirementService.delete(id: _requirements[index].id, userId: _requirements[index].userId).then((res) {
+      RequirementService.delete(
+              id: _requirements[index].id, userId: _requirements[index].userId)
+          .then((res) {
         setState(() => _requirements.removeAt(index));
       }).catchError((err) => _showError(err.toString()));
     }
@@ -492,7 +575,3 @@ class _ViewRequirementState extends State<ViewRequirement> {
     ));
   }
 }
-
-
-
-

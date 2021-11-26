@@ -10,10 +10,9 @@ import 'package:sonaar_retailer/services/auth_service.dart';
 import 'package:sonaar_retailer/services/homepage_service.dart';
 import 'package:sonaar_retailer/services/order_service.dart';
 
-
 class OrdersPage extends StatefulWidget {
   final bool focusSearch;
-  OrdersPage({this.focusSearch=false});
+  OrdersPage({this.focusSearch = false});
   @override
   _OrdersPageState createState() => _OrdersPageState();
 }
@@ -28,7 +27,7 @@ class _OrdersPageState extends State<OrdersPage> {
   List<Orders> _orders = [];
   List<Status> _status = [];
 
-  List<String> tags=[];
+  List<String> tags = [];
   bool searchVisible = false;
   Map<String, dynamic> param = {};
   final searchKey = GlobalKey<AutoCompleteTextFieldState<String>>();
@@ -78,68 +77,128 @@ class _OrdersPageState extends State<OrdersPage> {
           )
         ],
       ),
-      body: _error != null
-          ? buildErrorWidget()
-          : Stack(
-              children: <Widget>[
-                _buildListView(),
-                Visibility(
-                  visible: searchVisible,
-                  child: Card(
-                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-                    elevation: 2,
-                    child: AutoCompleteTextField(
-                      key: searchKey,
-                      focusNode: searchFocusNode,
-                      controller: searchController,
-                      suggestions: tags,
-                      clearOnSubmit: false,
-                      itemBuilder: (BuildContext context, String suggestion) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              color: Colors.grey.shade300,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(suggestion),
-                            )
-                          ],
-                        );
-                      },
-                      itemSorter: (String a, String b) {
-                        return a.compareTo(b);
-                      },
-                      itemFilter: (String suggestion, String query) {
-                        return suggestion
-                            .toLowerCase()
-                            .contains(query.toLowerCase());
-                      },
-                      itemSubmitted: searchProducts,
-                      textSubmitted: searchProducts,
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search, size: 18),
-                        contentPadding: EdgeInsets.all(16),
+      body: Column(
+        children: [
+          Visibility(
+            visible: searchVisible,
+            child: Card(
+              margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+              elevation: 2,
+              child: AutoCompleteTextField(
+                key: searchKey,
+                focusNode: searchFocusNode,
+                controller: searchController,
+                suggestions: tags,
+                clearOnSubmit: false,
+                itemBuilder: (BuildContext context, String suggestion) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey.shade300,
                       ),
-                    ),
-                  ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(suggestion),
+                      )
+                    ],
+                  );
+                },
+                itemSorter: (String a, String b) {
+                  return a.compareTo(b);
+                },
+                itemFilter: (String suggestion, String query) {
+                  return suggestion.toLowerCase().contains(query.toLowerCase());
+                },
+                itemSubmitted: searchProducts,
+                textSubmitted: searchProducts,
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, size: 18),
+                  contentPadding: EdgeInsets.all(16),
                 ),
-                Visibility(
-                  visible: isLoading,
-                  child: Center(
-                      child: CircularProgressIndicator(strokeWidth: 2.0)),
-                ),
-              ],
+              ),
             ),
+          ),
+          Expanded(
+            child: _error != null
+                ? buildErrorWidget()
+                : Stack(children: <Widget>[
+                    _buildListView(),
+                    Visibility(
+                      visible: isLoading,
+                      child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2.0)),
+                    ),
+                  ]),
+          )
+        ],
+      ),
+      // body: _error != null
+      //     ? buildErrorWidget()
+      //     : Stack(
+      //         children: <Widget>[
+      //           _buildListView(),
+      //           Visibility(
+      //             visible: searchVisible,
+      //             child: Card(
+      //               margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+      //               elevation: 2,
+      //               child: AutoCompleteTextField(
+      //                 key: searchKey,
+      //                 focusNode: searchFocusNode,
+      //                 controller: searchController,
+      //                 suggestions: tags,
+      //                 clearOnSubmit: false,
+      //                 itemBuilder: (BuildContext context, String suggestion) {
+      //                   return Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: <Widget>[
+      //                       Divider(
+      //                         height: 1,
+      //                         thickness: 1,
+      //                         color: Colors.grey.shade300,
+      //                       ),
+      //                       Padding(
+      //                         padding: const EdgeInsets.all(12.0),
+      //                         child: Text(suggestion),
+      //                       )
+      //                     ],
+      //                   );
+      //                 },
+      //                 itemSorter: (String a, String b) {
+      //                   return a.compareTo(b);
+      //                 },
+      //                 itemFilter: (String suggestion, String query) {
+      //                   return suggestion
+      //                       .toLowerCase()
+      //                       .contains(query.toLowerCase());
+      //                 },
+      //                 itemSubmitted: searchProducts,
+      //                 textSubmitted: searchProducts,
+      //                 decoration: InputDecoration(
+      //                   hintText: 'Search',
+      //                   border: InputBorder.none,
+      //                   prefixIcon: Icon(Icons.search, size: 18),
+      //                   contentPadding: EdgeInsets.all(16),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           Visibility(
+      //             visible: isLoading,
+      //             child: Center(
+      //                 child: CircularProgressIndicator(strokeWidth: 2.0)),
+      //           ),
+      //         ],
+      //       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: (){
-         _createOrder();
+        onPressed: () {
+          _createOrder();
         },
       ),
     );
@@ -170,134 +229,151 @@ class _OrdersPageState extends State<OrdersPage> {
     final heroTag = 'post - ${_orders[index].id}';
     final order = _orders[index];
     return Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10,bottom: 20,left: 15,right: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            child: RichText(
-                              overflow: TextOverflow.fade,
-                              text: new TextSpan(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 10, bottom: 20, left: 15, right: 15),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'name: '),
+                            new TextSpan(
+                                text: '${order.customerName}',
                                 style: new TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.black,
-                                ),
-                              children: <TextSpan>[
-                                new TextSpan(text: 'name: '),
-                                new TextSpan(text: '${order.customerName}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                              ],
-                            ),
-                          ),
-                          ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  new TextSpan(text: 'contact: '),
-                                  new TextSpan(text: '${order.customerNumber}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child: RichText(
-                                overflow: TextOverflow.fade,
-                                text: new TextSpan(
-                                  style: new TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.black,
-                                  ),
-                                children: <TextSpan>[
-                                  new TextSpan(text: 'issue date: '),
-                                  new TextSpan(text: '${order.date}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                            ),
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
                           ],
                         ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                             Padding(
-                              padding: const EdgeInsets.only(top:15),
-                              child: Text("order Items : ${order.orderItem.length}"),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextButton(
-                                onPressed: (){}, 
-                                child: Row(children: [
-                                  Text("view details"),
-                                  Icon(Icons.navigate_next_rounded)
-                                ],)),
-                            )
-                            ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
                           ),
-                        ],
-                      ),               
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RaisedButton(
-                            onPressed: () {
-                              _editOrder(index);
-                            },
-                            child: Text("Edit"),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'contact: '),
+                            new TextSpan(
+                                text: '${order.customerNumber}',
+                                style:
+                                    new TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: RichText(
+                        overflow: TextOverflow.fade,
+                        text: new TextSpan(
+                          style: new TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
                           ),
-                          RaisedButton(
-                            onPressed: () {
-                              _deleteOrder(index);
-                            },
-                            child: Text("Delete"),
-                          ),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              items: _status.map((Status value) {
-                                return DropdownMenuItem<Status>(
-                                  value: value,
-                                  child: Text(value.statusName),
-                                );
-                              }).toList(),
-                              hint: Text(
-                                " ${order.statusDetail.statusName} ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  backgroundColor: order.statusDetail.statusName == "DELIVERED" ? Colors.green : order.statusDetail.statusName == "CANCELLED" ? Colors.red :Colors.grey.shade400,
-                                ),
-                                ),
-                              // value:  initalValue,
-                              onChanged: (Status newValue) {
-                                // setState(() {
-                                //   initalValue = newValue;
-                                // });
-                                _updateStatus(id: newValue.id, index: index);
-                              },
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                          children: <TextSpan>[
+                            new TextSpan(text: 'issue date: '),
+                            new TextSpan(
+                                text: '${order.date}',
+                                style:
+                                    new TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-    }
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Text("order Items : ${order.orderItem.length}"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                          onPressed: () {},
+                          child: Row(
+                            children: [
+                              Text("view details"),
+                              Icon(Icons.navigate_next_rounded)
+                            ],
+                          )),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RaisedButton(
+                  onPressed: () {
+                    _editOrder(index);
+                  },
+                  child: Text("Edit"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    _deleteOrder(index);
+                  },
+                  child: Text("Delete"),
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    items: _status.map((Status value) {
+                      return DropdownMenuItem<Status>(
+                        value: value,
+                        child: Text(value.statusName),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      " ${order.statusDetail.statusName} ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        backgroundColor:
+                            order.statusDetail.statusName == "DELIVERED"
+                                ? Colors.green
+                                : order.statusDetail.statusName == "CANCELLED"
+                                    ? Colors.red
+                                    : Colors.grey.shade400,
+                      ),
+                    ),
+                    // value:  initalValue,
+                    onChanged: (Status newValue) {
+                      // setState(() {
+                      //   initalValue = newValue;
+                      // });
+                      _updateStatus(id: newValue.id, index: index);
+                    },
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   // Widget _buildOrderItemList({List<OrderItem> items}) {
   //    ScrollController _itemScrollController;
@@ -321,8 +397,11 @@ class _OrdersPageState extends State<OrdersPage> {
 
   Widget _buildOrderItemList({List<OrderItem> items}) {
     List<Widget> widgetList = [];
-    items.forEach((element) { 
-      widgetList.add(OutlinedButton(onPressed: (){}, child: Text(element.product, overflow: TextOverflow.fade),));
+    items.forEach((element) {
+      widgetList.add(OutlinedButton(
+        onPressed: () {},
+        child: Text(element.product, overflow: TextOverflow.fade),
+      ));
     });
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -340,7 +419,7 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   fetchData() {
-    param['user_id']=AuthService.user.id;
+    param['user_id'] = AuthService.user.id;
     setState(() {
       isLoading = true;
       _orders.clear();
@@ -362,23 +441,21 @@ class _OrdersPageState extends State<OrdersPage> {
           isLoading = false;
         });
     });
-
   }
 
-  _fetchStatusList(){
+  _fetchStatusList() {
     setState(() => isLoading = true);
 
-    HomePageService.getAllStatus({"create_order" : "1"}).then((res){
+    HomePageService.getAllStatus({"create_order": "1"}).then((res) {
       List<Status> status = Status.listFromJson(res["data"]);
-      if(mounted){
+      if (mounted) {
         setState(() {
           _status.addAll(status);
-          _error=null;
-          isLoading=false;
+          _error = null;
+          isLoading = false;
         });
       }
-
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       if (mounted)
         setState(() {
@@ -391,7 +468,7 @@ class _OrdersPageState extends State<OrdersPage> {
   _fetchOrders() {
     setState(() => isLoading = true);
 
-    OrderService.getAll(params).then((res){
+    OrderService.getAll(params).then((res) {
       List<Orders> repairs = Orders.listFromJson(res['data']);
       totalPage = res['last_page'];
       if (rowCount == 0) rowCount = res['total'];
@@ -403,7 +480,7 @@ class _OrdersPageState extends State<OrdersPage> {
           _error = null;
           isLoading = false;
         });
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       if (mounted)
         setState(() {
@@ -437,35 +514,35 @@ class _OrdersPageState extends State<OrdersPage> {
     // });
   }
 
-  _updateStatus({int id, int index}) async{
+  _updateStatus({int id, int index}) async {
     setState(() => isLoading = true);
 
     Orders data = _orders[index];
     data.status = id;
     FormData formData = FormData.fromMap(data.toJson());
 
-    OrderService.update(formData).then((res){
+    OrderService.update(formData).then((res) {
       setState(() {
         _orders[index] = res;
       });
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
-      if (mounted)      
+      if (mounted)
         setState(() {
           isLoading = false;
         });
-    }).whenComplete((){
+    }).whenComplete(() {
       setState(() {
         isLoading = false;
       });
     });
-
   }
 
   _deleteOrder(int index) async {
     final result = await _showConfirmationDialog();
     if (result == 'yes') {
-      OrderService.delete(id: _orders[index].id, userId: _orders[index].userId).then((res) {
+      OrderService.delete(id: _orders[index].id, userId: _orders[index].userId)
+          .then((res) {
         setState(() => _orders.removeAt(index));
       }).catchError((err) => _showError(err.toString()));
     }
@@ -505,10 +582,3 @@ class _OrdersPageState extends State<OrdersPage> {
     ));
   }
 }
-
-
-  
-
-
-
-

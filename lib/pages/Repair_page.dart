@@ -59,7 +59,7 @@ class _RepairState extends State<Repair> {
       }
     });
     _fetchStatusList();
-   // _fetchRepairs();
+    // _fetchRepairs();
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
@@ -85,64 +85,126 @@ class _RepairState extends State<Repair> {
           )
         ],
       ),
-      body: _error != null
-          ? buildErrorWidget()
-          : Stack(
-              children: <Widget>[
-                _buildListView(),
-                Visibility(
-                  visible: searchVisible,
-                  child: Card(
-                    margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-                    elevation: 2,
-                    child: AutoCompleteTextField(
-                      key: searchKey,
-                      focusNode: searchFocusNode,
-                      controller: searchController,
-                      suggestions: tags,
-                      clearOnSubmit: false,
-                      itemBuilder: (BuildContext context, String suggestion) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              color: Colors.grey.shade300,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(suggestion),
-                            )
-                          ],
-                        );
-                      },
-                      itemSorter: (String a, String b) {
-                        return a.compareTo(b);
-                      },
-                      itemFilter: (String suggestion, String query) {
-                        return suggestion
-                            .toLowerCase()
-                            .contains(query.toLowerCase());
-                      },
-                      itemSubmitted: searchProducts,
-                      textSubmitted: searchProducts,
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search, size: 18),
-                        contentPadding: EdgeInsets.all(16),
+      body: Column(
+        children: [
+          Visibility(
+            visible: searchVisible,
+            child: Card(
+              margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+              elevation: 2,
+              child: AutoCompleteTextField(
+                key: searchKey,
+                focusNode: searchFocusNode,
+                controller: searchController,
+                suggestions: tags,
+                clearOnSubmit: false,
+                itemBuilder: (BuildContext context, String suggestion) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey.shade300,
                       ),
-                    ),
-                  ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(suggestion),
+                      )
+                    ],
+                  );
+                },
+                itemSorter: (String a, String b) {
+                  return a.compareTo(b);
+                },
+                itemFilter: (String suggestion, String query) {
+                  return suggestion.toLowerCase().contains(query.toLowerCase());
+                },
+                itemSubmitted: searchProducts,
+                textSubmitted: searchProducts,
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, size: 18),
+                  contentPadding: EdgeInsets.all(16),
                 ),
-                Visibility(
-                  visible: isLoading,
-                  child: Center(
-                      child: CircularProgressIndicator(strokeWidth: 2.0)),
-                ),
-              ],
+              ),
             ),
+          ),
+          Expanded(
+            child: _error != null
+                ? buildErrorWidget()
+                : Stack(
+                    children: <Widget>[
+                      _buildListView(),
+                      Visibility(
+                        visible: isLoading,
+                        child: Center(
+                            child: CircularProgressIndicator(strokeWidth: 2.0)),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+      // body: _error != null
+      //     ? buildErrorWidget()
+      //     : Stack(
+      //         children: <Widget>[
+      //           _buildListView(),
+      //           Visibility(
+      //             visible: searchVisible,
+      //             child: Card(
+      //               margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+      //               elevation: 2,
+      //               child: AutoCompleteTextField(
+      //                 key: searchKey,
+      //                 focusNode: searchFocusNode,
+      //                 controller: searchController,
+      //                 suggestions: tags,
+      //                 clearOnSubmit: false,
+      //                 itemBuilder: (BuildContext context, String suggestion) {
+      //                   return Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: <Widget>[
+      //                       Divider(
+      //                         height: 1,
+      //                         thickness: 1,
+      //                         color: Colors.grey.shade300,
+      //                       ),
+      //                       Padding(
+      //                         padding: const EdgeInsets.all(12.0),
+      //                         child: Text(suggestion),
+      //                       )
+      //                     ],
+      //                   );
+      //                 },
+      //                 itemSorter: (String a, String b) {
+      //                   return a.compareTo(b);
+      //                 },
+      //                 itemFilter: (String suggestion, String query) {
+      //                   return suggestion
+      //                       .toLowerCase()
+      //                       .contains(query.toLowerCase());
+      //                 },
+      //                 itemSubmitted: searchProducts,
+      //                 textSubmitted: searchProducts,
+      //                 decoration: InputDecoration(
+      //                   hintText: 'Search',
+      //                   border: InputBorder.none,
+      //                   prefixIcon: Icon(Icons.search, size: 18),
+      //                   contentPadding: EdgeInsets.all(16),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           Visibility(
+      //             visible: isLoading,
+      //             child: Center(
+      //                 child: CircularProgressIndicator(strokeWidth: 2.0)),
+      //           ),
+      //         ],
+      //       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -176,26 +238,26 @@ class _RepairState extends State<Repair> {
   searchProducts(String keyword) {
     // param['user_id']=AuthService.user.id;
     param['query'] = keyword;
-   // params['page'] = 1;
+    // params['page'] = 1;
     print('Search KeyWord:-$keyword');
     fetchData();
   }
 
   fetchData() {
-    param['user_id']=AuthService.user.id;
+    param['user_id'] = AuthService.user.id;
     setState(() {
       isLoading = true;
-      _repairs.clear();
+     _repairs.clear();
     });
     RepairService.search(param).then((res) {
       List<Repairs> repairs = Repairs.listFromJson(res['data']);
-       if (mounted)
-         setState(() {
+      if (mounted)
+        setState(() {
           _repairs.addAll(repairs);
           // _repairs = res ;
-           _error = null;
-           isLoading = false;
-         });
+          _error = null;
+          isLoading = false;
+        });
     }).catchError((err) {
       if (mounted)
         setState(() {
@@ -204,7 +266,6 @@ class _RepairState extends State<Repair> {
           isLoading = false;
         });
     });
-
   }
 
   Widget _buildListItem(BuildContext context, int index) {

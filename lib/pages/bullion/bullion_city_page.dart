@@ -599,7 +599,7 @@ class _BullionCityPageState extends State<BullionCityPage> {
                           },
                           child: Card(
                             child: Container(
-                              width: 170,
+                              width: 165,
                               height: 110,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
