@@ -63,8 +63,9 @@ class _RepairState extends State<Repair> {
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
-      fetchData();
+      //fetchData();
     }
+    _fetchRepairs();
   }
 
   @override

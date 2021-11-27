@@ -48,11 +48,11 @@ class _ViewRequirementState extends State<ViewRequirement> {
         }
       }
     });
-    //  _fetchRequirements();
+      _fetchRequirements();
     if (widget.focusSearch) {
       searchFocusNode.requestFocus();
     } else {
-      fetchData();
+      //fetchData();
     }
   }
 
@@ -237,6 +237,7 @@ class _ViewRequirementState extends State<ViewRequirement> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.35,
+                      //maxWidth: 100,
                       maxHeight: MediaQuery.of(context).size.width * 0.28,
                     ),
                     child: requirement.thumbUrl == null
@@ -308,24 +309,32 @@ class _ViewRequirementState extends State<ViewRequirement> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                      child: RichText(
-                        overflow: TextOverflow.fade,
-                        text: new TextSpan(
-                          style: new TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.black,
-                          ),
-                          children: <TextSpan>[
-                            //new TextSpan(text: 'item type: '),
-                            new TextSpan(
-                                text:
-                                    '${requirement.jewelleryType}\n${requirement.productCategoryType}',
-                                style:
-                                    new TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
+                      child: Text("${requirement.jewelleryType}", overflow: TextOverflow.fade,style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: Text("${requirement.productCategoryType}", overflow: TextOverflow.fade,style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                    //   child: RichText(
+                    //     overflow: TextOverflow.fade,
+                    //     text: new TextSpan(
+                    //       style: new TextStyle(
+                    //         fontSize: 12.0,
+                    //         color: Colors.black,
+                    //       ),
+                    //       children: <TextSpan>[
+                    //         //new TextSpan(text: 'item type: '),
+                    //         new TextSpan(
+                    //             text:
+                    //                 '${requirement.jewelleryType}\n${requirement.productCategoryType}',
+                    //             style:
+                    //                 new TextStyle(fontWeight: FontWeight.bold)),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                       child: RichText(

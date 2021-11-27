@@ -5,8 +5,8 @@ import 'package:sonaar_retailer/models/user.dart';
 
 class Repairs{
 
-  String id;
-  String userId;
+  int id;
+  int userId;
   String customerName;
   String customerNumber;
   String remark;
@@ -36,8 +36,8 @@ class Repairs{
   });
 
   factory Repairs.fromJson(Map<String, dynamic> parsedJson) => Repairs(
-        id: parsedJson['id']?.toString(),
-        userId: parsedJson['user_id'].toString(),
+        id: parsedJson['id'],
+        userId: parsedJson['user_id'],
         customerName: parsedJson['customer_name']?.toString(),
         customerNumber: parsedJson['customer_number']?.toString(),
         thumbUrl: parsedJson['thumb_url']?.toString(),

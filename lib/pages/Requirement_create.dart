@@ -403,7 +403,7 @@ class _CreateRequirementState extends State<CreateRequirement> {
       'jewellery_type' : _selectedProductType.name,
       'product_category_type' : _selectedCategory.name,
       'status': initalValue,
-      'user_id': AuthService.user.id,
+      'user_id': int.parse(AuthService.user.id),
     };
 
     FormData formData = FormData.fromMap(data);

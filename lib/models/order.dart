@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:sonaar_retailer/models/status.dart';
 
 class Orders {
@@ -208,3 +210,69 @@ class OrderItem {
   }
 }
 
+
+
+class UploadableOrderItem {
+  String categoryType;
+  String product;
+  String melting;
+  int weight;
+  int size;
+  final File image;
+  String remark;
+  String image2;
+  String remark2;
+  String image3;
+  String remark3;
+  String image4;
+  String remark4;
+
+  UploadableOrderItem(
+      {this.categoryType,
+      this.product,
+      this.melting,
+      this.weight,
+      this.size,
+      this.image,
+      this.remark,
+      this.image2,
+      this.remark2,
+      this.image3,
+      this.remark3,
+      this.image4,
+      this.remark4});
+
+  // UploadableOrderItem.fromJson(Map<String, dynamic> json) {
+  //   categoryType = json['category_type'];
+  //   product = json['product'];
+  //   melting = json['melting'];
+  //   weight = json['weight'];
+  //   size = json['size'];
+  //   image = json['image'];
+  //   remark = json['remark'];
+  //   image2 = json['image2'];
+  //   remark2 = json['remark2'];
+  //   image3 = json['image3'];
+  //   remark3 = json['remark3'];
+  //   image4 = json['image4'];
+  //   remark4 = json['remark4'];
+  // }
+
+  Future<Map<String, dynamic>> toJson() async{
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['category_type'] = this.categoryType;
+    data['product'] = this.product;
+    data['melting'] = this.melting;
+    data['weight'] = this.weight;
+    data['size'] = this.size;
+    data['image'] = await MultipartFile.fromFile(this.image.path);
+    data['remark'] = this.remark;
+    data['image2'] = this.image2;
+    data['remark2'] = this.remark2;
+    data['image3'] = this.image3;
+    data['remark3'] = this.remark3;
+    data['image4'] = this.image4;
+    data['remark4'] = this.remark4;
+    return data;
+  }
+}
