@@ -249,6 +249,7 @@ class _EditRequirementState extends State<EditRequirement> {
                           Container(
                             height: 45,
                             child: TextFormField(
+                              controller: _remarkController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Remark'),
