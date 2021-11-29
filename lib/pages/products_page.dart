@@ -105,7 +105,7 @@ class _ProductsPageState extends State<ProductsPage> {
               //setState(() => searchVisible = !searchVisible);
               setState(() {
                 searchVisible = !searchVisible;
-                filter.searchkey = searchController.text.toString();
+                filter.searchKey = searchController.text.toString();
               });
             },
           ),
@@ -656,13 +656,20 @@ class _ProductsPageState extends State<ProductsPage> {
           _error = null;
           isLoading = false;
           print("load $isLoading");
-          Tracking.track1(
-              searchController.text,
-              widget.categoryId,
-              weightFromController.text.toString(),
-              weightToController.text.toString(),
-              products.length.toString());
-          Tracking.getResult(products.length.toString());
+          Tracking.track(
+            weightFromController.text,
+            weightToController.text,
+            widget.categoryId.toString(),
+            filter.subcategories1.toString(),
+            filter.cities1.toString(),
+            filter.types1.toString(),
+            // null, //subcategory
+            // null, //cities
+            // null, //product type
+            searchController.text.toString(),
+            products.length.toString(),
+            null, //product
+          );
         });
     }).catchError((err) {
       if (mounted)

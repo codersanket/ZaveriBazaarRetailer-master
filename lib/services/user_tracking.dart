@@ -23,6 +23,8 @@ class Tracking {
     String cities,
     String productType,
     String searchKey,
+    String result,
+    String product,
   ) async {
     try {
       var response =
@@ -32,11 +34,13 @@ class Tracking {
         'phone': AuthService.user.mobile,
         'min_weight': min,
         'max_weight': max,
-        'category_id': categoryId,
-        'subcategories': subcategories,
+        'category': categoryId,
+        'subcategory': subcategories,
         'cities': cities,
         'product_type': productType,
-        'search_Key': searchKey,
+        'search_key': searchKey,
+        'result': result,
+        'product': product
         // remaining to  add result and search key
       });
       return Future.value(response.data);
@@ -45,37 +49,6 @@ class Tracking {
     }
   }
 
-  ///set at apply button
-  static Future<void> track1(String searchKey, String categoryId, String min,
-      String max, String result) async {
-    try {
-      var response =
-          await DioProvider().dio().post('/search_track/insert', data: {
-        'retailer_id': AuthService.user.id,
-        'name': AuthService.user.name,
-        'phone': AuthService.user.mobile,
-        'search_Key': searchKey,
-        'category_id': categoryId,
-        'min_weight': min,
-        'max_weight': max,
-        'result': result
-      });
-      return Future.value(response.data);
-    } catch (e) {
-      return Future.error(_handleError(e));
-    }
-  }
-
-  static Future<void> getResult(String result) async {
-    try {
-      var response = await DioProvider()
-          .dio()
-          .post('/search_track/insert', data: {'result': result});
-      return Future.value(response.data);
-    } catch (e) {
-      return Future.error(_handleError(e));
-    }
-  }
 
   static _handleError(e) {
     return ErrorHandler.handleError(e);

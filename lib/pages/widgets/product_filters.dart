@@ -67,7 +67,7 @@ class ProductFiltersState extends State<ProductFilters> {
                           filter.subcategories1.toString(),
                           filter.cities1.toString(),
                           filter.types1.toString(),
-                      widget.searchKey.toString());
+                          widget.searchKey.toString(),null,null);
                       Navigator.pop(context, 'filter');
                     },
                   )),
@@ -342,5 +342,5 @@ class Filter {
   WeightRange weightRange = WeightRange(lower: 0, upper: 0);
   // double weightRangeValue = 0;
   double weightRangeLower = 0, weightRangeUpper = 0;
-  String searchkey='Search something';
+  String searchKey='Search something';
 }
