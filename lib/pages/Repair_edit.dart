@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sonaar_retailer/models/repairs.dart';
 import 'package:sonaar_retailer/services/repair_service.dart';
 
@@ -23,7 +24,7 @@ class _RepairEditState extends State<RepairEdit> {
   TextEditingController _weightController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  DateTime selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -88,20 +89,47 @@ class _RepairEditState extends State<RepairEdit> {
                             ),
                           ),
                           SizedBox(height: 20),
-                          Container(
-                            height: 45,
-                            child: TextFormField(
-                              controller: _dateController,
-                              validator: (v) {
-                                return v.isEmpty ? 'Please select Date' : null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Issue date',
-                                  //hintText: widget.repair.inwardDate
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height: 45,
+                                  child: TextFormField(
+                                    controller: _dateController,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Issue date',
+                                    ),
+                                    validator: (v) {
+                                      return v.isEmpty ? 'Please select Date' : null;
+                                    },
                                   ),
-                            ),
+                                ),
+                              ),
+                              IconButton(
+                                  onPressed: (){_selectDate(context);},
+                                  icon: Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.blue,
+                                  )
+                              ),
+
+                            ],
                           ),
+                          // Container(
+                          //   height: 45,
+                          //   child: TextFormField(
+                          //     controller: _dateController,
+                          //     validator: (v) {
+                          //       return v.isEmpty ? 'Please select Date' : null;
+                          //     },
+                          //     decoration: InputDecoration(
+                          //         border: OutlineInputBorder(),
+                          //         labelText: 'Issue date',
+                          //         //hintText: widget.repair.inwardDate
+                          //         ),
+                          //   ),
+                          // ),
                           SizedBox(height: 20),
                           // Container(
                           //   height: 200,
@@ -185,7 +213,21 @@ class _RepairEditState extends State<RepairEdit> {
       ),
     );
   }
-
+  _selectDate(BuildContext context) async {
+    final DateTime selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2025),
+    );
+    if (selected != null && selected != selectedDate)
+      setState(() {
+        selectedDate = selected;
+        _dateController.text =
+            DateFormat('yyyy-MM-dd').format(selectedDate);
+      });
+    //_datetimeController.text=selectedDate.toString().DateFormat("yyyy-MM-dd").format(selectedDate);
+  }
   _submit() async{
     setState(() => isLoading = true);
 
