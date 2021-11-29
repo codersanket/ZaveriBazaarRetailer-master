@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sonaar_retailer/models/category.dart';
 import 'package:sonaar_retailer/models/product_type.dart';
 import 'package:sonaar_retailer/models/requirement.dart';
 import 'package:sonaar_retailer/services/product_service.dart';
 import 'package:sonaar_retailer/services/requirement_service.dart';
 
-enum RequirementType {_old,_new}
+enum RequirementType { _old, _new }
 
 class EditRequirement extends StatefulWidget {
   final Requirement requirement;
@@ -37,6 +38,7 @@ class _EditRequirementState extends State<EditRequirement> {
   List<String> categoryList = [];
   String _selectedCategory;
   String _selectedProductType;
+  String _url;
 
   TextEditingController _noController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
@@ -48,14 +50,16 @@ class _EditRequirementState extends State<EditRequirement> {
     _edited = widget.requirement;
     _fetchCategoryList();
     _fetchTypeList();
-    _noController.text =  widget.requirement.customerNumber;
+    _noController.text = widget.requirement.customerNumber;
     _nameController.text = widget.requirement.customerName;
-    _remarkController.text =  widget.requirement.remark ?? null;
-    _requirementType = widget.requirement.requirementOf == "Old" ? RequirementType._old: RequirementType._new;
+    _remarkController.text = widget.requirement.remark ?? null;
+    _requirementType = widget.requirement.requirementOf == "Old"
+        ? RequirementType._old
+        : RequirementType._new;
     _selectedCategory = widget.requirement.productCategoryType;
     _selectedProductType = widget.requirement.jewelleryType;
+   _url=widget.requirement.thumbUrl;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +68,8 @@ class _EditRequirementState extends State<EditRequirement> {
       appBar: AppBar(
         title: Text('Edit Requirement'),
       ),
-      body: Stack(
-        children :[
-          SingleChildScrollView(
+      body: Stack(children: [
+        SingleChildScrollView(
           child: Column(
             children: [
               Padding(
@@ -81,18 +84,18 @@ class _EditRequirementState extends State<EditRequirement> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           Container(
+                          Container(
                             height: 45,
                             child: TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Customer name',
-                                  //hintText: widget.repair.customerName
-                                  ),
+                                border: OutlineInputBorder(),
+                                labelText: 'Customer name',
+                                //hintText: widget.repair.customerName
+                              ),
                               validator: (v) {
                                 return v.isEmpty ? 'Please enter Name' : null;
-                            },
+                              },
                             ),
                           ),
                           SizedBox(height: 20),
@@ -102,13 +105,17 @@ class _EditRequirementState extends State<EditRequirement> {
                               controller: _noController,
                               keyboardType: TextInputType.number,
                               validator: (v) {
-                                 return v.isEmpty ? 'Please select customer contact' : v.length > 12 || v.length < 10 ? 'Please enter valid number': null;
+                                return v.isEmpty
+                                    ? 'Please select customer contact'
+                                    : v.length > 12 || v.length < 10
+                                        ? 'Please enter valid number'
+                                        : null;
                               },
                               decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Customer number',
-                                  //hintText: widget.repair.customerNumber
-                                  ),
+                                border: OutlineInputBorder(),
+                                labelText: 'Customer number',
+                                //hintText: widget.repair.customerNumber
+                              ),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -118,132 +125,153 @@ class _EditRequirementState extends State<EditRequirement> {
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Old",
-                                      style: TextStyle(
-                                          fontSize: 17, fontWeight: FontWeight.w400),
-                                    ),
-                                    Radio(
-                                      value: RequirementType._old,
-                                      groupValue: _requirementType,
-                                      onChanged: (RequirementType value) {
-                                        setState(() {
-                                          _requirementType = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "New",
-                                      style: TextStyle(
-                                          fontSize: 17, fontWeight: FontWeight.w400),
-                                    ),
-                                    Radio(
-                                      value: RequirementType._new,
-                                      groupValue: _requirementType,
-                                      onChanged: (RequirementType value) {
-                                        setState(() {
-                                          _requirementType = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Old",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Radio(
+                                    value: RequirementType._old,
+                                    groupValue: _requirementType,
+                                    onChanged: (RequirementType value) {
+                                      setState(() {
+                                        _requirementType = value;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "New",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Radio(
+                                    value: RequirementType._new,
+                                    groupValue: _requirementType,
+                                    onChanged: (RequirementType value) {
+                                      setState(() {
+                                        _requirementType = value;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                           SizedBox(height: 15),
                           Container(
-                              height: 55,
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    //hintText: 'Select Product category type'
-                                ),
-                                value: _selectedProductType,
-                                hint: Text(_selectedProductType == null 
-                                  ? "Select jewellery type" 
-                                  : _selectedProductType,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    _selectedProductType = newValue;
-                                  });
-                                },
-                                items: typeList.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value, style: TextStyle(fontSize: 12)),
-                                  );
-                                }).toList(),
+                            height: 55,
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                //hintText: 'Select Product category type'
                               ),
+                              value: _selectedProductType,
+                              hint: Text(
+                                _selectedProductType == null
+                                    ? "Select jewellery type"
+                                    : _selectedProductType,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _selectedProductType = newValue;
+                                });
+                              },
+                              items: typeList.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value,
+                                      style: TextStyle(fontSize: 12)),
+                                );
+                              }).toList(),
                             ),
+                          ),
                           SizedBox(height: 15),
                           Container(
-                              height: 55,
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    //hintText: 'Select Product category type'
-                                ),
-                                value: _selectedCategory,
-                                hint: Text(_selectedCategory == null 
-                                  ? "Select Product category type" 
-                                  : _selectedCategory,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    _selectedCategory = newValue;
-                                  });
-                                },
-                                items: categoryList.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value, style: TextStyle(fontSize: 12)),
-                                  );
-                                }).toList(),
+                            height: 55,
+                            child: DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                //hintText: 'Select Product category type'
+                              ),
+                              value: _selectedCategory,
+                              hint: Text(
+                                _selectedCategory == null
+                                    ? "Select Product category type"
+                                    : _selectedCategory,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _selectedCategory = newValue;
+                                });
+                              },
+                              items: categoryList.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value,
+                                      style: TextStyle(fontSize: 12)),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          Material(
+                            //color: Colors.white,
+                            child: ListTile(
+                              onTap: pickImage,
+                              trailing: Icon(Icons.image, color: Colors.blue),
+                              title: Text('Photo'),
+                              subtitle: _image == null
+                                  ? CachedNetworkImage(imageUrl: _url)
+                                  : Container(
+                                padding: EdgeInsets.only(top: 8.0),
+                                height: 200.0,
+                                child: Image.file(_image, fit: BoxFit.cover),
                               ),
                             ),
-                          SizedBox(height: 15),
-                          ConstrainedBox(
-                                constraints:  BoxConstraints(
-                                  maxWidth: 200,
-                                  maxHeight: 200,
-                                  ),
-                                child: widget.requirement.thumbUrl == null
-                                  ? null
-                                    : CachedNetworkImage(
-                                    imageUrl: widget.requirement.thumbUrl,
-                                    fit: BoxFit.contain,
-                                    alignment: Alignment.center,
-                                    errorWidget: (c, u, e) => Image.asset(
-                                      "images/ic_launcher.png",
-                                      fit: BoxFit.cover,
-                                      alignment: Alignment.topCenter,
-                                    ),
-                                    ),
-                                  ),
-                          // Material(
-                          //   //color: Colors.white,
-                          //   child: ListTile(
-                          //     // onTap: pickImage,
-                          //     trailing: Icon(Icons.image, color: Colors.blue),
-                          //     title: Text('Photo'),
-                          //     subtitle: _image == null
-                          //         ? null
-                          //         : Container(
-                          //             padding: EdgeInsets.only(top: 8.0),
-                          //             height: 200.0,
-                          //             child: Image.file(_image, fit: BoxFit.cover),
-                          //           ),
+                          ),
+                          // ConstrainedBox(
+                          //   constraints: BoxConstraints(
+                          //     maxWidth: 200,
+                          //     maxHeight: 200,
                           //   ),
+                          //   child: widget.requirement.thumbUrl == null
+                          //       ? null
+                          //       : Row(
+                          //           mainAxisAlignment:
+                          //               MainAxisAlignment.spaceBetween,
+                          //           crossAxisAlignment:
+                          //               CrossAxisAlignment.stretch,
+                          //           children: [
+                          //             CachedNetworkImage(
+                          //               imageUrl: widget.requirement.thumbUrl,
+                          //               fit: BoxFit.contain,
+                          //               alignment: Alignment.center,
+                          //               errorWidget: (c, u, e) => Image.asset(
+                          //                 "images/ic_launcher.png",
+                          //                 fit: BoxFit.cover,
+                          //                 alignment: Alignment.topCenter,
+                          //               ),
+                          //             ),
+                          //             SizedBox(width: 20),
+                          //             GestureDetector(
+                          //               onTap: (){
+                          //                 pickImage();
+                          //               },
+                          //                 child: Icon(Icons.image,
+                          //                     color: Colors.blue)),
+                          //           ],
+                          //         ),
                           // ),
                           SizedBox(height: 20),
                           Container(
@@ -276,33 +304,69 @@ class _EditRequirementState extends State<EditRequirement> {
             ],
           ),
         ),
-           Visibility(
-            visible: isLoading,
-            child: Center(
-              child: CircularProgressIndicator(strokeWidth: 2.0)),
-          ),
-        ]
-         
-      ),
+        Visibility(
+          visible: isLoading,
+          child: Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
+        ),
+      ]),
     );
   }
 
+  void pickImage() async {
+    final source = await showDialog<dynamic>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          title: Text('Select image from'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.camera),
+              child: Text('Camera', style: TextStyle(fontSize: 16.0)),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              child: Text('Gallery', style: TextStyle(fontSize: 16.0)),
+            )
+          ],
+        );
+      },
+    );
 
-  _fetchCategoryList(){
+    var file = await ImagePicker.pickImage(source: source);
+
+    // Directory tempDir = await getTemporaryDirectory();
+    // String targetPath = tempDir.path + randomAlpha(5);
+    // file = await FlutterImageCompress.compressAndGetFile(
+    //   file.absolute.path,
+    //   targetPath,
+    //   quality: 80,
+    // );
+    setState(() {
+      _image=file;
+     // widget.requirement.thumbUrl=file;
+    });
+   // setState(() => _image = file);
+  }
+
+  _fetchCategoryList() {
     setState(() => isLoading = true);
 
-    ProductService.getCategories().then((res){
+    ProductService.getCategories().then((res) {
       List<Category> categories = res;
-      if(mounted){
+      if (mounted) {
         setState(() {
           //categoryList.addAll(categories);
-          categories.forEach((element) {categoryList.add(element.name);});
-          isLoading=false;
+          categories.forEach((element) {
+            categoryList.add(element.name);
+          });
+          isLoading = false;
           //_selectedCategory = categoryList.firstWhere((element) => element.name == widget.requirement.productCategoryType);
         });
       }
-
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       if (mounted)
         setState(() {
@@ -311,21 +375,22 @@ class _EditRequirementState extends State<EditRequirement> {
     });
   }
 
-  _fetchTypeList(){
+  _fetchTypeList() {
     setState(() => isLoading = true);
 
-    ProductService.getTypes().then((res){
+    ProductService.getTypes().then((res) {
       List<ProductType> productTypes = res;
-      if(mounted){
+      if (mounted) {
         setState(() {
           //typeList.addAll(productTypes.map((e) => e.name).toList());
-          productTypes.forEach((element) {typeList.add(element.name);});
-          isLoading=false;
+          productTypes.forEach((element) {
+            typeList.add(element.name);
+          });
+          isLoading = false;
           //_selectedProductType = typeList.firstWhere((element) => element.name == widget.requirement.jewelleryType);
         });
       }
-
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       if (mounted)
         setState(() {
@@ -334,28 +399,28 @@ class _EditRequirementState extends State<EditRequirement> {
     });
   }
 
-  _submit() async{
+  _submit() async {
     setState(() => isLoading = true);
 
     _edited.customerName = _nameController.text;
     _edited.customerNumber = _noController.text;
     _edited.remark = _remarkController.text;
-
+    _edited.thumbUrl=_image.path;
+   //_edited.thumbUrl=(await MultipartFile.fromFile(_image.path)) as String;
     FormData formData = FormData.fromMap(_edited.toJson());
 
-    RequirementService.update(formData).then((res){
+    RequirementService.update(formData).then((res) {
       Navigator.pop(context, res);
-    }).catchError((err){
+    }).catchError((err) {
       _showError(err.toString());
       setState(() {
         isLoading = false;
       });
-    }).whenComplete((){
+    }).whenComplete(() {
       setState(() {
         isLoading = false;
       });
     });
-
   }
 
   void _showError(String message) {
